@@ -23,7 +23,7 @@ Server::Server() { m_serverSocketFd = -1; }
 void Server::ServerInit(const std::string &port)
 {
 	if (port.find_first_not_of("0123456789") != std::string::npos)
-		throw std::invalid_argument("error: invalid argument: " + port);
+		throw std::invalid_argument("error: invalid argument: port: " + port);
 	this->m_port = atoi(port.c_str());
 	SerSocket();
 	std::cout << "Server <" << m_serverSocketFd << "> Connected" << std::endl;
