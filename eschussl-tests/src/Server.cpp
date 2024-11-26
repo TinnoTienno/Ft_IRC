@@ -17,6 +17,7 @@
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <fcntl.h>
 
 Server::Server() { m_serverSocketFd = -1; }
 
@@ -28,18 +29,35 @@ void Server::ServerInit(const std::string &port)
 	SerSocket();
 	std::cout << "Server <" << m_serverSocketFd << "> Connected" << std::endl;
 	std::cout << "Waiting for a connection..." << std::endl;
+
 }
 void Server::SerSocket()
 {
-	struct sockaddr_in socket;
+	struct sockaddr_in socketAdd;
 	struct pollfd Poll;
 
-	socket.sin_family = AF_INET;
-	socket.sin_port = htons(this->m_port);
-	socket.sin_addr.s_addr = INADDR_ANY;
+	socketAdd.sin_family = AF_INET;
+	socketAdd.sin_port = htons(this->m_port);
+	socketAdd.sin_addr.s_addr = INADDR_ANY;
 	
 	m_serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
-	if(m_serverSocketFd)
+	if(m_serverSocketFd == -1)
+		throw std::runtime_error("socket");
+	int i = 1;
+
+	if (setsockopt(m_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &i, sizeof(i)) < 0)
+		throw std::runtime_error("failed to set socket option: SO_REUSEADDR");
+	if (fcntl(m_serverSocketFd, F_SETFL, O_NONBLOCK) < 0)
+		throw std::runtime_error("failed to set socket: O_NONBLOCK");
+	if (bind(m_serverSocketFd, (struct sockaddr *)&socketAdd, sizeof(socketAdd)) < 0)
+		throw std::runtime_error("failed to bind socket to address");
+	if (listen(m_serverSocketFd, SOMAXCONN) < 0)
+		throw std::runtime_error("failed to listen");
+	Poll.fd = m_serverSocketFd;
+	Poll.events = POLLIN;
+	Poll.revents = 0;
+	m_fds.push_back(Poll);
+	std::cout << "Server listening on port " << m_port << std::endl;
 }
 void Server::AcceptNewCLient()
 {

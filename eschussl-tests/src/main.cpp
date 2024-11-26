@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 		throw std::runtime_error("Error: format: ./ircserv port password");
 		Server server;
 		server.ServerInit(argv[1]);
+		server.AcceptNewCLient();
 	}
 	catch(const std::exception& e)
 	{
