@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 14:16:34 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/05 18:19:28 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class Server
 		void AcceptNewClient();
 		void ReceiveNewData(const int);
 		
+		bool checkAuth(int fd, char *buff);
 		static void SignalHandler(int);
 		
 		void CloseFds();

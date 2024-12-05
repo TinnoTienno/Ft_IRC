@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 14:46:48 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/05 18:17:50 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,22 @@
 #include <iostream>
 
 
-Client::Client() { }
+Client::Client() {
+	m_authentified = false;
+}
 
 const int& Client::getFD() const { return m_fd; }
 
 void Client::setFD(const int &fd) {	m_fd = fd; }
 
 void Client::setIPadd(const std::string &ipadd) { m_ipAdd = ipadd; }
+
+const bool& Client::getAuth() const { return m_authentified; }
+
+void Client::setAuth(const bool &is)
+{
+	this->m_authentified = is;
+}
 
 Client::~Client()
 {

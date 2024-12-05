@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 14:51:07 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/05 18:24:15 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void Server::ServerInit(const std::string &port)
 			{
 				if (m_fds[i].fd == m_serverSocketFd)
 				{
-					std::cout << "yo" << std::endl;
 					AcceptNewClient();
 				}
 				else
@@ -101,6 +100,7 @@ void Server::SerSocket()
 	m_fds.push_back(Poll);
 	std::cout << "Server listening on port " << m_port << std::endl;
 }
+
 void Server::AcceptNewClient()
 {
 	Client client;
@@ -127,15 +127,30 @@ void Server::AcceptNewClient()
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
 	m_clients.push_back(client);
 	m_fds.push_back(newPoll);
-
 	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
 }
+
+bool Server::checkAuth(int fd, char *buff)
+{
+	size_t i = 0;
+	for (; i < m_clients.size(); i++)
+	{
+		if (m_clients[i].getFD() == fd)
+			break ;
+	}
+	if (m_clients[i].getAuth() == 1)
+		return 1;
+	std::string buffer = buff;
+	if (buffer.find("PASS") != buffer.npos)
+		
+	return 0;
+}
+
 void Server::ReceiveNewData(const int fd)
 {
 	char buff[513]; //-> buffer for the received data
 	memset(buff, 0, sizeof(buff)); //-> clear the buffer
 
-	// ssize_t bytes = recv(fd, buff, sizeof(buff) - 1 , 0); //-> receive the data
 	ssize_t bytes = recv(fd, buff, sizeof(buff) - 1, 0); //-> receive the data
 
 	if (bytes <= 0){ //-> check if the client disconnected
@@ -147,7 +162,10 @@ void Server::ReceiveNewData(const int fd)
 	else{ //-> print the received data
 		buff[bytes] = '\0';
 		std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
-		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
+		if (!checkAuth(fd, buff))
+			std::cout << RED << "Client <" << fd << "> is not authorized" << WHI << std::endl;
+			
+		;
 	}
 }
 
