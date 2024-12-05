@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 17:05:11 by eschussl          #+#    #+#             */
-/*   Updated: 2024/11/22 17:34:02 by eschussl         ###   ########.fr       */
+/*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
+/*   Updated: 2024/12/05 14:46:48 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-#include "Server.hpp"
-#include <exception>
+#include <unistd.h>
 #include <iostream>
-#include <string>
 
-int main(int argc, char **argv)
+
+Client::Client() { }
+
+const int& Client::getFD() const { return m_fd; }
+
+void Client::setFD(const int &fd) {	m_fd = fd; }
+
+void Client::setIPadd(const std::string &ipadd) { m_ipAdd = ipadd; }
+
+Client::~Client()
 {
-	try
-	{
-		if (argc != 3)
-		throw std::runtime_error("Error: format: ./ircserv port password");
-		Server server;
-		server.ServerInit(argv[1]);
-		server.AcceptNewCLient();
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
-}
+	// close(m_fd);
+	std::cout << "client is dead" << std::endl;
+};
