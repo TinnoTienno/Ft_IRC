@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 15:43:11 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 18:17:00 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include "Join.hpp"
 
 #define RED "\e[1;31m" //-> for red color
 #define WHI "\e[0;37m" //-> for white color
@@ -31,7 +32,11 @@
 #define YEL "\e[1;33m" //-> for yellow color
 
 Server::Server(const std::string &pass) : m_pass(pass)
-{ m_serverSocketFd = -1; }
+{ 
+	m_serverSocketFd = -1;
+	// BuildCommandMap();
+	m_CommandHandlers["JOIN"] = Join::execute();
+}
 
 bool Server::m_signal = false;
 
@@ -204,6 +209,9 @@ void Server::ReceiveNewData(const int fd)
 	else{ //-> print the received data
 		buff[bytes] = '\0';
 		if (checkAuth(fd, buff))
+		{
+			std::string cmd = identifyCommand(buff);
+		}
 			std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
 		
 			// std::cout << RED << "Client <" << fd << "> is not authorized" << WHI << std::endl;
@@ -247,4 +255,9 @@ void Server::ClearClients(int fd)
 		}
 	}
 	close (fd);
+}
+
+void Server::BuildCommandMap()
+{
+	m_CommandHandlers.
 }
