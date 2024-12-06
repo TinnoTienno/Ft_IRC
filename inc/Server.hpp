@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 13:24:21 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:55:59 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class Server
 		void ReceiveNewData(const int);
 		
 		bool checkAuth(int fd, const std::string&);
+		bool checkNick(const size_t &, const std::string &);
 		static void SignalHandler(int);
 		
 		void CloseFds();

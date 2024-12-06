@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 14:11:32 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:38:04 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ class Client
 		const bool& getAuth() const;
 		void addPacket(const std::string &);
 		std::string getPacket();
+		const std::string& getNick() const;
+		void setNick(const std::string &);
+		void sendMsg(const std::string &) const;
+		void kill(const std::string &) const;
 		~Client();
 }	;
 

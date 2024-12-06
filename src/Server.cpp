@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 14:39:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:43:11 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ void Server::ServerInit(const std::string &port)
 					ReceiveNewData(m_fds[i].fd);
 				}
 			}
-			if (m_fds[i].revents != 32 && m_fds[i].revents != 0)
-				std::cout << m_fds[i].revents << std::endl;
 		}
 	}
 }
@@ -130,11 +128,29 @@ void Server::AcceptNewClient()
 	m_fds.push_back(newPoll);
 	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
 }
-
+bool Server::checkNick(const size_t &clientid, const std::string &buffer)
+{
+	size_t nick = buffer.find("NICK");
+	nick = buffer.find(' ', nick) + 1;
+	size_t nick2 = buffer.find(13, nick);
+	std::string  nickname = buffer.substr(nick, nick2 - nick);
+	std::cout << "nick |" << nickname << "|" << std::endl;
+	m_clients[clientid].setNick(nickname);
+	for (size_t i = 0; i < m_clients.size(); i++)
+	{
+		if (m_clients[i].getNick() == nickname && i != clientid)
+		{
+			std::cout << RED << "Client <" << m_clients[clientid].getFD() << "> nickname already used" << WHI << std::endl;
+			m_clients[clientid].kill("nickname already taken");
+			ClearClients(m_clients[clientid].getFD());
+			return 0;
+		}
+	}
+	return 1;
+}
 bool Server::checkAuth(int fd, const std::string &buffer)
 {
 	size_t i = 0;
-	// std::cout << buffer << std::endl;
 	for (; i < m_clients.size(); i++)
 	{
 		if (m_clients[i].getFD() == fd)
@@ -144,33 +160,31 @@ bool Server::checkAuth(int fd, const std::string &buffer)
 		return 1;
 	if (buffer.find("USER") == buffer.npos)
 	    return 0;
+	if (!checkNick(i, buffer))
+		return 0;
 	size_t pass = buffer.find("PASS");
 	if (pass == buffer.npos)
 	{
 	    std::cout << RED << "Client <" << fd << "> has not set a password" << WHI << std::endl;
-        send(fd, "PRIVMSG Aduvilla :please send a password", 23, 0);
+		m_clients[i].sendMsg("please send a password");
 		return 0;
 	}
 	pass = buffer.find(' ', pass) + 1;
 	size_t pass2 = buffer.find(13, pass);
 	// std::cout << "pass : " << pass << " pass2 : " << pass2 << std::endl;
 	std::string passwd = buffer.substr(pass, pass2 - pass);
-	for (size_t i = 0; passwd[i]; i++)
-	{
-		std::cout << (int) passwd[i] << " ";
-	}
-	std::cout << std::endl;
 	std::cout << "pass : |" << passwd << "|" << std::endl;
 	// std::cout << "m_pass : |" << m_pass << "|" << std::endl;
 	if (!passwd.compare(m_pass))
 	{
 		m_clients[i].setAuth(1);
-		parsNick();
 		std::cout << GRE << "Client <" << fd << "> is now authentified" << WHI << std::endl;
-        send(fd, "PRIVMSG aduvilla :you're now authentified\r\n", 44, 0);
+		m_clients[i].sendMsg("you're now authentified");
 		return 0;
 	}
 	std::cout << RED << "Client <" << fd << "> has a wrong password" << WHI << std::endl;
+	m_clients[i].kill("password is wrong");
+	ClearClients(fd);
 	return 0;
 }
 
@@ -232,4 +246,5 @@ void Server::ClearClients(int fd)
 			break;
 		}
 	}
+	close (fd);
 }
