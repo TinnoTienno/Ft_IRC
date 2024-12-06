@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 14:51:07 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 15:43:11 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 #define GRE "\e[1;32m" //-> for green color
 #define YEL "\e[1;33m" //-> for yellow color
 
-Server::Server() { m_serverSocketFd = -1; }
+Server::Server(const std::string &pass) : m_pass(pass)
+{ m_serverSocketFd = -1; }
 
 bool Server::m_signal = false;
 
@@ -59,7 +60,6 @@ void Server::ServerInit(const std::string &port)
 			{
 				if (m_fds[i].fd == m_serverSocketFd)
 				{
-					std::cout << "yo" << std::endl;
 					AcceptNewClient();
 				}
 				else
@@ -67,8 +67,6 @@ void Server::ServerInit(const std::string &port)
 					ReceiveNewData(m_fds[i].fd);
 				}
 			}
-			if (m_fds[i].revents != 32 && m_fds[i].revents != 0)
-				std::cout << m_fds[i].revents << std::endl;
 		}
 	}
 }
@@ -101,6 +99,7 @@ void Server::SerSocket()
 	m_fds.push_back(Poll);
 	std::cout << "Server listening on port " << m_port << std::endl;
 }
+
 void Server::AcceptNewClient()
 {
 	Client client;
@@ -127,15 +126,73 @@ void Server::AcceptNewClient()
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
 	m_clients.push_back(client);
 	m_fds.push_back(newPoll);
-
 	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
 }
+bool Server::checkNick(const size_t &clientid, const std::string &buffer)
+{
+	size_t nick = buffer.find("NICK");
+	nick = buffer.find(' ', nick) + 1;
+	size_t nick2 = buffer.find(13, nick);
+	std::string  nickname = buffer.substr(nick, nick2 - nick);
+	std::cout << "nick |" << nickname << "|" << std::endl;
+	m_clients[clientid].setNick(nickname);
+	for (size_t i = 0; i < m_clients.size(); i++)
+	{
+		if (m_clients[i].getNick() == nickname && i != clientid)
+		{
+			std::cout << RED << "Client <" << m_clients[clientid].getFD() << "> nickname already used" << WHI << std::endl;
+			m_clients[clientid].kill("nickname already taken");
+			ClearClients(m_clients[clientid].getFD());
+			return 0;
+		}
+	}
+	return 1;
+}
+bool Server::checkAuth(int fd, const std::string &buffer)
+{
+	size_t i = 0;
+	for (; i < m_clients.size(); i++)
+	{
+		if (m_clients[i].getFD() == fd)
+			break ;
+	}
+	if (m_clients[i].getAuth() == 1)
+		return 1;
+	if (buffer.find("USER") == buffer.npos)
+	    return 0;
+	if (!checkNick(i, buffer))
+		return 0;
+	size_t pass = buffer.find("PASS");
+	if (pass == buffer.npos)
+	{
+	    std::cout << RED << "Client <" << fd << "> has not set a password" << WHI << std::endl;
+		m_clients[i].sendMsg("please send a password");
+		return 0;
+	}
+	pass = buffer.find(' ', pass) + 1;
+	size_t pass2 = buffer.find(13, pass);
+	// std::cout << "pass : " << pass << " pass2 : " << pass2 << std::endl;
+	std::string passwd = buffer.substr(pass, pass2 - pass);
+	std::cout << "pass : |" << passwd << "|" << std::endl;
+	// std::cout << "m_pass : |" << m_pass << "|" << std::endl;
+	if (!passwd.compare(m_pass))
+	{
+		m_clients[i].setAuth(1);
+		std::cout << GRE << "Client <" << fd << "> is now authentified" << WHI << std::endl;
+		m_clients[i].sendMsg("you're now authentified");
+		return 0;
+	}
+	std::cout << RED << "Client <" << fd << "> has a wrong password" << WHI << std::endl;
+	m_clients[i].kill("password is wrong");
+	ClearClients(fd);
+	return 0;
+}
+
 void Server::ReceiveNewData(const int fd)
 {
 	char buff[513]; //-> buffer for the received data
 	memset(buff, 0, sizeof(buff)); //-> clear the buffer
 
-	// ssize_t bytes = recv(fd, buff, sizeof(buff) - 1 , 0); //-> receive the data
 	ssize_t bytes = recv(fd, buff, sizeof(buff) - 1, 0); //-> receive the data
 
 	if (bytes <= 0){ //-> check if the client disconnected
@@ -146,8 +203,10 @@ void Server::ReceiveNewData(const int fd)
 
 	else{ //-> print the received data
 		buff[bytes] = '\0';
-		std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
-		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
+		if (checkAuth(fd, buff))
+			std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
+		
+			// std::cout << RED << "Client <" << fd << "> is not authorized" << WHI << std::endl;
 	}
 }
 
@@ -187,4 +246,5 @@ void Server::ClearClients(int fd)
 			break;
 		}
 	}
+	close (fd);
 }
