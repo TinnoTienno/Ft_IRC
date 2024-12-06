@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 18:24:15 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:39:40 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 #define GRE "\e[1;32m" //-> for green color
 #define YEL "\e[1;33m" //-> for yellow color
 
-Server::Server() { m_serverSocketFd = -1; }
+Server::Server(const std::string &pass) : m_pass(pass)
+{ m_serverSocketFd = -1; }
 
 bool Server::m_signal = false;
 
@@ -130,9 +131,10 @@ void Server::AcceptNewClient()
 	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
 }
 
-bool Server::checkAuth(int fd, char *buff)
+bool Server::checkAuth(int fd, const std::string &buffer)
 {
 	size_t i = 0;
+	// std::cout << buffer << std::endl;
 	for (; i < m_clients.size(); i++)
 	{
 		if (m_clients[i].getFD() == fd)
@@ -140,9 +142,35 @@ bool Server::checkAuth(int fd, char *buff)
 	}
 	if (m_clients[i].getAuth() == 1)
 		return 1;
-	std::string buffer = buff;
-	if (buffer.find("PASS") != buffer.npos)
-		
+	if (buffer.find("USER") == buffer.npos)
+	    return 0;
+	size_t pass = buffer.find("PASS");
+	if (pass == buffer.npos)
+	{
+	    std::cout << RED << "Client <" << fd << "> has not set a password" << WHI << std::endl;
+        send(fd, "PRIVMSG Aduvilla :please send a password", 23, 0);
+		return 0;
+	}
+	pass = buffer.find(' ', pass) + 1;
+	size_t pass2 = buffer.find(13, pass);
+	// std::cout << "pass : " << pass << " pass2 : " << pass2 << std::endl;
+	std::string passwd = buffer.substr(pass, pass2 - pass);
+	for (size_t i = 0; passwd[i]; i++)
+	{
+		std::cout << (int) passwd[i] << " ";
+	}
+	std::cout << std::endl;
+	std::cout << "pass : |" << passwd << "|" << std::endl;
+	// std::cout << "m_pass : |" << m_pass << "|" << std::endl;
+	if (!passwd.compare(m_pass))
+	{
+		m_clients[i].setAuth(1);
+		parsNick();
+		std::cout << GRE << "Client <" << fd << "> is now authentified" << WHI << std::endl;
+        send(fd, "PRIVMSG aduvilla :you're now authentified\r\n", 44, 0);
+		return 0;
+	}
+	std::cout << RED << "Client <" << fd << "> has a wrong password" << WHI << std::endl;
 	return 0;
 }
 
@@ -161,11 +189,10 @@ void Server::ReceiveNewData(const int fd)
 
 	else{ //-> print the received data
 		buff[bytes] = '\0';
-		std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
-		if (!checkAuth(fd, buff))
-			std::cout << RED << "Client <" << fd << "> is not authorized" << WHI << std::endl;
-			
-		;
+		if (checkAuth(fd, buff))
+			std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
+		
+			// std::cout << RED << "Client <" << fd << "> is not authorized" << WHI << std::endl;
 	}
 }
 

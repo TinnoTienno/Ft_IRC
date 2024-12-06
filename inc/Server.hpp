@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 18:19:28 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:24:21 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ class Server
 		std::vector<Client> 		m_clients;
 		std::vector<struct pollfd>	m_fds;
 		static bool 				m_signal;
+		const std::string			m_pass;					 
 	public : 
-		Server();
+		Server(const std::string&);
 		~Server();
 		
 		void ServerInit(const std::string&);
@@ -37,7 +38,7 @@ class Server
 		void AcceptNewClient();
 		void ReceiveNewData(const int);
 		
-		bool checkAuth(int fd, char *buff);
+		bool checkAuth(int fd, const std::string&);
 		static void SignalHandler(int);
 		
 		void CloseFds();

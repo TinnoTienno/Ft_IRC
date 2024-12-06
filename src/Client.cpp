@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 18:17:50 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:59:56 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,5 @@ void Client::setAuth(const bool &is)
 Client::~Client()
 {
 	// close(m_fd);
-	std::cout << "client is dead" << std::endl;
+	// std::cout << "client is dead" << std::endl;
 };

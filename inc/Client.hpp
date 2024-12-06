@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 18:18:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 14:11:32 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ class Client
 		int 		m_fd;
 		std::string m_ipAdd;
 		bool		m_authentified;
+		std::string m_irssiPacket;
+		std::string m_nick; 
 	public : 
 		Client();
 		const int& getFD() const;
@@ -27,6 +29,8 @@ class Client
 		void setIPadd(const std::string&);
 		void setAuth(const bool &);
 		const bool& getAuth() const;
+		void addPacket(const std::string &);
+		std::string getPacket();
 		~Client();
 }	;
 

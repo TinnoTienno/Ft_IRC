@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:05:11 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/05 14:14:52 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 13:23:22 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int main(int argc, char **argv)
 		signal(SIGINT, Server::SignalHandler);
 		
 		if (argc != 3)
-		throw std::runtime_error("Error: format: ./ircserv port password");
-		Server server;
+			throw std::runtime_error("Error: format: ./ircserv port password");
+		Server server(argv[2]);
 		server.ServerInit(argv[1]);
 	}
 	catch(const std::exception& e)
