@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 15:43:11 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/06 18:10:25 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,4 +247,26 @@ void Server::ClearClients(int fd)
 		}
 	}
 	close (fd);
+}
+
+void registerCommand(const std::string& command, commandHandler handler)
+{
+	commandHandlers[command] = handler;
+}
+    
+void handleCommand(const std::string& command, const std::string& params)
+{
+	if (commandHandlers.find(command) != commandHandlers.end()) // Appel de la méthode via un pointeur sur fonction membre
+		(this->*commandHandlers[command])(params);
+	else
+		std::cout << "Commande inconnue : " << command << std::endl;
+}
+void handleNick(const std::string& params)
+{
+	std::cout << "Handling NICK command with params: " << params << std::endl;
+}
+
+void handleJoin(const std::string& params)
+{
+	std::cout << "Handling JOIN command with params: " << params << std::endl;
 }
