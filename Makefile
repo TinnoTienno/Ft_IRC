@@ -6,7 +6,7 @@
 #    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/11/22 17:33:27 by eschussl         ###   ########.fr        #
+#    Updated: 2024/12/06 16:38:13 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,10 @@ NAME		=	ircserv
 
 CC 			=	c++ 
 CFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g
-SRCS		=	main.cpp Client.cpp Server.cpp\
+SRCS		=	main.cpp\
+				Client.cpp\
+				Server.cpp\
+				Channel.cpp
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))
 
