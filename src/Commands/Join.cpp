@@ -6,13 +6,19 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 18:17:39 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:37:29 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Join.hpp"
+#include <iostream>
 
-void *Join::execute()
+void Join::execute(Server *server, const std::string buffer, Client &client)
 {
-	return (NULL);
+	(void) server;
+	(void) buffer;
+	(void) client;
+	std::cout << "coucou" << std::endl;
+	server->sendMsg(client, "Coucou frerot", "");
+
 }

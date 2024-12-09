@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ACommand.cpp                                       :+:      :+:    :+:   */
+/*   UserHost.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 17:13:42 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 17:24:52 by eschussl         ###   ########.fr       */
+/*   Created: 2024/12/09 15:34:29 by eschussl          #+#    #+#             */
+/*   Updated: 2024/12/09 15:34:38 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ACommand.hpp"
+#include "Server.hpp"
+#include "Client.hpp"
 
-ACommand::ACommand(std::vector<std::string> vec)
+class UserHost
 {
-	m_args = vec;
-}
+	public :
+		static void execute(Server *server, const std::string buffer, Client &client);
+}	;

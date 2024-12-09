@@ -1,24 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ACommand.hpp                                       :+:      :+:    :+:   */
+/*   Nick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 17:05:41 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/06 18:07:42 by eschussl         ###   ########.fr       */
+/*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
+/*   Updated: 2024/12/09 18:34:26 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Server.hpp"
+#include "Client.hpp"
 
-#include <string>
-#include <vector>
-
-class ACommand
+class Nick
 {
-	protected :
-		std::vector <std::string>	m_args;
 	public :
-		ACommand(std::vector<std::string>);
-		virtual void execute() = 0;
+		static void execute(Server *server, const std::string buffer, Client &client);
+		static int checkformat(Server *server, const std::string &buffer);
 }	;
