@@ -256,8 +256,28 @@ void Server::ClearClients(int fd)
 	}
 	close (fd);
 }
-
 void Server::BuildCommandMap()
 {
 	m_CommandHandlers.
+}
+void registerCommand(const std::string& command, commandHandler handler)
+{
+	commandHandlers[command] = handler;
+}
+    
+void handleCommand(const std::string& command, const std::string& params)
+{
+	if (commandHandlers.find(command) != commandHandlers.end()) // Appel de la méthode via un pointeur sur fonction membre
+		(this->*commandHandlers[command])(params);
+	else
+		std::cout << "Commande inconnue : " << command << std::endl;
+}
+void handleNick(const std::string& params)
+{
+	std::cout << "Handling NICK command with params: " << params << std::endl;
+}
+
+void handleJoin(const std::string& params)
+{
+	std::cout << "Handling JOIN command with params: " << params << std::endl;
 }

@@ -16,13 +16,16 @@
 #include <vector>
 #include <sys/socket.h>
 #include <poll.h>
+#include <map>
 #include "Client.hpp"
 #include <map>
 
 class ACommand;
 class Client;
+
 class Server
 {
+
 	private :
 		int 						m_port;
 		int							m_serverSocketFd;
@@ -30,8 +33,9 @@ class Server
 		std::vector<struct pollfd>	m_fds;
 		static bool 				m_signal;
 		const std::string			m_pass;					 
-		
-	public : 
+
+	public :
+		typedef void	(Server::*commandHandler)(const std::string&);
 		Server(const std::string&);
 		~Server();
 		
@@ -49,7 +53,18 @@ class Server
 		void CloseFds();
 		void ClearClients(int);
 		void BuildCommandMap();
-
+		void registerCommand(const std::string & command, commandHandler handler);
+		void handleCommand(const std::string & command, const std::string & params);
+		void handleNick(const std::string & params);
+		void handleJoin(const std::string & params);
+	private :
+		int 						m_port;
+		int							m_serverSocketFd;
+		std::vector<Client> 		m_clients;
+		std::vector<struct pollfd>	m_fds;
+		static bool 				m_signal;
+		const std::string			m_pass;
+		std::map<std::string, commandHandler> commandHandlers;	
 }	;
 
 #endif
