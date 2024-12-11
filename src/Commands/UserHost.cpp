@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Join.hpp                                           :+:      :+:    :+:   */
+/*   UserHost.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/09 14:33:16 by eschussl         ###   ########.fr       */
+/*   Created: 2024/12/09 15:34:50 by eschussl          #+#    #+#             */
+/*   Updated: 2024/12/09 17:45:29 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
-#include "Client.hpp"
+#include "UserHost.hpp"
+#include <iostream>
 
-class Join
+void UserHost::execute(Server *server, const std::string buffer, Client &client)
 {
-	public :
-		static void execute(Server *server, const std::string buffer, Client &client);
-}	;
+	(void) buffer;
+	server->sendMsg(client, "UserHost is" + server->getName(), "");
+}

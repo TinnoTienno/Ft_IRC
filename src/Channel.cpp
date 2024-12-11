@@ -3,22 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/06 17:03:27 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/09 17:37:02 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include <string>
 #include <stdexcept>
+#include "Server.hpp"
 
 Channel::Channel	(const std::string &name)
 {
 	if (name.empty())
 		throw std::runtime_error("A channel name must not be empty");
-	this->m_inviteOnly = false;
+	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = "";
 	this->m_name = name;
@@ -28,7 +29,7 @@ Channel::Channel	(const std::string &name, const std::string &passwd)
 {
 	if (name.empty())
 		throw std::runtime_error("A channel name must not be empty");
-	this->m_inviteOnly = false;
+	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = passwd;
 	this->m_name = name;
@@ -43,7 +44,7 @@ Channel&	Channel::operator=(Channel const & rhs)
 {
 	if (this != &rhs)
 	{
-		this->m_inviteOnly = rhs.m_inviteOnly;
+		this->m_isInviteOnly = rhs.m_isInviteOnly;
 		this->setTopic(rhs.getTopic());
 		this->m_password = rhs.m_password;
 		this->m_name = rhs.m_name;
@@ -59,34 +60,34 @@ void	Channel::addClient(Client & client)
 {
 	if (!this->m_password.empty())
 		throw std::runtime_error("Wrong password");
-	this->m_clients.push_back(&client);
+	this->m_vClients.push_back(&client);
 }
 
 void	Channel::addClient(Client & client, const std::string & passwd)
 {
 	if (this->m_password != passwd)
 		throw std::runtime_error("Wrong password");
-	this->m_clients.push_back(&client);
+	this->m_vClients.push_back(&client);
 }
 
 void	Channel::removeClient(const Client & client)
 {
-	for (size_t i = 0; i < m_clients.size(); i++)
+	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		if (m_clients[i] == & client)
+		if (m_vClients[i] == & client)
 		{
-			m_clients.erase(m_clients.begin() + i);
+			m_vClients.erase(m_vClients.begin() + i);
 			return;
 		}
 	}
 	throw	std::runtime_error("Remove client: client not found");
 }
 
-void	Channel::sendAllMsg(const std::string & msg)
+void	Channel::sendAllMsg(const std::string & msg, Server *server)
 {
-	for (size_t i = 0; i < m_clients.size(); i++)
+	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		m_clients[i]->sendMsg(msg);
+		server->sendMsg(*m_vClients[i], msg, "");
 	}
 }
 
@@ -107,10 +108,10 @@ const std::string	Channel::getTopic(void) const
 
 void	Channel::setInvite(bool status)
 {
-	this->m_inviteOnly = status;
+	this->m_isInviteOnly = status;
 }
 
 bool	Channel::getInvite() const
 {
-	return this->m_inviteOnly;
+	return this->m_isInviteOnly;
 }

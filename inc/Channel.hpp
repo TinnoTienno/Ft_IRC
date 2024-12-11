@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/06 17:02:01 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:08:45 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <vector>
 #include "Client.hpp"
 
+class	Server;
 class	Channel
 {
 	public:
@@ -28,7 +29,7 @@ class	Channel
 		void addClient(Client&);
 		void addClient(Client&, const std::string&passwd);
 		void removeClient(const Client&);
-		void sendAllMsg(const std::string &);
+		void sendAllMsg(const std::string &, Server *server);
 		void setName(const std::string &);
 		void setTopic(const std::string &);
 		const std::string getName() const;
@@ -38,11 +39,11 @@ class	Channel
 		
 
 	private:
-		bool 		m_inviteOnly;
+		bool 		m_isInviteOnly;
 		std::string m_topic;
 		std::string	m_name;
 		std::string	m_password;
-		std::vector <Client*> m_clients;
+		std::vector <Client*> m_vClients;
 };
 
 #endif
