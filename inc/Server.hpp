@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/11 17:47:27 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 00:39:53 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <sys/socket.h>
 #include <poll.h>
 #include "Client.hpp"
-#include <map>
 
 #define RED "\e[1;31m" //-> for red color
 #define WHI "\e[0;37m" //-> for white color
@@ -62,6 +61,9 @@ class Server
 		bool checkUser(Client &client, const std::string &buffer);
 
 		bool findNick(const std::string &nickname);
+
+		const std::string	getUserNumber() const;
+		const std::string	getChannelNumber() const;
 }	;
 
 #endif

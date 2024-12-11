@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/11 17:46:57 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 00:42:54 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,14 @@ bool Server::findNick(const std::string &nickname)
 			return 1;
 	}
 	return 0;
+}
+
+const std::string	Server::getUserNumber() const
+{
+	return itoa(this->m_vClients.size());
+}
+
+const std::string	Server::getChannelNumber() const
+{
+	return itoa(this->m_vChannels.size());
 }
