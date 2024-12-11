@@ -1,0 +1,3 @@
+connect -rawlog irssi_debug.log DALNET
+#connect -rawlog irssi_debug.log DALNET [port] [password] [nick]
+#connect -rawlog irssi_debug.log made-f0cr4s2 6667 port aduvilla
