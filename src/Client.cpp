@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/09 17:34:19 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/11 13:47:38 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,5 @@ void Client::connect(Server *server)
 	server->sendMsg(*this, "Your host is " + server->getName() + ", running version 1.2.3", "002");
 	server->sendMsg(*this, "This server was created" + (std::string) " Tue Dec 9 2024 at 12:00:00 GMT", "003");
 	server->sendMsg(*this, server->getName() + " 1.2.3 ao", "004");
+	server->sendMsg(*this, "CHANMODES=i t, k, o, l : are supported by this server", "005");
 }

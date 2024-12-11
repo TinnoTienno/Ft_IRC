@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/09 18:43:39 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:36:54 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void Nick::execute(Server *server, const std::string buffer, Client &client)
 		break;
 	default:
 		server->sendMsg(client, client.getNick() + " :Bienvenue sur le serveur IRC", "001");
-		server->sendMsg(client, "!" + client.getUser() + "@" + server->getHostname() + " NICK :" + buffer.substr(buffer.find(" ") + 1, buffer.npos), "");
+		std::string	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + server->getHostname() + " NICK :" + "Jean-claude\r\n";
+		send(client.getFD(), msg.c_str(), msg.size(), 0);
 		client.setNick(buffer.substr(buffer.find(" ") + 1, buffer.npos));
 		
 	}
