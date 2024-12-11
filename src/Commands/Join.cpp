@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/09 17:37:29 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:25:38 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@ void Join::execute(Server *server, const std::string buffer, Client &client)
 	(void) buffer;
 	(void) client;
 	std::cout << "coucou" << std::endl;
-	server->sendMsg(client, "Coucou frerot", "");
+//	server->sendMsg(client, "Coucou frerot", "");
 
 }

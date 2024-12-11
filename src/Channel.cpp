@@ -6,14 +6,15 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/09 17:37:02 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:48:43 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
 #include <string>
 #include <stdexcept>
 #include "Server.hpp"
+#include "Channel.hpp"
+#include "utils.hpp"
 
 Channel::Channel	(const std::string &name)
 {
@@ -85,9 +86,10 @@ void	Channel::removeClient(const Client & client)
 
 void	Channel::sendAllMsg(const std::string & msg, Server *server)
 {
+	(void) server; // a supprimer !!!!
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		server->sendMsg(*m_vClients[i], msg, "");
+		sendMessage(m_vClients[i]->getFD(), m_vClients[i]->getPrefix(server->getHostname()), "PRIVMSG", msg);
 	}
 }
 

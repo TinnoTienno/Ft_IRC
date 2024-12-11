@@ -6,7 +6,7 @@
 #    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/09 15:37:09 by eschussl         ###   ########.fr        #
+#    Updated: 2024/12/11 17:45:46 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,10 @@ SRCS		=	main.cpp\
 				Client.cpp\
 				Server.cpp\
 				Channel.cpp\
+				initServer.cpp\
+				runServer.cpp\
+				utils.cpp\
+				authentificationServer.cpp\
 				$(addprefix $(COMMAND_PATH), Nick.cpp Join.cpp UserHost.cpp)  
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))

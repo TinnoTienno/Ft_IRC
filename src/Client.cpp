@@ -6,15 +6,15 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/11 13:47:38 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:14:19 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include <unistd.h>
-#include <iostream>
 #include <sys/socket.h>
 #include "Server.hpp"
+#include "utils.hpp"
 
 void Client::kill(const std::string &str) const
 {
@@ -69,11 +69,17 @@ Client::~Client()
 	// std::cout << "client is dead" << std::endl;
 };
 
+std::string	Client::getPrefix(const std::string & host) const
+{
+	std::string prefix = this->getNick() + "!" + this->getUser() + "@" + host;
+	return prefix;
+}
+
 void Client::connect(Server *server)
 {
-	server->sendMsg(*this, "Welcome to the IRC NETWORK" + this->getNick() + "!" + this->getUser() + "@host", "001");
-	server->sendMsg(*this, "Your host is " + server->getName() + ", running version 1.2.3", "002");
-	server->sendMsg(*this, "This server was created" + (std::string) " Tue Dec 9 2024 at 12:00:00 GMT", "003");
-	server->sendMsg(*this, server->getName() + " 1.2.3 ao", "004");
-	server->sendMsg(*this, "CHANMODES=i t, k, o, l : are supported by this server", "005");
+	sendMessage(this->getFD(), server->getHostname(), "001 " + this->getNick(), "Welcome to the IRC NETWORK" + this->getNick() + "!" + this->getUser() + "@host");
+	sendMessage(this->getFD(), server->getHostname(), "002 " + this->getNick(), "Your host is " + server->getHostname() + ", running version 1.2.3");
+	sendMessage(this->getFD(), server->getHostname(), "003 " + this->getNick(), "This server was created" + (std::string) " Tue Dec 9 2024 at 12:00:00 GMT");
+	sendMessage(this->getFD(), server->getHostname(), "004 " + this->getNick(), server->getHostname() + " 1.2.3 ao");
+	sendMessage(this->getFD(), server->getHostname(), "005 " + this->getNick(), "CHANMODES=i t, k, o, l : are supported by this server");
 }

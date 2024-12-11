@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/09 16:07:05 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:47:39 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Client
 		std::string m_user;
 		// std::vector<Channel *>	m_vChannels; Not very useful so far, not implemented
 	public : 
+		std::string	getPrefix(const std::string & host) const;
 		Client();
 		const int& getFD() const;
 		void setFD(const int&);

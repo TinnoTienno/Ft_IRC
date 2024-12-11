@@ -6,11 +6,12 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/11 14:36:54 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/11 18:23:25 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Nick.hpp"
+#include "utils.hpp"
 #include <iostream>
 
 void Nick::execute(Server *server, const std::string buffer, Client &client)
@@ -20,19 +21,18 @@ void Nick::execute(Server *server, const std::string buffer, Client &client)
 	switch (errcode)
 	{
 	case 432:
-		server->sendMsg(client, "Erroneus nickname", "432");
+		sendMessage(client.getFD(), server->getHostname(), "432", "Erroneus nickname");
 		break;
 	case 433:
-		server->sendMsg(client, "Nickname already in use", "433");
+		sendMessage(client.getFD(), server->getHostname(), "433", "Nickname already in use");
 		break;
 	default:
-		server->sendMsg(client, client.getNick() + " :Bienvenue sur le serveur IRC", "001");
-		std::string	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + server->getHostname() + " NICK :" + "Jean-claude\r\n";
-		send(client.getFD(), msg.c_str(), msg.size(), 0);
+		sendMessage(client.getFD(), server->getHostname(), "001 " + client.getNick(), "Bienvenue sur le serveur IRC");
+		std::string message = ":"  + client.getPrefix(server->getHostname()) + " NICK :" + buffer + "\r\n";
+		send(client.getFD(), message.c_str(), message.size(), 0);
+//		sendMessage(client.getFD(), source, "NICK", buffer.substr(buffer.find(" ") + 1, buffer.npos));
 		client.setNick(buffer.substr(buffer.find(" ") + 1, buffer.npos));
-		
 	}
-	
 }
 
 int Nick::checkformat(Server *server, const std::string &line)

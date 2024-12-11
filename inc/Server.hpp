@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/09 18:35:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:47:27 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,13 @@
 #include <vector>
 #include <sys/socket.h>
 #include <poll.h>
-#include <map>
 #include "Client.hpp"
 #include <map>
+
+#define RED "\e[1;31m" //-> for red color
+#define WHI "\e[0;37m" //-> for white color
+#define GRE "\e[1;32m" //-> for green color
+#define YEL "\e[1;33m" //-> for yellow color
 
 class Client;
 class Channel;
@@ -34,8 +38,7 @@ class Server
 		std::vector<Client> 		m_vClients;
 		std::vector<struct pollfd>	m_vFds;
 		std::vector<Channel>		m_vChannels;
-		std::string 				m_name;
-		std::string					m_serverHostname;
+		std::string					m_hostname;
 
 	public :
 		typedef void	(Server::*commandHandler)(const std::string&);
@@ -50,27 +53,15 @@ class Server
 		bool checkAuth(Client &client, const std::string&);
 		bool checkNick(Client &client, const std::string &);
 		static void SignalHandler(int);
-		typedef void(*CommandHandler)(const std::string&, Server&);
-		std::map<std::string, CommandHandler> m_CommandHandlers;
 		
 		void CloseFds();
 		void ClearClients(int);
 		void parseCommand(const std::string buffer, Client &client);
-		void BuildCommandMap();
-		void registerCommand(const std::string & command, commandHandler handler);
-		void handleCommand(const std::string & command, const std::string & params);
-		void handleNick(const std::string & params);
-		void handleJoin(const std::string & params);
-		const std::string getName() const;
 		const std::string getHostname() const;
 
 		bool checkUser(Client &client, const std::string &buffer);
 
-		void sendMsg(Client &client, const std::string &str, const std::string &code) const;
-
 		bool findNick(const std::string &nickname);
 }	;
-
-
 
 #endif
