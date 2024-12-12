@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 13:34:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:01:46 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include "Nick.hpp"
 #include "Channel.hpp"
 #include "UserHost.hpp"
+#include "Ping.hpp"
 
 bool Server::m_signal = false;
 
@@ -79,8 +80,8 @@ void Server::ClearClients(int fd)
 
 void Server::parseCommand(const std::string buffer, Client &client)
 {
-	std::string		Commands[] = {"JOIN", "NICK", "userhost"};	
-	void (*fCommands[])(Server *, const std::string, Client &) = { &Join::execute, &Nick::execute, &UserHost::execute };
+	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING"};	
+	void (*fCommands[])(Server *, const std::string, Client &) = { &Join::execute, &Nick::execute, &UserHost::execute , &Ping::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
 	std::cout << "|" << buffer << "|" << std::endl;
 	for (size_t i = 0; i < size; i++)
@@ -98,15 +99,7 @@ const std::string Server::getHostname() const { return m_hostname; }
 //:irc.njip.com 001 0002 003
 //:nick!user@host NICK TOPIC PRIVMSG
 
-bool Server::findNick(const std::string &nickname)
-{
-	for (size_t i = 0; i < m_vClients.size(); i++)
-	{
-		if (nickname == m_vClients[i].getNick())
-			return 1;
-	}
-	return 0;
-}
+
 
 const std::string	Server::getUserNumber() const
 {

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/11 17:49:02 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:40:01 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ class	Channel
 		void	setInvite(bool);
 		bool	getInvite() const;
 		
-
 	private:
 		bool 		m_isInviteOnly;
 		std::string m_topic;

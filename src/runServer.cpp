@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/11 16:16:53 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:24:33 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,38 +46,41 @@ void Server::AcceptNewClient()
 	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
 }
 
-void Server::ReceiveNewData(const int fd)
+void Server::ReceiveNewData(Client &client)
 {
 	char buff[513]; //-> buffer for the received data
 	memset(buff, 0, sizeof(buff)); //-> clear the buffer
-	ssize_t bytes = recv(fd, buff, sizeof(buff) - 1, 0); //-> receive the data
+	ssize_t bytes = recv(client.getFD(), buff, sizeof(buff) - 1, 0); //-> receive the data
 
 	if (bytes <= 0){ //-> check if the client disconnected
-		std::cout << RED << "Client <" << fd << "> Disconnected" << WHI << std::endl;
-		ClearClients(fd); //-> clear the client
-		close(fd); //-> close the client socket
+		std::cout << RED << "Client <" << client.getFD() << "> Disconnected" << WHI << std::endl;
+		ClearClients(client.getFD()); //-> clear the client
+		close(client.getFD()); //-> close the client socket
 	}
-	
-	else{ //-> print the received data
-		size_t i = 0;
-		for (; i < m_vClients.size(); i++)
-		{
-			if (m_vClients[i].getFD() == fd)
-				break ;
-		}
+	else //-> print the received data
+	{
 		buff[bytes] = '\0';
-		std::string buffer = buff;
-		if (checkAuth(m_vClients[i], buffer))
+		std::string line = parseBuffer(client, buff);
+		if (checkAuth(client, line))
 		{
 			size_t j = 0;
-			for (size_t i = 0; i < buffer.size(); i = j)
+			for (size_t k = 0; k < line.size(); k = j)
 			{
-				j = buffer.find("\r", i + 1);
-				parseCommand(buffer.substr(i, j), m_vClients[i]);
+				j = line.find("\r", k + 1);
+				parseCommand(line.substr(k, j), client);
 			}
 		}
-			// std::cout << YEL << "Client <" << fd << "> Data: " << WHI << buff;
-		
-			// std::cout << RED << "Client <" << fd << "> is not authorized" << WHI << std::endl;
 	}
 }
+
+std::string Server::parseBuffer(Client &client, std::string buffer)
+{
+	if (buffer.find("\r\n") == buffer.npos)
+	{
+		client.addPacket(buffer);
+		return "";
+	}
+	std::string line = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
+	std::cout << "line.find(\r\n) = " <<  line.find("\r\n");
+	return line;
+} 

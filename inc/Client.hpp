@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/11 17:47:39 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:58:32 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ class Client
 		int 		m_fd;
 		std::string m_ipAdd;
 		bool		m_authentified;
-		std::string m_irssiPacket;
 		std::string m_nick;
 		std::string m_user;
+		std::string m_realname;
+		std::string m_irssiPacket;
 		// std::vector<Channel *>	m_vChannels; Not very useful so far, not implemented
 	public : 
 		std::string	getPrefix(const std::string & host) const;
@@ -44,6 +45,7 @@ class Client
 		void sendMsg(const std::string &, Server *server) const;
 		void kill(const std::string &) const;
 		void connect(Server *server);
+		
 		~Client();
 }	;
 

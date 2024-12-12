@@ -6,11 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:34:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/11 17:26:33 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:14:53 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserHost.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
 #include <iostream>
 
 void UserHost::execute(Server *server, const std::string buffer, Client &client)

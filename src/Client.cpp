@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 00:18:04 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 14:02:44 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ void Client::addPacket(const std::string &packet)
 
 std::string Client::getPacket()
 {
-	return this->m_irssiPacket;
+	std::string tmp = this->m_irssiPacket;
+	this->m_irssiPacket = "";
+	return tmp;
 }
 
 const std::string& Client::getNick() const

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 00:39:53 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:46:10 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,12 @@ class Server
 		void ServerInit(const std::string&);
 		void SerSocket();
 		void AcceptNewClient();
-		void ReceiveNewData(const int);
+		void ReceiveNewData(Client &client);
+		std::string parseBuffer(Client &client, std::string buffer);
 		
 		bool checkAuth(Client &client, const std::string&);
-		bool checkNick(Client &client, const std::string &);
+		int nickErrorCode(Client &client, const std::string &buffer);
+		bool userErrorCode(Client &client, const std::string &buffer);
 		static void SignalHandler(int);
 		
 		void CloseFds();
@@ -58,10 +60,10 @@ class Server
 		void parseCommand(const std::string buffer, Client &client);
 		const std::string getHostname() const;
 
-		bool checkUser(Client &client, const std::string &buffer);
-
-		bool findNick(const std::string &nickname);
-
+		const std::string getNextGuest();
+		bool isNickFormatted(const std::string &nickname) const;
+		int findNick(const std::string &nickname) const;
+	
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
 }	;
