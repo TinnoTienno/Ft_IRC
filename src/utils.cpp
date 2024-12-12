@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 15:38:01 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:05:11 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,10 @@ bool Server::isNickFormatted(const std::string &nickname) const
 
 int Server::findNick(const std::string &nickname) const // carefull return index + 1 so not to get index == 0
 {
-	for (size_t i = 0; i < m_vClients.size(); i++)
+	for (std::map<int, Client>::const_iterator iter = m_mClients.begin(); iter != m_mClients.end(); iter++)  
 	{
-		if (m_vClients[i].getNick() == nickname)
-		{
-			return i + 1;
-		}
+		if ((*iter).second.getNick() == nickname)
+			return (*iter).first;
 	}
 	return 0;
 }

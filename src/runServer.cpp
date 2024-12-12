@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 15:24:33 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:12:39 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <map>
 
 void Server::AcceptNewClient()
 {
@@ -41,7 +42,8 @@ void Server::AcceptNewClient()
 	
 	client.setFD(incoFd);
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
-	m_vClients.push_back(client);
+	// m_mClients.insert({incoFd, client});
+	m_mClients[incoFd] = client;
 	m_vFds.push_back(newPoll);
 	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
 }
@@ -54,8 +56,7 @@ void Server::ReceiveNewData(Client &client)
 
 	if (bytes <= 0){ //-> check if the client disconnected
 		std::cout << RED << "Client <" << client.getFD() << "> Disconnected" << WHI << std::endl;
-		ClearClients(client.getFD()); //-> clear the client
-		close(client.getFD()); //-> close the client socket
+		ClearClient(client); //-> clear the client
 	}
 	else //-> print the received data
 	{

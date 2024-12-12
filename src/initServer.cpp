@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 14:19:24 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 16:55:24 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,7 @@ void Server::ServerInit(const std::string &port)
 				}
 				else
 				{
-					for (size_t j = 0; j < m_vClients.size(); j++)
-					{
-						if (m_vFds[i].fd == m_vClients[j].getFD())
-							ReceiveNewData(m_vClients[j]);
-					}
+					ReceiveNewData(m_mClients[m_vFds[i].fd]);
 				}
 			}
 		}

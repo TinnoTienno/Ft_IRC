@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 15:54:39 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:18:58 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,6 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 	}
 	std::cout << RED << "Client <" << client.getFD() << "> has a wrong password" << WHI << std::endl;
 	client.kill("password is wrong");
-	ClearClients(client.getFD());
+	ClearClient(client);
 	return 0;
 }
