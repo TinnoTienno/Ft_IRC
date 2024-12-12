@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 18:19:54 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:25:55 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ Server::~Server()
 		ClearClient((*iter).second);
 	CloseFds();
 }
-
-
 
 void Server::SignalHandler(int signum)
 {

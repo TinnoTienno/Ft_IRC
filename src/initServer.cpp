@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 16:55:24 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:30:05 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,9 @@ void Server::ServerInit(const std::string &port)
 			if (m_vFds[i].revents & POLLIN)
 			{
 				if (m_vFds[i].fd == m_serverSocketFd)
-				{
 					AcceptNewClient();
-				}
 				else
-				{
 					ReceiveNewData(m_mClients[m_vFds[i].fd]);
-				}
 			}
 		}
 	}
