@@ -6,7 +6,7 @@
 #    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/12 16:00:39 by eschussl         ###   ########.fr        #
+#    Updated: 2024/12/12 16:57:01 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRCS		=	main.cpp\
 				Channel.cpp\
 				initServer.cpp\
 				runServer.cpp\
+				utilServer.cpp\
 				utils.cpp\
 				authentificationServer.cpp\
 				$(addprefix $(COMMAND_PATH), Nick.cpp Join.cpp UserHost.cpp Ping.cpp)  
