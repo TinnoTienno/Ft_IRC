@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 17:09:10 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:20:52 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void Client::setNick(const std::string &nick)
 }
 
 const std::string& Client::getUser() const { return this->m_user; }
+
 void Client::setUser(const std::string &user) {	this->m_user = user; }
 
 Client::~Client()
@@ -79,42 +80,42 @@ std::string	Client::getPrefix(const std::string & host) const
 
 void Client::connect(Server *server)
 {
-	// :irc.server.com NOTICE AUTH :*** Looking up your hostname...
-	// :irc.server.com NOTICE AUTH :*** Checking Ident
-	// :irc.server.com NOTICE AUTH :*** Found tour hostname
-	// :irc.server.com NOTICE AUTH :*** No Ident response
 	std::string y = "10"; // nombre de Operators online
 	std::string	port = "6667"; // prévoir fn getPort
-	std::string	msg = "Welcome to the ft_IRC NETWORK" + this->getPrefix(server->getHostname());
+	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Looking up your hostname"); 
+	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Found your hostname"); 
+	std::string	msg = "Welcome to the ft_IRC NETWORK " + this->getPrefix(server->getHostname());
 	sendMessage(this->getFD(), server->getHostname(), "001 " + this->getNick(), msg); 
 	msg = "Your host is " + server->getHostname() + ", running version 1.2.3";
 	sendMessage(this->getFD(), server->getHostname(), "002 " + this->getNick(), msg); 
-	msg = "This server was created" + getTime();
+	msg = "This server was created " + getTime();
 //	msg = "This server was created" + (std::string) " Tue Dec 9 2024 at 12:00:00 GMT";
 	sendMessage(this->getFD(), server->getHostname(), "003 " + this->getNick(), msg); 
 	msg = server->getHostname() + " 1.2.3 itkOl";
 	sendMessage(this->getFD(), server->getHostname(), "004 " + this->getNick(), msg); 
 	msg = "CHANMODES=i t, k, o, l : are supported by this server";
 	sendMessage(this->getFD(), server->getHostname(), "005 " + this->getNick(), msg);
-	msg = "There are " + server->getUserNumber() + " number of users on 1 server";
+	msg = "There are " + server->getUserNumber() + " users on 1 server";
 	sendMessage(this->getFD(), server->getHostname(), "251 " + this->getNick(), msg); 
 	msg = y + " :IRC Operators online";
 	sendMessage(this->getFD(), server->getHostname(), "252 " + this->getNick(), msg); 
 	msg = server->getChannelNumber() + " :channels formed";
 	sendMessage(this->getFD(), server->getHostname(), "254 " + this->getNick(), msg); 
-	msg = server->getHostname() + "Message of the Day -";
+	msg = server->getHostname() + " Message of the Day -";
 	sendMessage(this->getFD(), server->getHostname(), "375 " + this->getNick(), msg); 
-	std::string	motd[] = {"-			Welcome to",
+	std::string	motd[] = {"-        Welcome to",
 							"-",
-							"-			" + server->getHostname(),
+							"-        " + server->getHostname(),
 							"-",
-							"-			* Host.....: " + server->getHostname(),
-							"-			* Port.....: " + port,
+							"-        * Host.....: " + server->getHostname(),
+							"-        * Port.....: " + port,
 							"-",
-							"-			Welcome to our 42 irc project",
-							"-			by eschussl and aduvilla"};
+							"-        Welcome to our 42 irc project",
+							"-        by eschussl and aduvilla"};
 	for (size_t i = 0; i < sizeof(motd) / sizeof(motd[0]); i++)
 	{
 		sendMessage(this->getFD(), server->getHostname(), "372 " + this->getNick(), motd[i]); 
 	}
+	msg = server->getHostname() + " End of /MOTD command.";
+	sendMessage(this->getFD(), server->getHostname(), "376 " + this->getNick(), msg); 
 }
