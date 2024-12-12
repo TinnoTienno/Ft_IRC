@@ -6,13 +6,14 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 00:42:54 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:34:08 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include "Server.hpp"
@@ -109,10 +110,14 @@ bool Server::findNick(const std::string &nickname)
 
 const std::string	Server::getUserNumber() const
 {
-	return itoa(this->m_vClients.size());
+	std::ostringstream	oss;
+	oss << this->m_vClients.size();
+	return oss.str();
 }
 
 const std::string	Server::getChannelNumber() const
 {
-	return itoa(this->m_vChannels.size());
+	std::ostringstream	oss;
+	oss << this->m_vChannels.size();
+	return oss.str();
 }
