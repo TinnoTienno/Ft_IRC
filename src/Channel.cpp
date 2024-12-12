@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 14:10:58 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:45:47 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "Channel.hpp"
 #include "utils.hpp"
 
-Channel::Channel	(const std::string &name)
+Channel::Channel	(const std::string &name, Client &client)
 {
 	if (name.empty())
 		throw std::runtime_error("A channel name must not be empty");
@@ -24,9 +24,11 @@ Channel::Channel	(const std::string &name)
 	this->setTopic("");
 	this->m_password = "";
 	this->m_name = name;
+	addClient(client);
+	addOP(client);
 }
 
-Channel::Channel	(const std::string &name, const std::string &passwd)
+Channel::Channel	(const std::string &name, Client &client, const std::string &passwd)
 {
 	if (name.empty())
 		throw std::runtime_error("A channel name must not be empty");
@@ -34,6 +36,8 @@ Channel::Channel	(const std::string &name, const std::string &passwd)
 	this->setTopic("");
 	this->m_password = passwd;
 	this->m_name = name;
+	addClient(client, passwd);
+	addOP(client);
 }
 
 Channel::Channel	(Channel const & src)
@@ -57,39 +61,103 @@ Channel::~Channel	(void)
 {
 }
 
-void	Channel::addClient(Client & client)
+void	Channel::addClient(Client &client)
 {
 	if (!this->m_password.empty())
 		throw std::runtime_error("Wrong password");
-	this->m_vClients.push_back(&client);
+	this->m_vClientKeys.push_back(client.getFD());
+}
+
+void Channel::addClient(int clientKey)
+{
+	if (!this->m_password.empty())
+		throw std::runtime_error("Wrong password");
+	this->m_vClientKeys.push_back(clientKey);
 }
 
 void	Channel::addClient(Client & client, const std::string & passwd)
 {
 	if (this->m_password != passwd)
 		throw std::runtime_error("Wrong password");
-	this->m_vClients.push_back(&client);
+	this->m_vClientKeys.push_back(client.getFD());
+}
+
+void Channel::addClient(int clientKey, const std::string &passwd)
+{
+	if (this->m_password != passwd)
+		throw std::runtime_error("Wrong password");
+	this->m_vClientKeys.push_back(clientKey);
 }
 
 void	Channel::removeClient(const Client & client)
 {
-	for (size_t i = 0; i < m_vClients.size(); i++)
+	for (size_t i = 0; i < m_vClientKeys.size(); i++)
 	{
-		if (m_vClients[i] == & client)
+		if (m_vClientKeys[i] == client.getFD())
 		{
-			m_vClients.erase(m_vClients.begin() + i);
+			m_vClientKeys.erase(m_vClientKeys.begin() + i);
 			return;
 		}
 	}
 	throw	std::runtime_error("Remove client: client not found");
 }
 
+void Channel::removeClient(int clientKey)
+{
+	for (size_t i = 0; i < m_vClientKeys.size(); i++)
+	{
+		if (m_vClientKeys[i] == clientKey)
+		{
+			m_vClientKeys.erase(m_vClientKeys.begin() + i);
+			return;
+		}
+	}
+	throw	std::runtime_error("Remove client: client not found");
+}
+
+void Channel::addOP(Client &client)
+{
+	this->m_vOPKeys.push_back(client.getFD());
+}
+
+void Channel::addOP(int clientKey)
+{
+	this->m_vOPKeys.push_back(clientKey);
+}
+
+void Channel::removeOP(Client &client)
+{
+	for (size_t i = 0; i < m_vOPKeys.size(); i++)
+	{
+		if (m_vOPKeys[i] == client.getFD())
+		{
+			m_vOPKeys.erase(m_vOPKeys.begin() + i);
+			return;
+		}
+	}
+	throw	std::runtime_error("Remove OP: OP not found");
+}
+
+void Channel::removeOP(int clientKey)
+{
+	for (size_t i = 0; i < m_vOPKeys.size(); i++)
+	{
+		if (m_vOPKeys[i] == clientKey)
+		{
+			m_vOPKeys.erase(m_vOPKeys.begin() + i);
+			return;
+		}
+	}
+	throw	std::runtime_error("Remove OP: OP not found");
+}
+
+
 void	Channel::sendAllMsg(const std::string & msg, Server *server)
 {
 	(void) server; // a supprimer !!!!
-	for (size_t i = 0; i < m_vClients.size(); i++)
+	for (size_t i = 0; i < m_vClientKeys.size(); i++)
 	{
-		sendMessage(m_vClients[i]->getFD(), m_vClients[i]->getPrefix(server->getHostname()), "PRIVMSG", msg);
+		sendMessage(m_vClientKeys[i], server->getClient(m_vClientKeys[i]).getPrefix(server->getHostname()), "PRIVMSG", msg);
 	}
 }
 

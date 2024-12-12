@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 15:46:10 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:16:52 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SERVER_HPP
 
 #include <vector>
+#include <map>
 #include <sys/socket.h>
 #include <poll.h>
 #include "Client.hpp"
@@ -34,9 +35,9 @@ class Server
 		int							m_serverSocketFd;
 		static bool 				m_signal;
 		const std::string			m_pass;
-		std::vector<Client> 		m_vClients;
+		std::map<int, Client> 		m_mClients;
 		std::vector<struct pollfd>	m_vFds;
-		std::vector<Channel>		m_vChannels;
+		std::map<int, Channel>		m_mChannels;
 		std::string					m_hostname;
 
 	public :
@@ -56,7 +57,7 @@ class Server
 		static void SignalHandler(int);
 		
 		void CloseFds();
-		void ClearClients(int);
+		void ClearClient(Client &client);
 		void parseCommand(const std::string buffer, Client &client);
 		const std::string getHostname() const;
 
@@ -66,6 +67,7 @@ class Server
 	
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
+		Client &getClient(int clientKey);
 }	;
 
 #endif

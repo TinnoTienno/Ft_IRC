@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 16:40:01 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:41:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,33 @@ class	Server;
 class	Channel
 {
 	public:
-		Channel(const std::string &name, const std::string &passwd);
-		Channel(const std::string &name);
+		Channel(const std::string &name, Client &client, const std::string &passwd);
+		Channel(const std::string &name, Client &client);
 		Channel(Channel const & src);
 		Channel &operator=(Channel const & rhs);
 		~Channel(void);
-		void addClient(Client&);
-		void addClient(Client&, const std::string&passwd);
-		void removeClient(const Client&);
+		
+		void addClient(Client &client);
+		void addClient(int clientKey);
+		void addClient(Client &client, const std::string &passwd);
+		void addClient(int clientKey, const std::string &passwd);
+		
+		void removeClient(const Client &client);
+		void removeClient(int clientKey);
+		
+		void addOP(Client &client);
+		void addOP(int clientKey);
+		
+		void removeOP(Client &client);
+		void removeOP(int clientKey);
+		
 		void sendAllMsg(const std::string &, Server *server);
 		void setName(const std::string &);
 		void setTopic(const std::string &);
+		void	setInvite(bool);
+		
 		const std::string getName() const;
 		const std::string getTopic() const;
-		void	setInvite(bool);
 		bool	getInvite() const;
 		
 	private:
@@ -42,7 +55,8 @@ class	Channel
 		std::string m_topic;
 		std::string	m_name;
 		std::string	m_password;
-		std::vector <Client*> m_vClients;
+		std::vector <int> m_vClientKeys;
+		std::vector <int> m_vOPKeys;
 };
 
 #endif

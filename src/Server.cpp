@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 16:01:46 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:25:55 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,10 @@ Server::Server(const std::string &name, const std::string &pass) : m_pass(pass),
 
 Server::~Server()
 {
-	for (size_t i = 0; i < m_vFds.size(); i++)
-		ClearClients(m_vFds[i].fd);
+	for (std::map<int, Client>::iterator iter = m_mClients.begin(); iter != m_mClients.end(); iter++)
+		ClearClient((*iter).second);
 	CloseFds();
 }
-
-
 
 void Server::SignalHandler(int signum)
 {
@@ -46,10 +44,11 @@ void Server::SignalHandler(int signum)
 	Server::m_signal = true; //-> set the static boolean to true to stop the server
 }
 
-void	Server::CloseFds(){
-	for(size_t i = 0; i < m_vClients.size(); i++){ //-> close all the clients
-		std::cout << RED << "Client <" << m_vClients[i].getFD() << "> Disconnected" << WHI << std::endl;
-		close(m_vClients[i].getFD());
+void	Server::CloseFds()
+{
+	for(size_t i = 0; i < m_mClients.size(); i++){ //-> close all the clients
+		std::cout << RED << "Client <" << m_mClients[i].getFD() << "> Disconnected" << WHI << std::endl;
+		close(m_mClients[i].getFD());
 	}
 	if (m_serverSocketFd != -1){ //-> close the server socket
 		std::cout << RED << "Server <" << m_serverSocketFd << "> Disconnected" << WHI << std::endl;
@@ -57,25 +56,18 @@ void	Server::CloseFds(){
 	}
 }
 
-void Server::ClearClients(int fd)
+void Server::ClearClient(Client &client)
 {
 	for (size_t i = 0; i < m_vFds.size(); i++)
 	{
-		if (m_vFds[i].fd == fd)
+		if (m_vFds[i].fd == client.getFD())
 		{
+			m_mClients.erase(m_vFds[i].fd);
+			close (m_vFds[i].fd);
 			m_vFds.erase(m_vFds.begin() + i);
 			break;	
 		}
 	}
-	for (size_t i = 0; i < m_vClients.size(); i++)
-	{
-		if (m_vClients[i].getFD() == fd)
-		{
-			m_vClients.erase(m_vClients.begin() + i);
-			break;
-		}
-	}
-	close (fd);
 }
 
 void Server::parseCommand(const std::string buffer, Client &client)
@@ -98,19 +90,21 @@ const std::string Server::getHostname() const { return m_hostname; }
 
 //:irc.njip.com 001 0002 003
 //:nick!user@host NICK TOPIC PRIVMSG
-
-
-
 const std::string	Server::getUserNumber() const
 {
 	std::ostringstream	oss;
-	oss << this->m_vClients.size();
+	oss << this->m_mClients.size();
 	return oss.str();
 }
 
 const std::string	Server::getChannelNumber() const
 {
 	std::ostringstream	oss;
-	oss << this->m_vChannels.size();
+	oss << this->m_mChannels.size();
 	return oss.str();
+}
+
+Client &Server::getClient(int clientKey)
+{
+	return (m_mClients.find(clientKey)->second);
 }
