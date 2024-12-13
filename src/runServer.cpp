@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 15:28:50 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:17:03 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void Server::ReceiveNewData(Client &client)
 			for (size_t k = 0; k < line.size(); k = j + 1)
 			{
 				j = line.find("\n", k + 1);
-				parseCommand(line.substr(k, j - k), client);
+				parseCommand(line.substr(k, j - k - 1), client);
 			}
 		}
 	}

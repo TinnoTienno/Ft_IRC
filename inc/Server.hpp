@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 15:41:08 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:01:09 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class Server
 
 		const std::string getNextGuest();
 		bool isNickFormatted(const std::string &nickname) const;
-		int findNick(const std::string &nickname) const;
+		int findNick(const std::string &nickname);
 	
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
