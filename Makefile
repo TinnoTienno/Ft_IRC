@@ -6,7 +6,7 @@
 #    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/12 16:57:01 by aduvilla         ###   ########.fr        #
+#    Updated: 2024/12/13 15:56:53 by eschussl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRCS		=	main.cpp\
 				utilServer.cpp\
 				utils.cpp\
 				authentificationServer.cpp\
+				Parsing.cpp\
 				$(addprefix $(COMMAND_PATH), Nick.cpp Join.cpp UserHost.cpp Ping.cpp)  
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))

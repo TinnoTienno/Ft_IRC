@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 15:59:22 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 13:59:21 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 
 class Server;
 class Client;
+class Parsing;
 
 class Join
 {
 	public :
-		static void execute(Server *server, const std::string buffer, Client &client);
+		static void execute(Server *server, const Parsing &parse, Client &client);
 }	;
 
 #endif

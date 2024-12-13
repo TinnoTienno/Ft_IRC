@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Nick.hpp                                           :+:      :+:    :+:   */
+/*   Parsing.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 15:21:16 by eschussl         ###   ########.fr       */
+/*   Created: 2024/12/13 13:40:11 by eschussl          #+#    #+#             */
+/*   Updated: 2024/12/13 14:22:34 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NICK_HPP
-# define NICK_HPP
-# include <string>
-
-class Server;
-class Client;
-class Parsing;
-
-class Nick
+#ifndef PARSING_HPP
+#define PARSING_HPP
+#include <string>
+#include <vector>
+class Parsing
 {
+	private :
+		std::vector<std::string> m_arguments;
 	public :
-		static void execute(Server *server, const Parsing &parse, Client &client);
-		static int checkformat(Server *server, const std::string &buffer);
-		static int nickErrorCode(Server *server, Client &client, const Parsing &parse);
-
+		Parsing(std::string line);
+		const std::string &getCommand() const;
+		const std::vector<std::string> &getArguments() const;
 }	;
 
 #endif

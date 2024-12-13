@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 17:12:39 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:28:50 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,15 @@ void Server::ReceiveNewData(Client &client)
 		std::string line = parseBuffer(client, buff);
 		if (checkAuth(client, line))
 		{
+			std::cout << "line " << line << std::endl;
+			for (size_t i = 0; i < line.size(); i++)
+				std::cout << (int) line[i] << " ";
+			std::cout << std::endl;
 			size_t j = 0;
-			for (size_t k = 0; k < line.size(); k = j)
+			for (size_t k = 0; k < line.size(); k = j + 1)
 			{
-				j = line.find("\r", k + 1);
-				parseCommand(line.substr(k, j), client);
+				j = line.find("\n", k + 1);
+				parseCommand(line.substr(k, j - k), client);
 			}
 		}
 	}
@@ -82,6 +86,5 @@ std::string Server::parseBuffer(Client &client, std::string buffer)
 		return "";
 	}
 	std::string line = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
-	std::cout << "line.find(\r\n) = " <<  line.find("\r\n");
 	return line;
 } 
