@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 17:05:11 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:41:28 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Server.hpp"
 #include <sstream>
 #include <iomanip>
+#include "Parsing.hpp"
 
 void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
 {
@@ -49,13 +50,10 @@ const std::string Server::getNextGuest()
 	return ((std::string) "Guest" + oss.str());
 }
 
-bool Server::userErrorCode(Client &client, const std::string &buffer)
+bool Server::userErrorCode(Client &client, const Parsing &parse)
 {
 	(void) client;
-	(void) buffer;
-	struct parse
-	{
-		std::string cmd;
-	}	;
+	(void) parse;
+	
 	return 1;
 }

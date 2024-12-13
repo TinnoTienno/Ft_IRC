@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 17:18:58 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:50:16 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,56 +14,44 @@
 #include "utils.hpp"
 #include <iostream>
 #include "Nick.hpp"
-
-int Server::nickErrorCode(Client &client, const std::string &buffer)
-{
-	size_t nick = buffer.find("NICK");
-	nick = buffer.find(' ', nick) + 1;
-	size_t nick2 = buffer.find(13, nick);
-	std::string  nickname = buffer.substr(nick, nick2 - nick);
-	std::cout << "nick |" << nickname << "|" << std::endl;
-	if (!nickname.size())
-		return 431;
-	if (findNick(nickname))
-		return 433;
-	if (!isNickFormatted(nickname))
-		return 432;
-	client.setNick(nickname);
-	return 0;
-}
-
+#include "Parsing.hpp"
 
 bool Server::checkAuth(Client &client, const std::string &buffer)
 {
-
+	size_t j = 0;
 	if (client.getAuth() == 1)
 		return 1;
-	if (buffer.find("USER") == buffer.npos)
-	    return 0;
-	std::cout << "checkAuth buffer " << buffer << std::endl;
-	if (nickErrorCode(client, buffer))
-		client.setNick(getNextGuest());
-	if (!userErrorCode(client, buffer))
-		return 0;
-	size_t pass = buffer.find("PASS");
-	if (pass == buffer.npos)
+	for (size_t i = 0; i < buffer.size() ; i = j + 1)
 	{
-	    std::cout << RED << "Client <" << client.getFD() << "> has not set a password" << WHI << std::endl;
-		return 0;
+		j = buffer.find("\n", i + 1);
+		std::string line = buffer.substr(i, j - i - 1);
+		Parsing parse(line);
+		if (parse.getCommand() == "NICK" && Nick::nickErrorCode(this, client, parse))
+			client.setNick(getNextGuest());
+		if (parse.getCommand() == "PASS" && parse.getArguments()[1] == m_pass)
+		{
+			client.setAuth(true);
+			std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;
+			client.connect(this);
+		}
+		else if (parse.getCommand() == "PASS")
+		{
+			std::cout << "|" << parse.getArguments()[1] << "|" << std::endl;
+			std::cout << RED << "Client <" << client.getFD() << "> has a wrong password" << WHI << std::endl;
+			client.kill("password is wrong");
+			ClearClient(client);
+			return 0;
+		}
+		if (parse.getCommand() == "USER" && !userErrorCode(client, parse))
+			return 0;
 	}
-	pass = buffer.find(' ', pass) + 1;
-	size_t pass2 = buffer.find(13, pass);
-	std::string passwd = buffer.substr(pass, pass2 - pass);
-	std::cout << "pass : |" << passwd << "|" << std::endl;
-	if (!passwd.compare(m_pass))
+	if (m_pass != "" && client.getAuth() == false)
+	    std::cout << RED << "Client <" << client.getFD() << "> has not set a password" << WHI << std::endl;
+	else if (m_pass == "" && client.getAuth() == false)
 	{
 		client.setAuth(true);
 		std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;
 		client.connect(this);
-		return 0;
 	}
-	std::cout << RED << "Client <" << client.getFD() << "> has a wrong password" << WHI << std::endl;
-	client.kill("password is wrong");
-	ClearClient(client);
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 14:02:44 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:45:24 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 void Client::kill(const std::string &str) const
 {
-	std::string msg = "KILL " + this->getNick() + " :" + str + "\r\n";
+	std::string msg = "ERROR :Closing Link: " + this->getNick() + "hostname" +" :" + str + "\r\n";
 	send(this->getFD(), msg.c_str(), msg.size(), 0);
 }
 

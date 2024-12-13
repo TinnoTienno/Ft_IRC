@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 18:25:55 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 14:00:15 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "Channel.hpp"
 #include "UserHost.hpp"
 #include "Ping.hpp"
+#include "Parsing.hpp"
 
 bool Server::m_signal = false;
 
@@ -70,18 +71,17 @@ void Server::ClearClient(Client &client)
 	}
 }
 
-void Server::parseCommand(const std::string buffer, Client &client)
+void Server::parseCommand(const std::string line, Client &client)
 {
 	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING"};	
-	void (*fCommands[])(Server *, const std::string, Client &) = { &Join::execute, &Nick::execute, &UserHost::execute , &Ping::execute};
+	void (*fCommands[])(Server *, const Parsing &, Client &) = { &Join::execute, &Nick::execute, &UserHost::execute , &Ping::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
-	std::cout << "|" << buffer << "|" << std::endl;
+	Parsing parse(line);
 	for (size_t i = 0; i < size; i++)
 	{
-		if (buffer.find(Commands[i]) == 0)
+		if (parse.getCommand() == Commands[i])
 		{
-			std::string line = buffer.substr(Commands[i].size() + 1, buffer.npos);
-			fCommands[i](this, line, client);
+			fCommands[i](this, parse, client);
 		}
 	}
 }

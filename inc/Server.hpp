@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 18:16:52 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 15:41:08 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 class Client;
 class Channel;
+class Parsing;
 
 class Server
 {
@@ -52,8 +53,7 @@ class Server
 		std::string parseBuffer(Client &client, std::string buffer);
 		
 		bool checkAuth(Client &client, const std::string&);
-		int nickErrorCode(Client &client, const std::string &buffer);
-		bool userErrorCode(Client &client, const std::string &buffer);
+		bool userErrorCode(Client &client, const Parsing &parse);
 		static void SignalHandler(int);
 		
 		void CloseFds();
