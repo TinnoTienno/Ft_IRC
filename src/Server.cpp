@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 14:00:15 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:41:45 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ bool Server::m_signal = false;
 Server::Server(const std::string &name, const std::string &pass) : m_pass(pass), m_hostname(name)
 { 
 	m_serverSocketFd = -1;
+	m_nextChannelID = 0;
 }
 
 Server::~Server()
@@ -104,7 +105,18 @@ const std::string	Server::getChannelNumber() const
 	return oss.str();
 }
 
-Client &Server::getClient(int clientKey)
+Client &Server::getClient(int clientKey) { return (m_mClients.find(clientKey)->second); }
+
+
+Channel &Server::addChannel(const std::string &name, Client &client)
 {
-	return (m_mClients.find(clientKey)->second);
+	Channel newChannel(name, client);
+	m_mChannels.insert(std::pair<std::string, Channel>(name, newChannel));
+	return m_mChannels.find(name);
+}
+Channel &Server::addChannel(const std::string &name, Client &client, const std::string &passwd)
+{
+	Channel newChannel(name, client, passwd);
+	m_mChannels.insert(std::pair<std::string, Channel>(name, newChannel));
+	return m_mChannels[name];
 }

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 16:05:06 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:17:48 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,11 @@
 #include "Parsing.hpp"
 #include <iostream>
 
-int Nick::nickErrorCode(Server *server, Client &client, const Parsing &parse)
-{
-	if (!parse.getArguments()[1].size())
-		return 431;
-	if (server->findNick(parse.getArguments()[1]))
-		return 433;
-	if (!server->isNickFormatted(parse.getArguments()[1]))
-		return 432;
-	client.setNick(parse.getArguments()[1]);
-	return 0;
-}
-
 void Nick::execute(Server *server, const Parsing &parse, Client &client)
 {
-
 	std::string nickTmp = client.getNick();
 	std::string source = client.getPrefix(server->getHostname());
-	int errorCode = nickErrorCode(server, client, parse);
-	// std::cout << "Nick::execute : " << buffer << std::endl;
+	int errorCode = Nick::errorCode(server, parse, client);
 	switch (errorCode)
 	{
 	case 431:
@@ -52,10 +38,24 @@ void Nick::execute(Server *server, const Parsing &parse, Client &client)
 	}
 }
 
-int Nick::checkformat(Server *server, const std::string &line)
+int Nick::errorCode(Server *server, const Parsing &parse, Client &client)
 {
-		return 432; // ERR_NONICKNAMEGIVEN
-	if (server->findNick(line))
+	if (!parse.getArguments()[1].size())
+		return 431;
+	if (server->findNick(parse.getArguments()[1]))
 		return 433;
-	return -1;
+	if (!isNickFormatted(parse.getArguments()[1]))
+		return 432;
+	client.setNick(parse.getArguments()[1]);
+	return 0;
 }
+
+bool Nick::isNickFormatted(const std::string &nickname)
+{
+	if (nickname.find_first_of("@.:!") != nickname.npos || !nickname.find("#") || isdigit(nickname[0]))
+		return 0;
+	return 1;
+}
+
+
+

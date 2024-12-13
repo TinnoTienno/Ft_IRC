@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 17:41:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:22:08 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,17 @@ class	Channel
 		
 		const std::string getName() const;
 		const std::string getTopic() const;
+		int getID() const;
 		bool	getInvite() const;
 		
 	private:
-		bool 		m_isInviteOnly;
-		std::string m_topic;
-		std::string	m_name;
-		std::string	m_password;
-		std::vector <int> m_vClientKeys;
-		std::vector <int> m_vOPKeys;
+		bool 				m_isInviteOnly;
+		std::string 		m_topic;
+		std::string			m_name;
+		std::string			m_password;
+		std::vector <int>	m_vClientKeys;
+		std::vector <int>	m_vOPKeys;
+		int					m_ID;
 };
 
 #endif

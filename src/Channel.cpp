@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 17:45:47 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:31:13 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 #include "Server.hpp"
 #include "Channel.hpp"
 #include "utils.hpp"
+#include <climits>
 
-Channel::Channel	(const std::string &name, Client &client)
+Channel::Channel(const std::string &name, Client &client)
 {
+	static int ID = 0;
+	this->m_ID = ++ID;
 	if (name.empty())
 		throw std::runtime_error("A channel name must not be empty");
 	this->m_isInviteOnly = false;
@@ -26,10 +29,13 @@ Channel::Channel	(const std::string &name, Client &client)
 	this->m_name = name;
 	addClient(client);
 	addOP(client);
+	sendMessage(client.getFD(), client.getPrefix(), "JOIN ", this->m_name);
 }
 
-Channel::Channel	(const std::string &name, Client &client, const std::string &passwd)
+Channel::Channel(const std::string &name, Client &client, const std::string &passwd)
 {
+	static int ID = 0;
+	this->m_ID = --ID;
 	if (name.empty())
 		throw std::runtime_error("A channel name must not be empty");
 	this->m_isInviteOnly = false;
@@ -115,15 +121,9 @@ void Channel::removeClient(int clientKey)
 	throw	std::runtime_error("Remove client: client not found");
 }
 
-void Channel::addOP(Client &client)
-{
-	this->m_vOPKeys.push_back(client.getFD());
-}
+void Channel::addOP(Client &client) { this->m_vOPKeys.push_back(client.getFD()); }
 
-void Channel::addOP(int clientKey)
-{
-	this->m_vOPKeys.push_back(clientKey);
-}
+void Channel::addOP(int clientKey) { this->m_vOPKeys.push_back(clientKey); }
 
 void Channel::removeOP(Client &client)
 {
@@ -161,27 +161,14 @@ void	Channel::sendAllMsg(const std::string & msg, Server *server)
 	}
 }
 
-void	Channel::setTopic(const std::string & topic)
-{
-	this->m_topic = topic;
-}
+void	Channel::setTopic(const std::string & topic) { this->m_topic = topic; }
 
-const std::string	Channel::getName(void) const
-{
-	return this->m_name;
-}
+const std::string	Channel::getName(void) const { return this->m_name; }
 
-const std::string	Channel::getTopic(void) const
-{
-	return this->m_topic;
-}
+const std::string	Channel::getTopic(void) const {	return this->m_topic; }
 
-void	Channel::setInvite(bool status)
-{
-	this->m_isInviteOnly = status;
-}
+void	Channel::setInvite(bool status) { this->m_isInviteOnly = status; }
 
-bool	Channel::getInvite() const
-{
-	return this->m_isInviteOnly;
-}
+bool	Channel::getInvite() const { return this->m_isInviteOnly; }
+
+int Channel::getID() const { return this->m_ID; }

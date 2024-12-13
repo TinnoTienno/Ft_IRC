@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 16:14:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:24:03 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,9 @@
 #include <sstream>
 #include <iomanip>
 #include "Parsing.hpp"
-
-bool Server::isNickFormatted(const std::string &nickname) const
-{
-	if (nickname.find_first_of("@.:!") != nickname.npos || !nickname.find("#") || isdigit(nickname[0]))
-		return 0;
-	return 1;
-}
-
-int Server::findNick(const std::string &nickname) // carefull return index + 1 so not to get index == 0
-{
-	for (std::map<int, Client>::iterator iter = m_mClients.begin(); iter != m_mClients.end() ; iter++)
-	{
-		if (iter->second.getNick() == nickname)
-			return iter->first;
-	}
-	return 0;
-}
+#include <map>
+#include <string>
+#include "Channel.hpp"
 
 const std::string Server::getNextGuest()
 {
@@ -43,8 +29,14 @@ const std::string Server::getNextGuest()
 
 bool Server::userErrorCode(Client &client, const Parsing &parse)
 {
-	(void) client;
-	(void) parse;
 	client.setUser(parse.getArguments()[1]);
+	client.setReal(parse.getArguments()[4]);
 	return 0;
+}
+
+Channel *Server::findChannel(const std::string &channelName)
+{
+	if (m_mChannels.find(channelName) == m_mChannels.end())
+		return NULL;
+	return (&m_mChannels.find(channelName)->second);
 }

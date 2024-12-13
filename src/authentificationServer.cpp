@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 16:11:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:34:15 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		j = buffer.find("\n", i + 1);
 		std::string line = buffer.substr(i, j - i - 1);
 		Parsing parse(line);
-		if (parse.getCommand() == "NICK" && Nick::nickErrorCode(this, client, parse))
+		if (parse.getCommand() == "NICK" && Nick::errorCode(this, parse, client))
 			client.setNick(getNextGuest());
 		if (parse.getCommand() == "PASS" && parse.getArguments()[1] == m_pass)
 		{
@@ -43,7 +43,9 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		}
 		if (parse.getCommand() == "USER" && !userErrorCode(client, parse))
 		{
-			if (client.getAuth() == 1  ||( m_pass == "" && client.getAuth() == false))
+			if (client.getAuth() == 1) 
+				client.connect(this);
+			else if ( m_pass == "" && client.getAuth() == false)
 			{
 				client.setAuth(true);
 				std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 15:55:44 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:38:40 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,13 @@ void Client::setFD(const int &fd) {	m_fd = fd; }
 
 void Client::setIPadd(const std::string &ipadd) { m_ipAdd = ipadd; }
 
+std::string Client::getIPadd() const { return m_ipAdd; }
+
 const bool& Client::getAuth() const { return m_authentified; }
 
-void Client::setAuth(const bool &is)
-{
-	this->m_authentified = is;
-}
+void Client::setAuth(const bool &is) { this->m_authentified = is; }
 
-void Client::addPacket(const std::string &packet)
-{
-	this->m_irssiPacket += packet;
-}
+void Client::addPacket(const std::string &packet) {	this->m_irssiPacket += packet; }
 
 std::string Client::getPacket()
 {
@@ -52,29 +48,27 @@ std::string Client::getPacket()
 	return tmp;
 }
 
-const std::string& Client::getNick() const
-{
-	return this->m_nick;
-}
+const std::string& Client::getNick() const { return this->m_nick; }
 
-void Client::setNick(const std::string &nick)
-{
-	this->m_nick = nick;
-}
+void Client::setNick(const std::string &nick) {	this->m_nick = nick; }
 
 const std::string& Client::getUser() const { return this->m_user; }
 
 void Client::setUser(const std::string &user) {	this->m_user = user; }
 
+const std::string& Client::getReal() const { return this->m_realname; } 
+
+void Client::setReal(const std::string &real) { this->m_realname = real; }
+		
 Client::~Client()
 {
 	// close(m_fd);
 	// std::cout << "client is dead" << std::endl;
 };
 
-std::string	Client::getPrefix(const std::string & host) const
+std::string	Client::getPrefix() const
 {
-	std::string prefix = this->getNick() + "!" + this->getUser() + "@" + host;
+	std::string prefix = this->getNick() + "!" + this->getUser() + "@" + this->getIPadd();
 	return prefix;
 }
 
@@ -84,7 +78,7 @@ void Client::connect(Server *server)
 	std::string	port = "6667"; // prévoir fn getPort
 	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Looking up your hostname"); 
 	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Found your hostname"); 
-	std::string	msg = "Welcome to the ft_IRC NETWORK " + this->getPrefix(server->getHostname());
+	std::string	msg = "Welcome to the ft_IRC NETWORK " + this->getPrefix();
 	sendMessage(this->getFD(), server->getHostname(), "001 " + this->getNick(), msg); 
 	msg = "Your host is " + server->getHostname() + ", running version 1.2.3";
 	sendMessage(this->getFD(), server->getHostname(), "002 " + this->getNick(), msg); 
