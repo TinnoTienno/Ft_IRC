@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 15:55:26 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:05:06 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ int Nick::nickErrorCode(Server *server, Client &client, const Parsing &parse)
 
 void Nick::execute(Server *server, const Parsing &parse, Client &client)
 {
-	(void) server;
-	(void) parse;
-	(void) client;
+
 	std::string nickTmp = client.getNick();
 	std::string source = client.getPrefix(server->getHostname());
 	int errorCode = nickErrorCode(server, client, parse);
@@ -41,13 +39,13 @@ void Nick::execute(Server *server, const Parsing &parse, Client &client)
 	switch (errorCode)
 	{
 	case 431:
-		sendMessage(client.getFD(), server->getHostname(), "431 " + client.getNick(), buffer + " No nickname given");
+		sendMessage(client.getFD(), server->getHostname(), "431 " + client.getNick(), parse.getArguments()[1] + " No nickname given");
 		break;
 	case 432:
-		sendMessage(client.getFD(), server->getHostname(), "432 " + client.getNick(), buffer + " Erroneus nickname");
+		sendMessage(client.getFD(), server->getHostname(), "432 " + client.getNick(), parse.getArguments()[1] + " Erroneus nickname");
 		break;
 	case 433:
-		sendMessage(client.getFD(), server->getHostname(), "433 " + client.getNick(), buffer + " Nickname already in use");
+		sendMessage(client.getFD(), server->getHostname(), "433 " + client.getNick(), parse.getArguments()[1] + " Nickname already in use");
 		break;
 	default:
 		sendMessage(client.getFD(), source, "NICK", client.getNick());
