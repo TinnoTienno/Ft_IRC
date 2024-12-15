@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 16:11:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/15 19:53:24 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,10 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 			}
 			return 0;
 		}
+		if (parse.getCommand() == "JOIN" || parse.getCommand() == "AUTRES COMMANDES !!!")
+			sendMessage(client.getFD(), "irc.localhost.com", "451 * JOIN", "You must finish connecting with another nickname first.");
+//			sendMessage(client.getFD(), server->getHostname(), "451 * JOIN", "You must finish connecting with another nickname first.");
+		std::cout << "i = " << i << " j = " << j << std::endl;
 	}
 	if (m_pass != "" && client.getAuth() == false)
 	    std::cout << RED << "Client <" << client.getFD() << "> has not set a password" << WHI << std::endl;

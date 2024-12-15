@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 16:05:06 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/13 19:31:13 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include "Parsing.hpp"
-#include <iostream>
 
 int Nick::nickErrorCode(Server *server, Client &client, const Parsing &parse)
 {

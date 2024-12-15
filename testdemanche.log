@@ -1,0 +1,7 @@
+<< CAP LS 302
+<< JOIN :
+>> :irc.localhost.com.com 451 * JOIN :You must finish connecting with another nickname first.
+<< PASS port
+<< NICK tutu
+<< USER c0rvax c0rvax localhost :c0rvax
+>> :!@c0rvax-MS-7D98.com NICK :tutu
