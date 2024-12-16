@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 16:11:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:10:44 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,31 +19,32 @@
 bool Server::checkAuth(Client &client, const std::string &buffer)
 {
 	size_t j = 0;
-	if (client.getAuth() == 1)
+	if (client.getAuth() == 1 && !client.getUser().empty() )
 		return 1;
 	for (size_t i = 0; i < buffer.size() ; i = j + 1)
 	{
 		j = buffer.find("\n", i + 1);
 		std::string line = buffer.substr(i, j - i - 1);
 		Parsing parse(line);
-		if (parse.getCommand() == "NICK" && Nick::nickErrorCode(this, client, parse))
-			client.setNick(getNextGuest());
-		if (parse.getCommand() == "PASS" && parse.getArguments()[1] == m_pass)
+		if (parse.getCommand() == "NICK")
 		{
-			client.setAuth(true);
-			std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;
+			if (Nick::nickErrorCode(this, client, parse))
+				client.setNick(getNextGuest());
 		}
 		else if (parse.getCommand() == "PASS")
 		{
-			std::cout << "|" << parse.getArguments()[1] << "|" << std::endl;
-			std::cout << RED << "Client <" << client.getFD() << "> has a wrong password" << WHI << std::endl;
-			client.kill("password is wrong");
-			ClearClient(client);
-			return 0;
+			if (parse.getArguments()[1] == m_pass)
+				client.setAuth(true);
+			else
+			{
+				client.kill("password is wrong");
+				ClearClient(client);
+				return 0;
+			}
 		}
-		if (parse.getCommand() == "USER" && !userErrorCode(client, parse))
+		else if (parse.getCommand() == "USER" && !userErrorCode(client, parse))
 		{
-			if (client.getAuth() == 1  ||( m_pass == "" && client.getAuth() == false))
+			if (client.getAuth() == 1  || (m_pass.empty() && client.getAuth() == false))
 			{
 				client.setAuth(true);
 				std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;
@@ -51,6 +52,10 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 			}
 			return 0;
 		}
+		else if (parse.getCommand() == "CAP")
+			;
+		else
+			sendMessage(client.getFD(), this->getHostname(), "451 * " + parse.getCommand(), "You must finish connecting with another nickname first.");
 	}
 	if (m_pass != "" && client.getAuth() == false)
 	    std::cout << RED << "Client <" << client.getFD() << "> has not set a password" << WHI << std::endl;
