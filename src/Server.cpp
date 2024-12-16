@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 15:43:54 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 16:32:38 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "UserHost.hpp"
 #include "Ping.hpp"
 #include "Parsing.hpp"
+#include "utils.hpp"
 
 bool Server::m_signal = false;
 
@@ -107,15 +108,21 @@ const std::string	Server::getChannelNumber() const
 Client &Server::getClient(int clientKey) { return (m_mClients.find(clientKey)->second); }
 
 
-Channel &Server::addChannel(const std::string &name, Client &client)
+Channel &Server::createChannel(const std::string &name, Client &client)
 {
 	Channel newChannel(name, client);
 	m_mChannels.insert(std::pair<std::string, Channel>(name, newChannel));
-	return m_mChannels.find(name);
+	std::cout << "New channel " << name << " was added " << client.getFD() << " is OP" << std::endl;
+	Channel &tmp = m_mChannels.find(name)->second;
+	client.addChannel(tmp);
+	client.addOP(tmp);
+	sendMessage(client.getFD(), client.getPrefix(), "JOIN ", name);
+	return tmp;
 }
-Channel &Server::addChannel(const std::string &name, Client &client, const std::string &passwd)
+
+Channel &Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
 {
-	Channel newChannel(name, client, passwd);
-	m_mChannels.insert(std::pair<std::string, Channel>(name, newChannel));
-	return m_mChannels[name];
+	Channel &channel = createChannel(name, client);
+	channel.setPassword(passwd);
+	return channel;
 }

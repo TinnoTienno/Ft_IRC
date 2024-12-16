@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 18:38:29 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:54:33 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ class Server
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
 		Client &getClient(int clientKey);
-		Channel &addChannel(const std::string &name, Client &client);
-		Channel &addChannel(const std::string &name, Client &client, const std::string &passwd);
+		Channel &createChannel(const std::string &name, Client &client);
+		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
 		
 }	;
 

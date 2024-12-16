@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 18:38:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:11:00 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <sys/socket.h>
 #include "Server.hpp"
 #include "utils.hpp"
+#include <iostream>
+#include "Channel.hpp"
 
 void Client::kill(const std::string &str) const
 {
@@ -112,4 +114,16 @@ void Client::connect(Server *server)
 	}
 	msg = server->getHostname() + " End of /MOTD command.";
 	sendMessage(this->getFD(), server->getHostname(), "376 " + this->getNick(), msg); 
+}
+
+void Client::addChannel(Channel &channel)
+{
+	this->m_vChannels.push_back(&channel);
+	std::cout << "Channel " << channel.getName() << " was added to " << this->getNick() << "'s channels list" << std::endl;
+}
+
+void Client::addOP(Channel &channel)
+{	
+	this->m_OpChannels.push_back(&channel);
+	std::cout << "Channel " << channel.getName() << " was added to " << this->getNick() << "'s channels OP list" << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 15:41:52 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 16:39:25 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,19 @@ void Join::execute(Server *server, const Parsing &parse, Client &client)
 		return ;
 	}
 	size_t firstPassword = findPassword(parse.getArguments());
-	for (size_t i = 1; i < firstPassword; i++)
+	for (size_t i = 1, j = firstPassword; i < firstPassword; i++)
 	{
 		try
 		{
 			Channel *channel = server->findChannel(parse.getArguments()[i]);
 			if (channel == NULL && firstPassword != parse.getArguments().size())
-				server->addChannel(parse.getArguments()[i], client);
+				server->createChannel(parse.getArguments()[i], client);
 			else if (channel == NULL)
-				server->addChannel(parse.getArguments()[i], client, parse.getArguments()[firstPassword]);
+				server->createChannel(parse.getArguments()[i], client, parse.getArguments()[j++]);
+			else if (firstPassword != parse.getArguments().size())
+				channel->addClient(client);
+			else
+				channel->addClient(client, parse.getArguments()[j++]);
 		}
 		catch(const std::exception& e)
 		{

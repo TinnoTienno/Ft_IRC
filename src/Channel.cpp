@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 18:31:13 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:53:37 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 
 Channel::Channel(const std::string &name, Client &client)
 {
-	static int ID = 0;
-	this->m_ID = ++ID;
 	if (name.empty())
 		throw std::runtime_error("A channel name must not be empty");
 	this->m_isInviteOnly = false;
@@ -29,7 +27,6 @@ Channel::Channel(const std::string &name, Client &client)
 	this->m_name = name;
 	addClient(client);
 	addOP(client);
-	sendMessage(client.getFD(), client.getPrefix(), "JOIN ", this->m_name);
 }
 
 Channel::Channel(const std::string &name, Client &client, const std::string &passwd)
@@ -71,37 +68,26 @@ void	Channel::addClient(Client &client)
 {
 	if (!this->m_password.empty())
 		throw std::runtime_error("Wrong password");
-	this->m_vClientKeys.push_back(client.getFD());
+	this->m_vClients.push_back(&client);
+	this->sendAllMsg()
 }
 
-void Channel::addClient(int clientKey)
-{
-	if (!this->m_password.empty())
-		throw std::runtime_error("Wrong password");
-	this->m_vClientKeys.push_back(clientKey);
-}
 
-void	Channel::addClient(Client & client, const std::string & passwd)
+void	Channel::addClient(Client &client, const std::string & passwd)
 {
 	if (this->m_password != passwd)
 		throw std::runtime_error("Wrong password");
-	this->m_vClientKeys.push_back(client.getFD());
-}
-
-void Channel::addClient(int clientKey, const std::string &passwd)
-{
-	if (this->m_password != passwd)
-		throw std::runtime_error("Wrong password");
-	this->m_vClientKeys.push_back(clientKey);
+	this->m_vClients.push_back(&client);
+	this->sendAllMessage("JOIN", this->getName());
 }
 
 void	Channel::removeClient(const Client & client)
 {
-	for (size_t i = 0; i < m_vClientKeys.size(); i++)
+	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		if (m_vClientKeys[i] == client.getFD())
+		if (m_vClients[i] == &client)
 		{
-			m_vClientKeys.erase(m_vClientKeys.begin() + i);
+			m_vClients.erase(m_vClients.begin() + i);
 			return;
 		}
 	}
@@ -151,14 +137,10 @@ void Channel::removeOP(int clientKey)
 	throw	std::runtime_error("Remove OP: OP not found");
 }
 
-
-void	Channel::sendAllMsg(const std::string & msg, Server *server)
+void	Channel::sendAllMsg(const std::string & msg)
 {
-	(void) server; // a supprimer !!!!
-	for (size_t i = 0; i < m_vClientKeys.size(); i++)
-	{
-		sendMessage(m_vClientKeys[i], server->getClient(m_vClientKeys[i]).getPrefix(server->getHostname()), "PRIVMSG", msg);
-	}
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		sendMessage(m_vClients[i]->getFD(), m_vClients[i]->getPrefix(), "PRIVMSG", msg);
 }
 
 void	Channel::setTopic(const std::string & topic) { this->m_topic = topic; }
@@ -172,3 +154,5 @@ void	Channel::setInvite(bool status) { this->m_isInviteOnly = status; }
 bool	Channel::getInvite() const { return this->m_isInviteOnly; }
 
 int Channel::getID() const { return this->m_ID; }
+
+void Channel::setPassword(const std::string &passwd) { m_password = passwd; }

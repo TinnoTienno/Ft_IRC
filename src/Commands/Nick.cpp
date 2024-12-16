@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 17:17:48 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:33:15 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 void Nick::execute(Server *server, const Parsing &parse, Client &client)
 {
 	std::string nickTmp = client.getNick();
-	std::string source = client.getPrefix(server->getHostname());
+	std::string source = client.getPrefix();
 	int errorCode = Nick::errorCode(server, parse, client);
 	switch (errorCode)
 	{

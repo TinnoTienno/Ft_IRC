@@ -6,15 +6,17 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 15:37:35 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 16:10:23 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 # include <string>
+# include <vector>
 
 class Server;
+class Channel;
 
 class Client
 {
@@ -49,7 +51,9 @@ class Client
 		void sendMsg(const std::string &, Server *server) const;
 		void kill(const std::string &) const;
 		void connect(Server *server);
-		
+
+		void addChannel(Channel &channel);
+		void addOP(Channel &channel);
 		~Client();
 }	;
 
