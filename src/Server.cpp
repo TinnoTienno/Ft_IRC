@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 16:32:38 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 18:47:01 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ const std::string	Server::getUserNumber() const
 const std::string	Server::getChannelNumber() const
 {
 	std::ostringstream	oss;
-	oss << this->m_mChannels.size();
+	oss << this->m_vChannels.size();
 	return oss.str();
 }
 
@@ -111,12 +111,11 @@ Client &Server::getClient(int clientKey) { return (m_mClients.find(clientKey)->s
 Channel &Server::createChannel(const std::string &name, Client &client)
 {
 	Channel newChannel(name, client);
-	m_mChannels.insert(std::pair<std::string, Channel>(name, newChannel));
+	m_vChannels.push_back(newChannel);
 	std::cout << "New channel " << name << " was added " << client.getFD() << " is OP" << std::endl;
-	Channel &tmp = m_mChannels.find(name)->second;
+	Channel &tmp = m_vChannels[m_vChannels.size() - 1]; 
 	client.addChannel(tmp);
 	client.addOP(tmp);
-	sendMessage(client.getFD(), client.getPrefix(), "JOIN ", name);
 	return tmp;
 }
 
@@ -125,4 +124,24 @@ Channel &Server::createChannel(const std::string &name, Client &client, const st
 	Channel &channel = createChannel(name, client);
 	channel.setPassword(passwd);
 	return channel;
+}
+
+void 	Server::deleteChannel(Channel &channel)
+{
+	for (std::vector<Channel>::iterator iter = m_vChannels.begin(); iter != m_vChannels.end(); iter++)
+	{
+		if (iter->getName() == channel.getName())
+		{
+			std::cout << "Now deleting the " << channel.getName() << "channel" << std::endl;
+			m_vChannels.erase(iter);
+		}
+	}
+}
+
+Client *Server::findNick(const std::string &nickname)
+{
+	for (size_t i = 0; i < m_mClients.size(); i++)
+		if (m_mClients[i].getNick() == nickname)
+			return &m_mClients[i];
+	return NULL;
 }

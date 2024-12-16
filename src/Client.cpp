@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 17:00:40 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 18:35:37 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void Client::setReal(const std::string &real) { this->m_realname = real; }
 Client::~Client()
 {
 	// close(m_fd);
+	// for (size_t i = 0; i < m_vChannels.size(); i++)
+		// m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
+	for (size_t i = 0; i < m_vChannels.size(); i++)
+		m_vChannels[i]->removeOP(*this);
 	// std::cout << "client is dead" << std::endl;
 };
 

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 17:01:38 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 18:40:11 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ const std::string	Server::getPort() const
 
 Channel *Server::findChannel(const std::string &channelName)
 {
-	if (m_mChannels.find(channelName) == m_mChannels.end())
-		return NULL;
-	return (&m_mChannels.find(channelName)->second);
+	for (size_t i = 0; i < m_vChannels.size(); i++)
+		if (m_vChannels[i].getName() == channelName)
+			return &m_vChannels[i];
+	return NULL;
 }

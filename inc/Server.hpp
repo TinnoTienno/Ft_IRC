@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 16:58:44 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 18:44:44 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ class Server
 		const std::string					m_pass;
 		std::vector<struct pollfd>			m_vFds;
 		std::map<int, Client> 				m_mClients;
-		std::map<std::string, Channel>		m_mChannels;
+		std::vector<Channel>				m_vChannels;
 		std::string							m_hostname;
 		unsigned int						m_nextChannelID;
 
@@ -81,8 +81,7 @@ class Server
 		void ClearClient(Client &client);
 		void parseCommand(const std::string buffer, Client &client);
 
-		const std::string getNextGuest();
-		int findNick(const std::string &nickname);
+		Client *findNick(const std::string &nickname);
 		Channel *findChannel(const std::string &channelName);
 	
 		const std::string	getPort() const;
@@ -90,10 +89,10 @@ class Server
 		const std::string	getHostname() const;
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
-		Client &getClient(int clientKey);
+		Client 	&getClient(int clientKey);
 		Channel &createChannel(const std::string &name, Client &client);
 		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
-		
+		void 	deleteChannel(Channel &channel);
 }	;
 
 #endif
