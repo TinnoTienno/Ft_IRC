@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 16:10:23 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 16:58:04 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class Client
 	private :
 		int 		m_fd;
 		std::string m_ipAdd;
+		std::string	m_host;
 		bool		m_authentified;
 		std::string m_nick;
 		std::string m_user;
@@ -36,7 +37,7 @@ class Client
 		const int& getFD() const;
 		void setFD(const int&);
 		void setIPadd(const std::string&);
-		std::string getIPadd() const;
+		void setHost(struct sockaddr * addr, Server * server);
 		void setAuth(const bool &);
 		const bool& getAuth() const;
 		const std::string& getUser() const;

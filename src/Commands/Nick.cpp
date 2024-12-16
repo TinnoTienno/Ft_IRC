@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 16:33:15 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/16 17:02:51 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,18 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include "Parsing.hpp"
-#include <iostream>
+
+int Nick::nickErrorCode(Server *server, Client &client, const Parsing &parse)
+{
+	if (!parse.getArguments()[1].size())
+		return 431;
+	if (server->findNick(parse.getArguments()[1]))
+		return 433;
+	if (!server->isNickFormatted(parse.getArguments()[1]))
+		return 432;
+	client.setNick(parse.getArguments()[1]);
+	return 0;
+}
 
 void Nick::execute(Server *server, const Parsing &parse, Client &client)
 {
