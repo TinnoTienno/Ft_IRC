@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 16:10:44 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:27:23 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		else
 			sendMessage(client.getFD(), this->getHostname(), "451 * " + parse.getCommand(), "You must finish connecting with another nickname first.");
 	}
-	if (m_pass != "" && client.getAuth() == false)
+	if (m_pass != "" && client.getAuth() == false && !client.getUser().empty())
 	    std::cout << RED << "Client <" << client.getFD() << "> has not set a password" << WHI << std::endl;
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 16:38:25 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:20:03 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,7 @@ const std::string& Client::getUser() const { return this->m_user; }
 
 void Client::setUser(const std::string &user) {	this->m_user = user; }
 
-Client::~Client()
-{
-	// close(m_fd);
-	// std::cout << "client is dead" << std::endl;
-};
+Client::~Client() {};
 
 std::string	Client::getPrefix() const
 {
@@ -117,9 +113,9 @@ void Client::connect(Server *server)
 	sendMessage(this->getFD(), server->getHostname(), "252 " + this->getNick(), msg); 
 	msg = server->getChannelNumber() + " :channels formed";
 	sendMessage(this->getFD(), server->getHostname(), "254 " + this->getNick(), msg); 
-	msg = server->getHostname() + " Message of the Day -";
+	msg = "- " + server->getHostname() + " Message of the Day -";
 	sendMessage(this->getFD(), server->getHostname(), "375 " + this->getNick(), msg); 
-	std::string	motd[] = {"-        Welcome to",
+	std::string	motd[] = {"-        Welcome to,",
 							"-",
 							"-        " + server->getHostname(),
 							"-",

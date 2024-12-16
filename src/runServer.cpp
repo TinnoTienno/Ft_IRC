@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 16:19:01 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:29:32 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,6 @@ void Server::ReceiveNewData(Client &client)
 		std::string line = parseBuffer(client, buff);
 		if (checkAuth(client, line))
 		{
-			std::cout << "line " << line << std::endl;
-			for (size_t i = 0; i < line.size(); i++)
-				std::cout << (int) line[i] << " ";
-			std::cout << std::endl;
 			size_t j = 0;
 			for (size_t k = 0; k < line.size(); k = j + 1)
 			{

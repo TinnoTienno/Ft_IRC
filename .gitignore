@@ -4,5 +4,5 @@ compile_flags.txt
 .obj/
 .vscode/
 .cache/
-irssi_debug.log
 ircserv
+*.log
