@@ -6,13 +6,13 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:31:04 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 15:33:32 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 19:48:07 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PRIVMSG_HPP
 # define PRIVMSG_HPP
-# include <string>
+# include "Parsing.hpp"
 
 class Server;
 class Client;
@@ -20,8 +20,7 @@ class Client;
 class	PrivMsg
 {
 	public :
-		static void execute(Server *server, const std::string buffer, Client &client);
-		static int checkformat(Server *server, const std::string &buffer);
+		static void execute(Server *server, Client &client, const Parsing &parse);
 };
 
 #endif

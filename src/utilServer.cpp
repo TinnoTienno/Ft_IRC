@@ -6,11 +6,12 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 16:34:52 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 22:45:54 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Channel.hpp"
 #include <sstream>
 #include <iomanip>
 #include "Parsing.hpp"
@@ -30,6 +31,30 @@ int Server::findNick(const std::string &nickname) // carefull return index + 1 s
 			return iter->first;
 	}
 	return 0;
+}
+
+int	Server::getNickFd(const int mapIndex) const
+{
+	if (this->m_mClients.find(mapIndex) == m_mClients.end())
+		throw std::out_of_range("invalid mapIndex in m_mClients");
+	return m_mClients.at(mapIndex).getFD();
+}
+
+int Server::findChannel(const std::string &chanName)
+{
+	for (std::map<int, Channel>::iterator iter = m_mChannels.begin(); iter != m_mChannels.end() ; iter++)
+	{
+		if (iter->second.getName() == chanName)
+			return iter->first;
+	}
+	return 0;
+}
+
+Channel	Server::getChan(const int mapIndex) const
+{
+	if (this->m_mChannels.find(mapIndex) == m_mChannels.end())
+		throw std::out_of_range("invalid mapIndex in m_mClients");
+	return m_mChannels.at(mapIndex);
 }
 
 const std::string Server::getNextGuest()
