@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 18:27:55 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:41:52 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static size_t findPassword(std::vector<std::string> args)
 }
 void Join::execute(Server *server, const Parsing &parse, Client &client)
 {
-	if (parse.getArguments().size())
+	if (parse.getArguments().size() == 1)
 	{
 		sendMessage(client.getFD(), server->getHostname(), "461 " + client.getNick(), parse.getArguments()[0] + " Not enough parameters");
 		return ;
@@ -45,29 +45,11 @@ void Join::execute(Server *server, const Parsing &parse, Client &client)
 				server->addChannel(parse.getArguments()[i], client);
 			else if (channel == NULL)
 				server->addChannel(parse.getArguments()[i], client, parse.getArguments()[firstPassword]);
-			
 		}
 		catch(const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
 		}
-		
-		
-	}
-	}
-	
-}
-
-
-int Join::errorCode(Server *server, const std::string &channelName, Client &client, const std::string passwd)
-{
-	int channelID = server->findChannel(channelName);
-	if (channelID == 0)
-	{
-		
-	}
-	else
-	{
-		
 	}
 }
+

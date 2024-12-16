@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 18:38:17 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 15:37:35 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ class Client
 		std::string m_user;
 		std::string m_realname;
 		std::string m_irssiPacket;
-		// std::vector<Channel *>	m_vChannels; Not very useful so far, not implemented
+		std::vector<Channel *>	m_vChannels;
+		std::vector<Channel *> 	m_OpChannels;
 	public : 
 		std::string	getPrefix() const;
 		Client();
