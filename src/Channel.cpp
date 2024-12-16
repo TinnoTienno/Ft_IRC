@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 17:45:47 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:24:19 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void	Channel::sendAllMsg(const std::string & msg, Server *server)
 	(void) server; // a supprimer !!!!
 	for (size_t i = 0; i < m_vClientKeys.size(); i++)
 	{
-		sendMessage(m_vClientKeys[i], server->getClient(m_vClientKeys[i]).getPrefix(server->getHostname()), "PRIVMSG", msg);
+		sendMessage(m_vClientKeys[i], server->getClient(m_vClientKeys[i]).getPrefix(), "PRIVMSG", msg);
 	}
 }
 

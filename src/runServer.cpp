@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 16:17:03 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:19:01 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void Server::AcceptNewClient()
 	
 	client.setFD(incoFd);
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
+	client.setHost((struct sockaddr*)&clientAdd, this);
 	// m_mClients.insert({incoFd, client});
 	m_mClients[incoFd] = client;
 	m_vFds.push_back(newPoll);

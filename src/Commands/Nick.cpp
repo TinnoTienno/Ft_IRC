@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 19:31:13 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:24:46 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void Nick::execute(Server *server, const Parsing &parse, Client &client)
 {
 
 	std::string nickTmp = client.getNick();
-	std::string source = client.getPrefix(server->getHostname());
+	std::string source = client.getPrefix();
 	int errorCode = nickErrorCode(server, client, parse);
 	// std::cout << "Nick::execute : " << buffer << std::endl;
 	switch (errorCode)

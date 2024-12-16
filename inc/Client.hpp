@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/12 13:58:32 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:18:22 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ class Client
 	private :
 		int 		m_fd;
 		std::string m_ipAdd;
+		std::string	m_host;
 		bool		m_authentified;
 		std::string m_nick;
 		std::string m_user;
@@ -28,11 +29,12 @@ class Client
 		std::string m_irssiPacket;
 		// std::vector<Channel *>	m_vChannels; Not very useful so far, not implemented
 	public : 
-		std::string	getPrefix(const std::string & host) const;
+		std::string	getPrefix() const;
 		Client();
 		const int& getFD() const;
 		void setFD(const int&);
 		void setIPadd(const std::string&);
+		void setHost(struct sockaddr * addr, Server * server);
 		void setAuth(const bool &);
 		const bool& getAuth() const;
 		const std::string& getUser() const;

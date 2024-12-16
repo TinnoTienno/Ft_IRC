@@ -6,12 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 15:55:44 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:38:25 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include <unistd.h>
+#include <netdb.h>
 #include <sys/socket.h>
 #include "Server.hpp"
 #include "utils.hpp"
@@ -32,6 +33,24 @@ const int& Client::getFD() const { return m_fd; }
 void Client::setFD(const int &fd) {	m_fd = fd; }
 
 void Client::setIPadd(const std::string &ipadd) { m_ipAdd = ipadd; }
+
+void	Client::setHost(struct sockaddr * addr, Server * server)
+{
+	char	host[NI_MAXHOST];
+	int		res = getnameinfo(addr, sizeof(&addr), host, sizeof(host), NULL, 0, 0);
+	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** No Identd"); 
+	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Looking up your hostname"); 
+	if (!res)
+	{
+		this->m_host = (std::string) host;
+		sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Found your hostname"); 
+	}
+	else
+	{
+		this->m_host = this->m_ipAdd;
+		sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Hostname not found, IP instead"); 
+	}
+}
 
 const bool& Client::getAuth() const { return m_authentified; }
 
@@ -72,19 +91,16 @@ Client::~Client()
 	// std::cout << "client is dead" << std::endl;
 };
 
-std::string	Client::getPrefix(const std::string & host) const
+std::string	Client::getPrefix() const
 {
-	std::string prefix = this->getNick() + "!" + this->getUser() + "@" + host;
+	std::string prefix = this->getNick() + "!" + this->getUser() + "@" + this->m_host;
 	return prefix;
 }
 
 void Client::connect(Server *server)
 {
 	std::string y = "10"; // nombre de Operators online
-	std::string	port = "6667"; // prévoir fn getPort
-	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Looking up your hostname"); 
-	sendMessage(this->getFD(), server->getHostname(), "NOTICE AUTH", "*** Found your hostname"); 
-	std::string	msg = "Welcome to the ft_IRC NETWORK " + this->getPrefix(server->getHostname());
+	std::string	msg = "Welcome to the ft_IRC NETWORK " + this->getPrefix();
 	sendMessage(this->getFD(), server->getHostname(), "001 " + this->getNick(), msg); 
 	msg = "Your host is " + server->getHostname() + ", running version 1.2.3";
 	sendMessage(this->getFD(), server->getHostname(), "002 " + this->getNick(), msg); 
@@ -108,7 +124,7 @@ void Client::connect(Server *server)
 							"-        " + server->getHostname(),
 							"-",
 							"-        * Host.....: " + server->getHostname(),
-							"-        * Port.....: " + port,
+							"-        * Port.....: " + server->getPort(),
 							"-",
 							"-        Welcome to our 42 irc project",
 							"-        by eschussl and aduvilla"};

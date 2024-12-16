@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 16:01:09 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:31:16 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,13 @@ class Server
 		void CloseFds();
 		void ClearClient(Client &client);
 		void parseCommand(const std::string buffer, Client &client);
-		const std::string getHostname() const;
 
-		const std::string getNextGuest();
 		bool isNickFormatted(const std::string &nickname) const;
 		int findNick(const std::string &nickname);
 	
+		const std::string	getPort() const;
+		const std::string	getNextGuest();
+		const std::string	getHostname() const;
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
 		Client &getClient(int clientKey);

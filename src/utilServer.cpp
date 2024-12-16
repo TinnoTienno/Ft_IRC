@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/13 16:14:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:34:52 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,11 @@ bool Server::userErrorCode(Client &client, const Parsing &parse)
 	(void) parse;
 	client.setUser(parse.getArguments()[1]);
 	return 0;
+}
+
+const std::string	Server::getPort() const 
+{
+	std::ostringstream	oss;
+	oss << this->m_port;
+	return (std::string) oss.str();
 }
