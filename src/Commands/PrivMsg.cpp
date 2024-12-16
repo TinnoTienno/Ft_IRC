@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 22:51:58 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 23:53:07 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 	return result;
 }
 
-void	PrivMsg::execute(Server *server, Client &client, const Parsing &parse)
+void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 {
 	if (parse.getArguments()[1].find(":", 0) == 0)
 		sendMessage(client.getFD(), server->getHostname(), "411 " + client.getNick(), "No recipient given PRIVMSG");
@@ -77,7 +77,7 @@ void	PrivMsg::execute(Server *server, Client &client, const Parsing &parse)
 			if (user == 0)
 				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
 			else
-				sendMessage(server->getNickFd(user), client.getPrefix(), "PRIVMSG" + targets[i], parse.getArguments()[2]);
+				sendMessage(server->getNickFd(user), client.getPrefix(), "PRIVMSG " + targets[i], parse.getArguments()[2]);
 		}
 	}
 //	else if (no such channel)

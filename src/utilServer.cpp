@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 22:45:54 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 23:16:59 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	Server::getNickFd(const int mapIndex) const
 {
 	if (this->m_mClients.find(mapIndex) == m_mClients.end())
 		throw std::out_of_range("invalid mapIndex in m_mClients");
-	return m_mClients.at(mapIndex).getFD();
+	return m_mClients.find(mapIndex)->second.getFD();
 }
 
 int Server::findChannel(const std::string &chanName)
@@ -54,7 +54,7 @@ Channel	Server::getChan(const int mapIndex) const
 {
 	if (this->m_mChannels.find(mapIndex) == m_mChannels.end())
 		throw std::out_of_range("invalid mapIndex in m_mClients");
-	return m_mChannels.at(mapIndex);
+	return m_mChannels.find(mapIndex)->second;
 }
 
 const std::string Server::getNextGuest()
