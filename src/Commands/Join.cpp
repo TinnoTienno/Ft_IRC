@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 16:39:25 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/17 14:45:48 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,13 @@ void Join::execute(Server *server, const Parsing &parse, Client &client)
 		return ;
 	}
 	size_t firstPassword = findPassword(parse.getArguments());
+	std::cout << "size " << parse.getArguments().size() << " password" << firstPassword << std::endl;
 	for (size_t i = 1, j = firstPassword; i < firstPassword; i++)
 	{
 		try
 		{
 			Channel *channel = server->findChannel(parse.getArguments()[i]);
-			if (channel == NULL && firstPassword != parse.getArguments().size())
+			if (channel == NULL & firstPassword == parse.getArguments().size())
 				server->createChannel(parse.getArguments()[i], client);
 			else if (channel == NULL)
 				server->createChannel(parse.getArguments()[i], client, parse.getArguments()[j++]);
