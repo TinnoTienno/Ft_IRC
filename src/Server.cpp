@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 18:47:01 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/17 17:39:24 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void 	Server::deleteChannel(Channel &channel)
 Client *Server::findNick(const std::string &nickname)
 {
 	for (size_t i = 0; i < m_mClients.size(); i++)
-		if (m_mClients[i].getNick() == nickname)
+		if (strCompareNoCase(m_mClients[i].getNick(), nickname))
 			return &m_mClients[i];
 	return NULL;
 }

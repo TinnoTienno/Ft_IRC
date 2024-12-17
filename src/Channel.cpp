@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 18:16:08 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/17 18:22:49 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,21 @@
 #include "Channel.hpp"
 #include "utils.hpp"
 #include <climits>
+#include "Exceptions.hpp"
+
+bool Channel::parseChannelName(const std::string &channelName)
+{
+	if (charIsNot(channelName[0], "&#+!") || channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
+		return false;
+	if (channelName.find_first_of(", :") != channelName.npos)
+		return false;
+	return true;
+}
 
 Channel::Channel(const std::string &name, Client &client)
 {
-	if (name.empty())
-		throw std::runtime_error("A channel name must not be empty");
+	if (!parseChannelName(name))
+		throw serverExceptions(476);
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = "";
@@ -31,10 +41,8 @@ Channel::Channel(const std::string &name, Client &client)
 
 Channel::Channel(const std::string &name, Client &client, const std::string &passwd)
 {
-	static int ID = 0;
-	this->m_ID = --ID;
-	if (name.empty())
-		throw std::runtime_error("A channel name must not be empty");
+	if (!parseChannelName(name))
+		throw serverExceptions(476);
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = passwd;
@@ -66,8 +74,10 @@ Channel::~Channel	(void)
 
 void	Channel::addClient(Client &client)
 {
-	if (!this->m_password.empty())
-		throw std::runtime_error("Wrong password");
+	// if (!this->m_password.empty())
+	// 	throw badChannelKeyException();
+	// if (client.getChannelssize() == MAX_CHANNEL_JOINED + 1)
+	// 	throw tooManyChannelException();
 	this->m_vClients.push_back(&client);
 	if (!m_vOP.size())
 		addOP(client);

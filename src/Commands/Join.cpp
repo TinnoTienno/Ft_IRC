@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 14:45:48 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:51:10 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,44 +17,95 @@
 #include "Parsing.hpp"
 #include "Channel.hpp"
 #include "utils.hpp"
+#include "Exceptions.hpp"
 
-static size_t findPassword(std::vector<std::string> args)
-{
-	size_t i = 1;
-	for (; i < args.size(); i++)
-	{
-		if (args[i][0] != '#' && args[i][0] != '&')
-			return i;
-	}
-	return i;
-}
 void Join::execute(Server *server, const Parsing &parse, Client &client)
 {
-	if (parse.getArguments().size() == 1)
+	try
 	{
-		sendMessage(client.getFD(), server->getHostname(), "461 " + client.getNick(), parse.getArguments()[0] + " Not enough parameters");
-		return ;
+		if (parse.getArguments().size() < 2)
+			throw (client.getNick(), parse.getCommand());
 	}
-	size_t firstPassword = findPassword(parse.getArguments());
-	std::cout << "size " << parse.getArguments().size() << " password" << firstPassword << std::endl;
-	for (size_t i = 1, j = firstPassword; i < firstPassword; i++)
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	if (parse.getArguments().size() == 3)
+		ifPassword(server, parse, client);
+	ifNoPassword(server, parse, client);
+}
+
+
+
+void Join::ifPassword(Server *server, const Parsing &parse, Client &client)
+{
+	std::vector<std::string> channels = vsplit(parse.getArguments()[1], ',');
+	std::vector<std::string> passwords = vsplit(parse.getArguments()[2], ',');
+	std::vector<std::string>::iterator iterPasswords = passwords.begin();
+	std::vector<std::string>::iterator iterChannels = channels.begin();
+	while (iterChannels != channels.end() && iterPasswords != passwords.end())
 	{
 		try
 		{
-			Channel *channel = server->findChannel(parse.getArguments()[i]);
-			if (channel == NULL & firstPassword == parse.getArguments().size())
-				server->createChannel(parse.getArguments()[i], client);
-			else if (channel == NULL)
-				server->createChannel(parse.getArguments()[i], client, parse.getArguments()[j++]);
-			else if (firstPassword != parse.getArguments().size())
-				channel->addClient(client);
+			
+			Channel *channel = server->findChannel(*iterChannels);
+			if (channel == NULL)
+				server->createChannel(*iterChannels, client, *iterPasswords);
 			else
-				channel->addClient(client, parse.getArguments()[j++]);
+				channel->addClient(client, *iterPasswords);
+			iterChannels++;
+			iterPasswords++;
 		}
-		catch(const std::exception& e)
+		catch(const serverExceptions& e)
 		{
-			std::cerr << e.what() << '\n';
+			if (e.getErrorCode() == 403)
+				sendMessage(client.getFD(), server->getHostname(), "403" + client.getPrefix() + *iterChannels, "No such channel");
+		}
+	}
+	while (iterChannels != channels.end())
+	{
+		try
+		{
+			if (isChannelNameWellFormated(*iterChannels))
+				throw serverExceptions(403);
+			Channel *channel = server->findChannel(*iterChannels);
+			if (channel == NULL)
+				server->createChannel(*iterChannels, client);
+			else
+				channel->addClient(client);
+			iterChannels++;
+		}
+		catch(const serverExceptions& e)
+		{
+			if (e.getErrorCode() == 403)
+				sendMessage(client.getFD(), server->getHostname(), "403" + client.getPrefix() + *iterChannels, "No such channel");
 		}
 	}
 }
 
+void Join::ifNoPassword(Server *server, const Parsing &parse, Client &client)
+{
+	std::vector<std::string> channels = vsplit(parse.getArguments()[1], ',');
+	std::vector<std::string>::iterator iterChannels = channels.begin();
+	while (iterChannels != channels.end())
+	{
+		try
+		{
+			if (isChannelNameWellFormated(*iterChannels))
+				throw serverExceptions(403);
+			Channel *channel = server->findChannel(*iterChannels);
+			if (channel == NULL)
+				server->createChannel(*iterChannels, client);
+			else
+				channel->addClient(client);
+			iterChannels++;
+		}
+		catch(const serverExceptions& e)
+		{
+			if (e.getErrorCode() == 403)
+				sendMessage(client.getFD(), server->getHostname(), "403" + client.getPrefix() + *iterChannels, "No such channel");
+		}
+	}
+}
+
+		

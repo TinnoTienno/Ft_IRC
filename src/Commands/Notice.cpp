@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 13:46:21 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/17 17:38:08 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,6 @@
 #include "Client.hpp"
 #include "Parsing.hpp"
 #include "utils.hpp"
-
-static std::vector<std::string>	vsplit(const std::string & str, char delimiter)
-{
-	std::vector<std::string>	result;
-	std::string					token;
-
-	for (size_t i = 0; i < str.size(); i++)
-	{
-		if (str[i] == delimiter && !token.empty())
-		{
-			result.push_back(token);
-			token.clear();
-		}
-		else if (str[i] != delimiter)
-			token += str[i];  
-	}
-	if (!token.empty())
-		result.push_back(token);
-	return result;
-}
 
 void	Notice::execute(Server *server, const Parsing &parse, Client &client)
 {
