@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 23:21:27 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 11:55:31 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "UserHost.hpp"
 #include "Ping.hpp"
 #include "PrivMsg.hpp"
+#include "Notice.hpp"
 #include "Parsing.hpp"
 
 bool Server::m_signal = false;
@@ -74,16 +75,19 @@ void Server::ClearClient(Client &client)
 
 void Server::parseCommand(const std::string line, Client &client)
 {
-	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG"};
-	void (*fCommands[])(Server *, const Parsing &, Client &) = { &Join::execute, &Nick::execute, &UserHost::execute , &Ping::execute, &PrivMsg::execute};
+	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE"};
+	void (*fCommands[])(Server *, const Parsing &, Client &) = { &Join::execute,
+		&Nick::execute,
+		&UserHost::execute,
+		&Ping::execute,
+		&PrivMsg::execute,
+		&Notice::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
 	Parsing parse(line);
 	for (size_t i = 0; i < size; i++)
 	{
 		if (parse.getCommand() == Commands[i])
-		{
 			fCommands[i](this, parse, client);
-		}
 	}
 }
 

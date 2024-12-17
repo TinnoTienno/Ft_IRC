@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 00:02:23 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 11:51:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,14 @@ void	Notice::execute(Server *server, const Parsing &parse, Client &client)
 		if (targets[i].find('#') == 0)
 		{
 			int	chan = server->findChannel(targets[i].substr(1));
-			if (chan == 0)
-				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
-			else
+			if (chan != 0)
 				server->getChan(chan).sendAllMsg(parse.getArguments()[2], server); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{
 			int user = server->findNick( targets[i]);
-			if (user == 0)
-				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
-			else
-				sendMessage(server->getNickFd(user), client.getPrefix(), "PRIVMSG " + targets[i], parse.getArguments()[2]);
+			if (user != 0)
+				sendMessage(server->getNickFd(user), client.getPrefix(), "NOTICE " + targets[i], parse.getArguments()[2]);
 		}
 	}
-//	else if (no such channel)
-//		sendMessage(client.getFD(), server->getHostname(), "404 " + client.getNick() + parse.getArguments()[1], "Cannot send to channel");
 }
