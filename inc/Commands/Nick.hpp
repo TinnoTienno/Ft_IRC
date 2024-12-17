@@ -24,7 +24,6 @@ class Nick
 		static void	execute(Server *server, const Parsing &parse, Client &client);
 		static int	errorCode(Server *server, const Parsing &parse, Client &client);
 		static bool	isNickFormatted(const std::string &nickname);
-
 }	;
 
 #endif

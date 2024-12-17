@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   authentificationServer.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 18:27:23 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:51:14 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 	{
 		j = buffer.find("\n", i + 1);
 		std::string line = buffer.substr(i, j - i - 1);
+		std::cout << " " << client.getFD() << " >> " << line << std::endl;
 		Parsing parse(line);
 		if (parse.getCommand() == "NICK")
 		{

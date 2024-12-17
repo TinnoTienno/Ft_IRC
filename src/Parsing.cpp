@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 13:44:48 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 15:13:27 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:50:40 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ Parsing::Parsing(std::string line)
 		m_arguments.push_back(word);
 		wordIndex++;
 	}
-	for (size_t i = 0; i < m_arguments[0].size(); i++)
-		std::cout << (int) m_arguments[0][i] << " ";
-	std::cout << std::endl;
+	// for (size_t i = 0; i < m_arguments[0].size(); i++)
+	// 	std::cout << (int) m_arguments[0][i] << " ";
+	// std::cout << std::endl;
 }
 
 const std::vector<std::string> &Parsing::getArguments() const {	return m_arguments; }

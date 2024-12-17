@@ -19,30 +19,6 @@
 #include <string>
 #include "Channel.hpp"
 
-int	Server::getNickFd(const int mapIndex) const
-{
-	if (this->m_mClients.find(mapIndex) == m_mClients.end())
-		throw std::out_of_range("invalid mapIndex in m_mClients");
-	return m_mClients.find(mapIndex)->second.getFD();
-}
-
-int Server::findChannel(const std::string &chanName)
-{
-	for (std::map<int, Channel>::iterator iter = m_mChannels.begin(); iter != m_mChannels.end() ; iter++)
-	{
-		if (iter->second.getName() == chanName)
-			return iter->first;
-	}
-	return 0;
-}
-
-Channel	Server::getChan(const int mapIndex) const
-{
-	if (this->m_mChannels.find(mapIndex) == m_mChannels.end())
-		throw std::out_of_range("invalid mapIndex in m_mClients");
-	return m_mChannels.find(mapIndex)->second;
-}
-
 const std::string Server::getNextGuest()
 {
 	static int i = 0;

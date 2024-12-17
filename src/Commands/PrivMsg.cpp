@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 23:53:07 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:44:11 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,19 @@ void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 	{
 		if (targets[i].find('#') == 0)
 		{
-			int	chan = server->findChannel(targets[i].substr(1));
-			if (chan == 0)
+			Channel	*chan = server->findChannel(targets[i].substr(1));
+			if (!chan)
 				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
 			else
-				server->getChan(chan).sendAllMsg(parse.getArguments()[2], server); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+				chan->sendAllMsg(parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{
-			int user = server->findNick( targets[i]);
-			if (user == 0)
+			Client *user = server->findNick( targets[i]);
+			if (!user)
 				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
 			else
-				sendMessage(server->getNickFd(user), client.getPrefix(), "PRIVMSG " + targets[i], parse.getArguments()[2]);
+				sendMessage(user->getFD(), client.getPrefix(), "PRIVMSG " + targets[i], parse.getArguments()[2]);
 		}
 	}
 //	else if (no such channel)

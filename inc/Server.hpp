@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 18:44:44 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/17 13:40:53 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,11 @@ class Server
 		unsigned int						m_nextChannelID;
 
 	public :
-		typedef void	(Server::*commandHandler)(const std::string&);
 		Server(const std::string &name, const std::string &password);
 		~Server();
 		
+		static void SignalHandler(int signum);
+
 		void ServerInit(const std::string&);
 		void SerSocket();
 		void AcceptNewClient();
@@ -75,17 +76,13 @@ class Server
 		
 		bool checkAuth(Client &client, const std::string&);
 		bool userErrorCode(Client &client, const Parsing &parse);
-		static void SignalHandler(int);
 		
 		void CloseFds();
 		void ClearClient(Client &client);
 		void parseCommand(const std::string buffer, Client &client);
 
 		bool isNickFormatted(const std::string &nickname) const;
-		int findNick(const std::string &nickname);
-		int	getNickFd(const int mapIndex) const;
-		int findChannel(const std::string &chanName);
-		Channel	getChan(const int mapIndex) const;
+		Client *findNick(const std::string &nickname);
 	
 		const std::string	getPort() const;
 		const std::string	getNextGuest();
@@ -93,6 +90,9 @@ class Server
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
 		Client 	&getClient(int clientKey);
+
+		Channel *findChannel(const std::string &channelName);
+
 		Channel &createChannel(const std::string &name, Client &client);
 		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
 		void 	deleteChannel(Channel &channel);

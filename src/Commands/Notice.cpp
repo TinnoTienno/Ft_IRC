@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Notice.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 11:51:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:46:21 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,15 @@ void	Notice::execute(Server *server, const Parsing &parse, Client &client)
 	{
 		if (targets[i].find('#') == 0)
 		{
-			int	chan = server->findChannel(targets[i].substr(1));
-			if (chan != 0)
-				server->getChan(chan).sendAllMsg(parse.getArguments()[2], server); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+			Channel *chan = server->findChannel(targets[i].substr(1));
+			if (chan)
+				chan->sendAllMsg(parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{
-			int user = server->findNick( targets[i]);
-			if (user != 0)
-				sendMessage(server->getNickFd(user), client.getPrefix(), "NOTICE " + targets[i], parse.getArguments()[2]);
+			Client *user = server->findNick( targets[i]);
+			if (user)
+				sendMessage(user->getFD(), client.getPrefix(), "NOTICE " + targets[i], parse.getArguments()[2]);
 		}
 	}
 }

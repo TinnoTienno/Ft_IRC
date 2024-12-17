@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 19:20:03 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:41:01 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ Client::~Client()
 {
 	// close(m_fd);
 	// for (size_t i = 0; i < m_vChannels.size(); i++)
-		// m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
+	// 	m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
 	for (size_t i = 0; i < m_vChannels.size(); i++)
 		m_vChannels[i]->removeOP(*this);
 	// std::cout << "client is dead" << std::endl;

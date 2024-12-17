@@ -69,6 +69,8 @@ void	Channel::addClient(Client &client)
 	if (!this->m_password.empty())
 		throw std::runtime_error("Wrong password");
 	this->m_vClients.push_back(&client);
+	if (!m_vOP.size())
+		addOP(client);
 	this->sendJoin(client);
 }
 
