@@ -6,11 +6,12 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 17:00:59 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/17 15:37:32 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include <vector>
 #include <ctime>
 #include <netdb.h>
 
@@ -28,4 +29,24 @@ const std::string	getTime()
 	std::tm	*timeStruct = std::gmtime(&now);
 	std::strftime(buffer, sizeof(buffer), "%a %b %d %Y at %H:%M:%S GMT", timeStruct);
 	return std::string(buffer);
+}
+
+std::vector<std::string>	vsplit(const std::string & str, char delimiter)
+{
+	std::vector<std::string>	result;
+	std::string					token;
+
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		if (str[i] == delimiter && !token.empty())
+		{
+			result.push_back(token);
+			token.clear();
+		}
+		else if (str[i] != delimiter)
+			token += str[i];  
+	}
+	if (!token.empty())
+		result.push_back(token);
+	return result;
 }
