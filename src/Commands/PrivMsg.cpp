@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 14:17:50 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:37:46 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,6 @@ static std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 	return result;
 }
 */
-
-static std::vector<std::string>	vsplit(const std::string & str, char delimiter)
-{
-	std::vector<std::string>	result;
-	std::string					token;
-
-	for (size_t i = 0; i < str.size(); i++)
-	{
-		if (str[i] == delimiter && !token.empty())
-		{
-			result.push_back(token);
-			token.clear();
-		}
-		else if (str[i] != delimiter)
-			token += str[i];  
-	}
-	if (!token.empty())
-		result.push_back(token);
-	return result;
-}
 
 void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 {
