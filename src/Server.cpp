@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 11:55:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:47:01 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@
 #include "PrivMsg.hpp"
 #include "Notice.hpp"
 #include "Parsing.hpp"
+#include "utils.hpp"
 
 bool Server::m_signal = false;
 
 Server::Server(const std::string &name, const std::string &pass) : m_pass(pass), m_hostname(name)
 { 
 	m_serverSocketFd = -1;
+	m_nextChannelID = 0;
 }
 
 Server::~Server()
@@ -83,6 +85,7 @@ void Server::parseCommand(const std::string line, Client &client)
 		&PrivMsg::execute,
 		&Notice::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
+	std::cout << " " << client.getFD() << " >> " << line << std::endl;
 	Parsing parse(line);
 	for (size_t i = 0; i < size; i++)
 	{
@@ -105,11 +108,47 @@ const std::string	Server::getUserNumber() const
 const std::string	Server::getChannelNumber() const
 {
 	std::ostringstream	oss;
-	oss << this->m_mChannels.size();
+	oss << this->m_vChannels.size();
 	return oss.str();
 }
 
-Client &Server::getClient(int clientKey)
+Client &Server::getClient(int clientKey) { return (m_mClients.find(clientKey)->second); }
+
+
+Channel &Server::createChannel(const std::string &name, Client &client)
 {
-	return (m_mClients.find(clientKey)->second);
+	Channel newChannel(name, client);
+	m_vChannels.push_back(newChannel);
+	std::cout << "New channel " << name << " was added " << client.getFD() << " is OP" << std::endl;
+	Channel &tmp = m_vChannels[m_vChannels.size() - 1]; 
+	client.addChannel(tmp);
+	client.addOP(tmp);
+	return tmp;
+}
+
+Channel &Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
+{
+	Channel &channel = createChannel(name, client);
+	channel.setPassword(passwd);
+	return channel;
+}
+
+void 	Server::deleteChannel(Channel &channel)
+{
+	for (std::vector<Channel>::iterator iter = m_vChannels.begin(); iter != m_vChannels.end(); iter++)
+	{
+		if (iter->getName() == channel.getName())
+		{
+			std::cout << "Now deleting the " << channel.getName() << "channel" << std::endl;
+			m_vChannels.erase(iter);
+		}
+	}
+}
+
+Client *Server::findNick(const std::string &nickname)
+{
+	for (size_t i = 0; i < m_mClients.size(); i++)
+		if (m_mClients[i].getNick() == nickname)
+			return &m_mClients[i];
+	return NULL;
 }

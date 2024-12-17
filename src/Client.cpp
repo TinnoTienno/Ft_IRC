@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
 /*   Updated: 2024/12/16 19:20:03 by aduvilla         ###   ########.fr       */
@@ -16,6 +16,8 @@
 #include <sys/socket.h>
 #include "Server.hpp"
 #include "utils.hpp"
+#include <iostream>
+#include "Channel.hpp"
 
 void Client::kill(const std::string &str) const
 {
@@ -54,15 +56,9 @@ void	Client::setHost(struct sockaddr * addr, Server * server)
 
 const bool& Client::getAuth() const { return m_authentified; }
 
-void Client::setAuth(const bool &is)
-{
-	this->m_authentified = is;
-}
+void Client::setAuth(const bool &is) { this->m_authentified = is; }
 
-void Client::addPacket(const std::string &packet)
-{
-	this->m_irssiPacket += packet;
-}
+void Client::addPacket(const std::string &packet) {	this->m_irssiPacket += packet; }
 
 std::string Client::getPacket()
 {
@@ -71,21 +67,27 @@ std::string Client::getPacket()
 	return tmp;
 }
 
-const std::string& Client::getNick() const
-{
-	return this->m_nick;
-}
+const std::string& Client::getNick() const { return this->m_nick; }
 
-void Client::setNick(const std::string &nick)
-{
-	this->m_nick = nick;
-}
+void Client::setNick(const std::string &nick) {	this->m_nick = nick; }
 
 const std::string& Client::getUser() const { return this->m_user; }
 
 void Client::setUser(const std::string &user) {	this->m_user = user; }
 
-Client::~Client() {};
+const std::string& Client::getReal() const { return this->m_realname; } 
+
+void Client::setReal(const std::string &real) { this->m_realname = real; }
+		
+Client::~Client()
+{
+	// close(m_fd);
+	// for (size_t i = 0; i < m_vChannels.size(); i++)
+		// m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
+	for (size_t i = 0; i < m_vChannels.size(); i++)
+		m_vChannels[i]->removeOP(*this);
+	// std::cout << "client is dead" << std::endl;
+};
 
 std::string	Client::getPrefix() const
 {
@@ -130,4 +132,16 @@ void Client::connect(Server *server)
 	}
 	msg = server->getHostname() + " End of /MOTD command.";
 	sendMessage(this->getFD(), server->getHostname(), "376 " + this->getNick(), msg); 
+}
+
+void Client::addChannel(Channel &channel)
+{
+	this->m_vChannels.push_back(&channel);
+	std::cout << "Channel " << channel.getName() << " was added to " << this->getNick() << "'s channels list" << std::endl;
+}
+
+void Client::addOP(Channel &channel)
+{	
+	this->m_OpChannels.push_back(&channel);
+	std::cout << "Channel " << channel.getName() << " was added to " << this->getNick() << "'s channels OP list" << std::endl;
 }

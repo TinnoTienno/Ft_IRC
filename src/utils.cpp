@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 16:02:18 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:00:59 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	sendMessage(const int fd, const std::string & source, const std::string & c
 {
 	std::string message = ":" + source + " " + command + " :" + msg + "\r\n";
 	send(fd, message.c_str(), message.size(), 0);
+	std::cout << " " << fd << " << " << message << std::endl;
 }
 
 const std::string	getTime()

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   authentificationServer.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
 /*   Updated: 2024/12/16 18:27:23 by aduvilla         ###   ########.fr       */
@@ -28,7 +28,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		Parsing parse(line);
 		if (parse.getCommand() == "NICK")
 		{
-			if (Nick::nickErrorCode(this, client, parse))
+			if (Nick::errorCode(this, parse, client))
 				client.setNick(getNextGuest());
 		}
 		else if (parse.getCommand() == "PASS")
