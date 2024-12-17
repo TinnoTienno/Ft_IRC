@@ -13,6 +13,7 @@
 #ifndef UTILS_HPP
 # define UTILS_HPP
 
+#include <vector>
 #include <string>
 
 void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg);
