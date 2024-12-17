@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
+#    By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/17 00:01:39 by aduvilla         ###   ########.fr        #
+#    Updated: 2024/12/17 14:19:23 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,9 @@ SRCS		=	main.cpp\
 				utils.cpp\
 				authentificationServer.cpp\
 				Parsing.cpp\
+				signalServer.cpp\
+				getServer.cpp\
+				exitServer.cpp\
 				$(addprefix $(COMMAND_PATH), Nick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp)
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))

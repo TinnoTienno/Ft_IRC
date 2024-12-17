@@ -1,22 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utilServer.cpp                                     :+:      :+:    :+:   */
+/*   signalServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 14:13:09 by aduvilla         ###   ########.fr       */
+/*   Created: 2024/12/17 14:00:27 by aduvilla          #+#    #+#             */
+/*   Updated: 2024/12/17 14:16:36 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "Parsing.hpp"
-#include "Client.hpp"
+#include <iostream>
 
-bool Server::userErrorCode(Client &client, const Parsing &parse)
+void Server::SignalHandler(int signum)
 {
-	client.setUser(parse.getArguments()[1]);
-	client.setReal(parse.getArguments()[4]);
-	return 0;
+	(void)signum;
+	std::cout << std::endl << "Signal Received!" << std::endl;
+	Server::m_signal = true; //-> set the static boolean to true to stop the server
 }
