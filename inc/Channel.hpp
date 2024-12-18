@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 17:52:13 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 18:12:30 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ class	Server;
 class	Channel
 {
 	public:
-		Channel(const std::string &name, Client &client, const std::string &passwd);
-		Channel(const std::string &name, Client &client);
+		Channel(Server *server, const std::string &name, Client &client, const std::string &passwd);
+		Channel(Server *server, const std::string &name, Client &client);
 		Channel(Channel const & src);
 		Channel &operator=(Channel const & rhs);
 		~Channel(void);
@@ -51,6 +51,14 @@ class	Channel
 		void setPassword(const std::string &passwd);
 		bool parseChannelName(const std::string &channelName);
 		
+		Client *getBanned(Client *client);
+		Client *getClient(Client *client);
+
+		void sendTopic(Client &client);
+		Server *getServ();
+
+		void sendClientslist(Client &dest);
+		std::string clientsList();
 	private:
 		bool 					m_isInviteOnly;
 		std::string 			m_topic;
@@ -58,6 +66,8 @@ class	Channel
 		std::string				m_password;
 		std::vector <Client *>	m_vClients;
 		std::vector <Client *>	m_vOP;
+		std::vector <Client *>	m_vBans;
+		Server *				m_serv;
 		int						m_ID;
 };
 

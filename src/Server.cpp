@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 17:39:24 by eschussl         ###   ########.fr       */
-=======
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 14:15:57 by aduvilla         ###   ########.fr       */
->>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f
+/*   Updated: 2024/12/18 18:11:25 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +18,7 @@
 #include "Channel.hpp"
 #include "Parsing.hpp"
 #include "utils.hpp"
+#include "serverExceptions.hpp"
 
 bool Server::m_signal = false;
 
@@ -43,7 +37,7 @@ Server::~Server()
 
 Channel &Server::createChannel(const std::string &name, Client &client)
 {
-	Channel newChannel(name, client);
+	Channel newChannel(this, name, client);
 	m_vChannels.push_back(newChannel);
 	std::cout << "New channel " << name << " was added " << client.getFD() << " is OP" << std::endl;
 	Channel &tmp = m_vChannels[m_vChannels.size() - 1]; 

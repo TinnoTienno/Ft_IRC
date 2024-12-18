@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:05:11 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 22:51:06 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:19:49 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <csignal>
+#include "serverExceptions.hpp"
 
 int main(int argc, char **argv)
 {

@@ -6,12 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 13:44:48 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 13:50:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:07:50 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parsing.hpp"
 #include <iostream>
+#include "serverExceptions.hpp"
 
 Parsing::Parsing(std::string line)
 {
@@ -29,6 +30,7 @@ Parsing::Parsing(std::string line)
 			i = line.find(' ', i) + 1;
 		else
 			i = line.npos;
+		std::cout << "word : " << word << std::endl;
 		m_arguments.push_back(word);
 		wordIndex++;
 	}

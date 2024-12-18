@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   getServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:05:05 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 14:12:46 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:21:43 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "Channel.hpp"
 #include <iomanip>
 #include <sstream>
+#include "serverExceptions.hpp"
 
 const std::string Server::getHostname() const { return m_hostname; }
 
@@ -38,7 +39,6 @@ const std::string Server::getNextGuest()
 	static int i = 0;
 	std::ostringstream	oss;
 	oss << std::setfill ('0') << std::setw (3) <<  ++i;
-	
 	return ((std::string) "Guest" + oss.str());
 }
 

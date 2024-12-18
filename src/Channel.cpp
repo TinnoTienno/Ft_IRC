@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 18:22:49 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 18:14:41 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include "Channel.hpp"
 #include "utils.hpp"
 #include <climits>
-#include "Exceptions.hpp"
+#include "serverExceptions.hpp"
+#include "Rpl.hpp"
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
@@ -27,10 +28,11 @@ bool Channel::parseChannelName(const std::string &channelName)
 	return true;
 }
 
-Channel::Channel(const std::string &name, Client &client)
+Channel::Channel(Server *server, const std::string &name, Client &client)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
+	this->m_serv = server;
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = "";
@@ -39,10 +41,11 @@ Channel::Channel(const std::string &name, Client &client)
 	addOP(client);
 }
 
-Channel::Channel(const std::string &name, Client &client, const std::string &passwd)
+Channel::Channel(Server *server, const std::string &name, Client &client, const std::string &passwd)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
+	this->m_serv = server;
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = passwd;
@@ -74,22 +77,35 @@ Channel::~Channel	(void)
 
 void	Channel::addClient(Client &client)
 {
-	// if (!this->m_password.empty())
-	// 	throw badChannelKeyException();
-	// if (client.getChannelssize() == MAX_CHANNEL_JOINED + 1)
-	// 	throw tooManyChannelException();
+	if (this->getClient(&client))
+		throw serverExceptions(405);
+	if (!this->m_password.empty())
+		throw serverExceptions(475);
+	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
+		throw serverExceptions(405);
+	if (this->getBanned(&client))
+		throw serverExceptions(474);
 	this->m_vClients.push_back(&client);
 	if (!m_vOP.size())
 		addOP(client);
 	this->sendJoin(client);
+	this->sendTopic(client);
 }
 
 void	Channel::addClient(Client &client, const std::string & passwd)
 {
 	if (this->m_password != passwd)
-		throw std::runtime_error("Wrong password");
+		throw serverExceptions(475);
+	if (this->getClient(&client))
+		throw serverExceptions(405);
+	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
+		throw serverExceptions(405);
+	if (this->getBanned(&client))
+		throw serverExceptions(474);
 	this->m_vClients.push_back(&client);
 	this->sendJoin(client);
+	this->sendTopic(client);
+	this->sendClientslist(client);
 }
 
 void	Channel::removeClient(Server *server, const Client & client)
@@ -146,4 +162,43 @@ void Channel::sendJoin(const Client &client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		sendMessage(m_vClients[i]->getFD(), client.getPrefix(), "JOIN ", this->getName());
+}
+
+Client *Channel::getBanned(Client *client)
+{
+	for (size_t i = 0; i < m_vBans.size(); i++)
+		if (m_vBans[i] == client)
+			return m_vBans[i];
+	return NULL;
+}
+
+Client *Channel::getClient(Client *client)
+{
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		if (m_vClients[i] == client)
+			return m_vClients[i];
+	return NULL;
+}
+
+void Channel::sendTopic(Client &client)
+{
+	if (this->getTopic() != "")
+		sendf(this->m_serv, &client, RPL_TOPIC, this->getName(), this->getTopic());
+	else
+		sendf(this->m_serv, &client, RPL_NOTOPIC, this->getName());
+}
+
+void Channel::sendClientslist(Client &dest)
+{
+	std::string list = this->clientsList();
+	sendf(this->m_serv, &dest, RPL_NAMREPLY, this->getsymbol(), this->getName(), list);
+}
+
+std::string Channel::clientsList()
+{
+	std::string res = "";
+	for (size_t i = 0; i < m_vClients.size(); i++)
+	{
+		res += m_vClients[i].g
+	}
 }

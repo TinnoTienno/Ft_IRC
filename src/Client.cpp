@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 13:41:01 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 17:20:23 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "utils.hpp"
 #include <iostream>
 #include "Channel.hpp"
+#include "serverExceptions.hpp"
 
 void Client::kill(const std::string &str) const
 {
@@ -145,3 +146,5 @@ void Client::addOP(Channel &channel)
 	this->m_OpChannels.push_back(&channel);
 	std::cout << "Channel " << channel.getName() << " was added to " << this->getNick() << "'s channels OP list" << std::endl;
 }
+
+size_t Client::getChannelsCount() { return m_vChannels.size(); }

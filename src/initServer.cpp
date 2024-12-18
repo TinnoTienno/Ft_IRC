@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/12 18:30:05 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:19:45 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <stdexcept>
 #include <sys/types.h>
 #include <stddef.h>
+#include "serverExceptions.hpp"
 
 void Server::ServerInit(const std::string &port)
 {

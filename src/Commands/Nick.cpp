@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 15:20:41 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:36:08 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,38 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include "Parsing.hpp"
-
+#include "serverExceptions.hpp"
 
 void Nick::execute(Server *server, const Parsing &parse, Client &client)
 {
 	std::string nickTmp = client.getNick();
 	std::string source = client.getPrefix();
-	int errorCode = Nick::errorCode(server, parse, client);
-	switch (errorCode)
-	{
-	case 431:
-		sendMessage(client.getFD(), server->getHostname(), "431 " + client.getNick(), parse.getArguments()[1] + " No nickname given");
-		break;
-	case 432:
-		sendMessage(client.getFD(), server->getHostname(), "432 " + client.getNick(), parse.getArguments()[1] + " Erroneus nickname");
-		break;
-	case 433:
-		sendMessage(client.getFD(), server->getHostname(), "433 " + client.getNick(), parse.getArguments()[1] + " Nickname already in use");
-		break;
-	default:
-		sendMessage(client.getFD(), source, "NICK", client.getNick());
-	}
+	Nick::parseError(server, parse, client);
 }
 
-int Nick::errorCode(Server *server, const Parsing &parse, Client &client)
+int Nick::parseError(Server *server, const Parsing &parse, Client &client)
 {
-	if (!parse.getArguments()[1].size())
-		return 431;
-	if (server->getClient(parse.getArguments()[1]))
-		return 433;
-	if (!isNickFormatted(parse.getArguments()[1]))
-		return 432;
-	client.setNick(parse.getArguments()[1]);
+	try
+	{
+		if (!parse.getArguments()[1].size())
+			throw(serverExceptions(431));
+		if (server->getClient(parse.getArguments()[1]))
+			throw(serverExceptions(433));
+		if (!isNickFormatted(parse.getArguments()[1]))
+			throw(serverExceptions(432));
+		client.setNick(parse.getArguments()[1]);
+	}
+	catch(const serverExceptions& e)
+	{
+		if (e.getErrorCode() == 431)
+			e.sendError(server, &client);
+		if (e.getErrorCode() == 432)
+			e.sendError(server, &client, parse.getArguments()[1].c_str());
+		if (e.getErrorCode() == 433)
+			e.sendError(server, &client, parse.getArguments()[1].c_str());
+		if (e.getErrorCode() == 436)
+			e.sendError(server, &client, parse.getArguments()[1].c_str());
+	}
 	return 0;
 }
 

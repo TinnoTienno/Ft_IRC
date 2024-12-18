@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:34:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/13 14:02:09 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:19:18 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Server.hpp"
 #include <iostream>
 #include "Parsing.hpp"
+#include "serverExceptions.hpp"
 
 void UserHost::execute(Server *server, const Parsing &parse, Client &client)
 {

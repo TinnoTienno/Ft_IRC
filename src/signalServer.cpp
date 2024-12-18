@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signalServer.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:00:27 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 14:16:36 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:20:09 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <iostream>
+#include "serverExceptions.hpp"
 
 void Server::SignalHandler(int signum)
 {
