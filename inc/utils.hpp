@@ -6,13 +6,14 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:44:33 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 15:28:01 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 18:49:59 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_HPP
 # define UTILS_HPP
 # include <vector>
+# include "Channel.hpp"
 
 #include <vector>
 #include <string>
@@ -27,4 +28,5 @@ std::string itoa(int nb);
 bool charIsNot(char c, const std::string &plage);
 bool strCompareNoCase(const std::string &string1, const std::string &string2);
 void sendf(Server *server, Client *client, const std::string str, ...);
+std::string getMode(Mode mode);
 #endif

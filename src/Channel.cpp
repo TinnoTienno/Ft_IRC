@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 18:14:41 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:06:30 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,14 @@
 #include <climits>
 #include "serverExceptions.hpp"
 #include "Rpl.hpp"
+#include <iostream>
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
-	if (charIsNot(channelName[0], "&#+!") || channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
+	
+	if (charIsNot(channelName[0], "&#+!")|| channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
 		return false;
+	std::cout << "yo" << std::endl;
 	if (channelName.find_first_of(", :") != channelName.npos)
 		return false;
 	return true;
@@ -85,7 +88,8 @@ void	Channel::addClient(Client &client)
 		throw serverExceptions(405);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
-	this->m_vClients.push_back(&client);
+	s_clientPair res = {&client, Default} ;
+	this->m_vClients.push_back(res);
 	if (!m_vOP.size())
 		addOP(client);
 	this->sendJoin(client);
@@ -102,7 +106,9 @@ void	Channel::addClient(Client &client, const std::string & passwd)
 		throw serverExceptions(405);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
-	this->m_vClients.push_back(&client);
+	s_clientPair res = {&client, Default} ;
+	
+	this->m_vClients.push_back(res);
 	this->sendJoin(client);
 	this->sendTopic(client);
 	this->sendClientslist(client);
@@ -112,7 +118,7 @@ void	Channel::removeClient(Server *server, const Client & client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		if (m_vClients[i] == &client)
+		if (m_vClients[i].client == &client)
 		{
 			m_vClients.erase(m_vClients.begin() + i);
 			if (!m_vClients.size())
@@ -141,7 +147,7 @@ void Channel::removeOP(Client &client)
 void	Channel::sendAllMsg(const std::string & msg)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendMessage(m_vClients[i]->getFD(), m_vClients[i]->getPrefix(), "PRIVMSG", msg);
+		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
 }
 
 void	Channel::setTopic(const std::string & topic) { this->m_topic = topic; }
@@ -161,7 +167,7 @@ void Channel::setPassword(const std::string &passwd) { m_password = passwd; }
 void Channel::sendJoin(const Client &client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendMessage(m_vClients[i]->getFD(), client.getPrefix(), "JOIN ", this->getName());
+		sendMessage(m_vClients[i].client->getFD(), client.getPrefix(), "JOIN ", this->getName());
 }
 
 Client *Channel::getBanned(Client *client)
@@ -175,30 +181,44 @@ Client *Channel::getBanned(Client *client)
 Client *Channel::getClient(Client *client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		if (m_vClients[i] == client)
-			return m_vClients[i];
+		if (m_vClients[i].client == client)
+			return m_vClients[i].client;
 	return NULL;
 }
 
 void Channel::sendTopic(Client &client)
 {
 	if (this->getTopic() != "")
-		sendf(this->m_serv, &client, RPL_TOPIC, this->getName(), this->getTopic());
+		sendf(this->m_serv, &client, RPL_TOPIC, this->getName().c_str(), this->getTopic().c_str());
 	else
-		sendf(this->m_serv, &client, RPL_NOTOPIC, this->getName());
+		sendf(this->m_serv, &client, RPL_NOTOPIC, this->getName().c_str());
 }
 
 void Channel::sendClientslist(Client &dest)
 {
 	std::string list = this->clientsList();
-	sendf(this->m_serv, &dest, RPL_NAMREPLY, this->getsymbol(), this->getName(), list);
+	sendf(this->m_serv, &dest, RPL_NAMREPLY, this->getSymbol().c_str(), this->getName().c_str(), list.c_str());
 }
 
 std::string Channel::clientsList()
 {
 	std::string res = "";
 	for (size_t i = 0; i < m_vClients.size(); i++)
+		res += getMode(m_vClients[i].mode) + m_vClients[i].client->getNick() + " ";
+	return res;
+}
+
+std::string Channel::getSymbol()
+{
+	switch (m_channelMode)
 	{
-		res += m_vClients[i].g
+	case Public :
+		return "=";
+	case Secret :
+		return "@";
+	case Private :
+		return "*";
+	default :
+		return "";
 	}
 }

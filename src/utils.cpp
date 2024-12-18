@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 15:20:13 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:06:58 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <stdarg.h>
 #include "Server.hpp"
 #include "serverExceptions.hpp"
+#include "Channel.hpp"
 
 void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
 {
@@ -67,8 +68,8 @@ bool charIsNot(char c, const std::string &plage)
 {
 	for (std::string::const_iterator iter = plage.begin(); iter != plage.end(); iter++)
 		if (c == *iter)
-			return true;
-	return false;
+			return false;
+	return true;
 }
 
 bool strCompareNoCase(const std::string &string1, const std::string &string2)
@@ -111,4 +112,23 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 	message += "\r\n";
 	send (dest->getFD(), message.c_str(), message.size(), 0);
 	std::cout << dest->getFD() << " << " << message << std::endl;
+}
+
+std::string getMode(Mode mode)
+{
+	switch (mode)
+	{
+	case Founder :
+		return "~";
+	case Protected :
+		return "&";
+	case Operator :
+		return "@";
+	case Halfop :
+		return "%";
+	case Voice :
+		return "+";
+	default:
+		return "";
+	}
 }

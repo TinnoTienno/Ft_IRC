@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 18:12:30 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 18:48:41 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,31 @@
 #include <string>
 #include <vector>
 #include "Client.hpp"
+
+
+typedef enum Mode
+{
+	Founder, 
+	Protected, 
+	Operator, 
+	Halfop, 
+	Voice,
+	Default
+}	Mode;
+
+typedef enum channelMode
+{
+	Public,
+	Secret,
+	Private,
+	Default1
+}	channelMode;
+
+typedef struct s_clientPair
+{
+	Client *client;
+	Mode mode;
+}	s_clientPair;
 
 class	Server;
 class	Channel
@@ -30,7 +55,7 @@ class	Channel
 		void addClient(Client &client);
 		void addClient(Client &client, const std::string &passwd);
 		
-		void	removeClient(Server *server, const Client & client);
+		void removeClient(Server *server, const Client & client);
 		
 		void addOP(Client &client);
 		
@@ -59,16 +84,20 @@ class	Channel
 
 		void sendClientslist(Client &dest);
 		std::string clientsList();
+		
+		std::string getSymbol();
+		
 	private:
 		bool 					m_isInviteOnly;
 		std::string 			m_topic;
 		std::string				m_name;
 		std::string				m_password;
-		std::vector <Client *>	m_vClients;
+		std::vector <s_clientPair>	m_vClients;
 		std::vector <Client *>	m_vOP;
 		std::vector <Client *>	m_vBans;
 		Server *				m_serv;
 		int						m_ID;
+		channelMode				m_channelMode;
 };
 
 #endif
