@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 18:29:32 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:04:15 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include "UserHost.hpp"
+#include "Ping.hpp"
+#include "PrivMsg.hpp"
+#include "Notice.hpp"
+#include "Join.hpp"
+#include "Nick.hpp"
 #include <map>
 
 void Server::AcceptNewClient()
@@ -72,6 +78,25 @@ void Server::ReceiveNewData(Client &client)
 				parseCommand(line.substr(k, j - k - 1), client);
 			}
 		}
+	}
+}
+
+void Server::parseCommand(const std::string line, Client &client)
+{
+	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE"};
+	void (*fCommands[])(Server *, const Parsing &, Client &) = { &Join::execute,
+		&Nick::execute,
+		&UserHost::execute,
+		&Ping::execute,
+		&PrivMsg::execute,
+		&Notice::execute};
+	size_t size = sizeof(Commands) / sizeof(Commands[0]);
+	std::cout << " " << client.getFD() << " >> " << line << std::endl;
+	Parsing parse(line);
+	for (size_t i = 0; i < size; i++)
+	{
+		if (parse.getCommand() == Commands[i])
+			fCommands[i](this, parse, client);
 	}
 }
 

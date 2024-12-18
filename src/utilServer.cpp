@@ -3,18 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   utilServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
 /*   Updated: 2024/12/17 17:33:36 by eschussl         ###   ########.fr       */
+=======
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
+/*   Updated: 2024/12/17 16:41:51 by aduvilla         ###   ########.fr       */
+>>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "Channel.hpp"
-#include <sstream>
-#include <iomanip>
 #include "Parsing.hpp"
+<<<<<<< HEAD
 #include <map>
 #include <string>
 #include "Channel.hpp"
@@ -27,6 +32,9 @@ const std::string Server::getNextGuest()
 	oss << std::setfill ('0') << std::setw (3) <<  ++i;
 	return ((std::string) "Guest" + oss.str());
 }
+=======
+#include "Client.hpp"
+>>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f
 
 bool Server::userErrorCode(Client &client, const Parsing &parse)
 {
@@ -34,6 +42,7 @@ bool Server::userErrorCode(Client &client, const Parsing &parse)
 	client.setReal(parse.getArguments()[4]);
 	return 0;
 }
+<<<<<<< HEAD
 
 const std::string	Server::getPort() const 
 {
@@ -47,3 +56,5 @@ Channel *Server::findChannel(const std::string &channelName)
 			return &m_vChannels[i];
 	return NULL;
 }
+=======
+>>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f

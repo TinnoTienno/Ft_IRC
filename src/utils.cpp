@@ -6,11 +6,16 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/12/17 17:37:28 by eschussl         ###   ########.fr       */
+=======
+/*   Updated: 2024/12/17 15:37:32 by aduvilla         ###   ########.fr       */
+>>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include <vector>
 #include <ctime>
 #include <netdb.h>
 #include <vector>
@@ -52,6 +57,7 @@ std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 		result.push_back(token);
 	return result;
 }
+<<<<<<< HEAD
 
 std::string itoa(int nb)
 {
@@ -77,3 +83,5 @@ bool strCompareNoCase(const std::string &string1, const std::string &string2)
 			return false;
 	return true;
 }
+=======
+>>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f

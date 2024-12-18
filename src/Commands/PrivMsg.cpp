@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/12/17 15:36:36 by eschussl         ###   ########.fr       */
+=======
+/*   Updated: 2024/12/17 15:37:46 by aduvilla         ###   ########.fr       */
+>>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +49,7 @@ void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 	{
 		if (targets[i].find('#') == 0)
 		{
-			Channel	*chan = server->findChannel(targets[i].substr(1));
+			Channel	*chan = server->getChannel(targets[i].substr(1));
 			if (!chan)
 				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
 			else
@@ -53,7 +57,7 @@ void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 		}
 		else
 	  	{
-			Client *user = server->findNick( targets[i]);
+			Client *user = server->getClient( targets[i]);
 			if (!user)
 				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
 			else

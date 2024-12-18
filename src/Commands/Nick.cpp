@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/16 19:43:13 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:20:41 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int Nick::errorCode(Server *server, const Parsing &parse, Client &client)
 {
 	if (!parse.getArguments()[1].size())
 		return 431;
-	if (server->findNick(parse.getArguments()[1]))
+	if (server->getClient(parse.getArguments()[1]))
 		return 433;
 	if (!isNickFormatted(parse.getArguments()[1]))
 		return 432;
@@ -52,7 +52,7 @@ int Nick::errorCode(Server *server, const Parsing &parse, Client &client)
 
 bool Nick::isNickFormatted(const std::string &nickname)
 {
-	if (nickname.find_first_of("@.:!") != nickname.npos || !nickname.find("#") || isdigit(nickname[0]))
+	if (nickname.find_first_of("&@.:!") != nickname.npos || !nickname.find("#") || isdigit(nickname[0]))
 		return 0;
 	return 1;
 }

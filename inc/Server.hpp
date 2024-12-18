@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 13:40:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/17 14:10:38 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,10 @@ class Server
 
 		void ServerInit(const std::string&);
 		void SerSocket();
+		
 		void AcceptNewClient();
 		void ReceiveNewData(Client &client);
+		void parseCommand(const std::string buffer, Client &client);
 		std::string parseBuffer(Client &client, std::string buffer);
 		
 		bool checkAuth(Client &client, const std::string&);
@@ -79,19 +81,15 @@ class Server
 		
 		void CloseFds();
 		void ClearClient(Client &client);
-		void parseCommand(const std::string buffer, Client &client);
-
-		bool isNickFormatted(const std::string &nickname) const;
-		Client *findNick(const std::string &nickname);
 	
 		const std::string	getPort() const;
 		const std::string	getNextGuest();
 		const std::string	getHostname() const;
 		const std::string	getUserNumber() const;
 		const std::string	getChannelNumber() const;
-		Client 	&getClient(int clientKey);
-
-		Channel *findChannel(const std::string &channelName);
+		Client 	*getClient(int clientFd);
+		Client 	*getClient(const std::string &nickname);
+		Channel *getChannel(const std::string &channelName);
 
 		Channel &createChannel(const std::string &name, Client &client);
 		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
