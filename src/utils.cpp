@@ -57,7 +57,6 @@ std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 		result.push_back(token);
 	return result;
 }
-<<<<<<< HEAD
 
 std::string itoa(int nb)
 {
@@ -83,5 +82,3 @@ bool strCompareNoCase(const std::string &string1, const std::string &string2)
 			return false;
 	return true;
 }
-=======
->>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f

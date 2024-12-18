@@ -51,20 +51,10 @@ void Join::ifPassword(Server *server, const Parsing &parse, Client &client)
 	{
 		try
 		{
-<<<<<<< HEAD
 			
 			Channel *channel = server->findChannel(*iterChannels);
 			if (channel == NULL)
 				server->createChannel(*iterChannels, client, *iterPasswords);
-=======
-			Channel *channel = server->getChannel(parse.getArguments()[i]);
-			if (channel == NULL && firstPassword != parse.getArguments().size())
-				server->createChannel(parse.getArguments()[i], client);
-			else if (channel == NULL)
-				server->createChannel(parse.getArguments()[i], client, parse.getArguments()[j++]);
-			else if (firstPassword != parse.getArguments().size())
-				channel->addClient(client);
->>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f
 			else
 				channel->addClient(client, *iterPasswords);
 			iterChannels++;
