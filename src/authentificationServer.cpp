@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 13:51:14 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 16:31:19 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include "Nick.hpp"
 #include "Parsing.hpp"
+#include "serverExceptions.hpp"
 
 bool Server::checkAuth(Client &client, const std::string &buffer)
 {
@@ -29,7 +30,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		Parsing parse(line);
 		if (parse.getCommand() == "NICK")
 		{
-			if (Nick::errorCode(this, parse, client))
+			if (Nick::parseError(this, parse, client))
 				client.setNick(getNextGuest());
 		}
 		else if (parse.getCommand() == "PASS")

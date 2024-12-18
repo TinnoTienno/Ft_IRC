@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 14:10:38 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:15:26 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ class Server
 		Channel &createChannel(const std::string &name, Client &client);
 		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
 		void 	deleteChannel(Channel &channel);
+		Channel *findChannel(const std::string &channelName);
 }	;
 
 #endif

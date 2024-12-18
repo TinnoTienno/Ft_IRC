@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 13:57:37 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:19:10 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "Client.hpp"
 #include "Parsing.hpp"
 #include "utils.hpp"
+#include "serverExceptions.hpp"
 
 void	Notice::execute(Server *server, const Parsing &parse, Client &client)
 {

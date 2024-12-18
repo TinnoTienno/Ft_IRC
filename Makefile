@@ -6,14 +6,14 @@
 #    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/18 13:56:56 by eschussl         ###   ########.fr        #
+#    Updated: 2024/12/18 17:05:14 by eschussl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	ircserv
 
 CC 			=	c++ 
-CFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g
+CFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g3
 
 COMMAND_PATH	= Commands/
 SRCS		=	main.cpp\
@@ -29,6 +29,7 @@ SRCS		=	main.cpp\
 				signalServer.cpp\
 				getServer.cpp\
 				exitServer.cpp\
+				serverExceptions.cpp\
 				$(addprefix $(COMMAND_PATH), Nick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp)
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))

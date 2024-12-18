@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/17 18:22:49 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 19:06:30 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,26 @@
 #include "Channel.hpp"
 #include "utils.hpp"
 #include <climits>
-#include "Exceptions.hpp"
+#include "serverExceptions.hpp"
+#include "Rpl.hpp"
+#include <iostream>
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
-	if (charIsNot(channelName[0], "&#+!") || channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
+	
+	if (charIsNot(channelName[0], "&#+!")|| channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
 		return false;
+	std::cout << "yo" << std::endl;
 	if (channelName.find_first_of(", :") != channelName.npos)
 		return false;
 	return true;
 }
 
-Channel::Channel(const std::string &name, Client &client)
+Channel::Channel(Server *server, const std::string &name, Client &client)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
+	this->m_serv = server;
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = "";
@@ -39,10 +44,11 @@ Channel::Channel(const std::string &name, Client &client)
 	addOP(client);
 }
 
-Channel::Channel(const std::string &name, Client &client, const std::string &passwd)
+Channel::Channel(Server *server, const std::string &name, Client &client, const std::string &passwd)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
+	this->m_serv = server;
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = passwd;
@@ -74,29 +80,45 @@ Channel::~Channel	(void)
 
 void	Channel::addClient(Client &client)
 {
-	// if (!this->m_password.empty())
-	// 	throw badChannelKeyException();
-	// if (client.getChannelssize() == MAX_CHANNEL_JOINED + 1)
-	// 	throw tooManyChannelException();
-	this->m_vClients.push_back(&client);
+	if (this->getClient(&client))
+		throw serverExceptions(405);
+	if (!this->m_password.empty())
+		throw serverExceptions(475);
+	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
+		throw serverExceptions(405);
+	if (this->getBanned(&client))
+		throw serverExceptions(474);
+	s_clientPair res = {&client, Default} ;
+	this->m_vClients.push_back(res);
 	if (!m_vOP.size())
 		addOP(client);
 	this->sendJoin(client);
+	this->sendTopic(client);
 }
 
 void	Channel::addClient(Client &client, const std::string & passwd)
 {
 	if (this->m_password != passwd)
-		throw std::runtime_error("Wrong password");
-	this->m_vClients.push_back(&client);
+		throw serverExceptions(475);
+	if (this->getClient(&client))
+		throw serverExceptions(405);
+	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
+		throw serverExceptions(405);
+	if (this->getBanned(&client))
+		throw serverExceptions(474);
+	s_clientPair res = {&client, Default} ;
+	
+	this->m_vClients.push_back(res);
 	this->sendJoin(client);
+	this->sendTopic(client);
+	this->sendClientslist(client);
 }
 
 void	Channel::removeClient(Server *server, const Client & client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		if (m_vClients[i] == &client)
+		if (m_vClients[i].client == &client)
 		{
 			m_vClients.erase(m_vClients.begin() + i);
 			if (!m_vClients.size())
@@ -125,7 +147,7 @@ void Channel::removeOP(Client &client)
 void	Channel::sendAllMsg(const std::string & msg)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendMessage(m_vClients[i]->getFD(), m_vClients[i]->getPrefix(), "PRIVMSG", msg);
+		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
 }
 
 void	Channel::setTopic(const std::string & topic) { this->m_topic = topic; }
@@ -145,5 +167,58 @@ void Channel::setPassword(const std::string &passwd) { m_password = passwd; }
 void Channel::sendJoin(const Client &client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendMessage(m_vClients[i]->getFD(), client.getPrefix(), "JOIN ", this->getName());
+		sendMessage(m_vClients[i].client->getFD(), client.getPrefix(), "JOIN ", this->getName());
+}
+
+Client *Channel::getBanned(Client *client)
+{
+	for (size_t i = 0; i < m_vBans.size(); i++)
+		if (m_vBans[i] == client)
+			return m_vBans[i];
+	return NULL;
+}
+
+Client *Channel::getClient(Client *client)
+{
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		if (m_vClients[i].client == client)
+			return m_vClients[i].client;
+	return NULL;
+}
+
+void Channel::sendTopic(Client &client)
+{
+	if (this->getTopic() != "")
+		sendf(this->m_serv, &client, RPL_TOPIC, this->getName().c_str(), this->getTopic().c_str());
+	else
+		sendf(this->m_serv, &client, RPL_NOTOPIC, this->getName().c_str());
+}
+
+void Channel::sendClientslist(Client &dest)
+{
+	std::string list = this->clientsList();
+	sendf(this->m_serv, &dest, RPL_NAMREPLY, this->getSymbol().c_str(), this->getName().c_str(), list.c_str());
+}
+
+std::string Channel::clientsList()
+{
+	std::string res = "";
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		res += getMode(m_vClients[i].mode) + m_vClients[i].client->getNick() + " ";
+	return res;
+}
+
+std::string Channel::getSymbol()
+{
+	switch (m_channelMode)
+	{
+	case Public :
+		return "=";
+	case Secret :
+		return "@";
+	case Private :
+		return "*";
+	default :
+		return "";
+	}
 }

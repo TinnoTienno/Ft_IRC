@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Exceptions.cpp                                     :+:      :+:    :+:   */
+/*   Rpl.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 16:06:42 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 16:33:42 by eschussl         ###   ########.fr       */
+/*   Created: 2024/12/18 17:46:21 by eschussl          #+#    #+#             */
+/*   Updated: 2024/12/18 18:10:59 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Exceptions.hpp"
-#include "utils.hpp"
+#ifndef RPL_HPP
+# define RPL_HPP
 
-int serverExceptions::getErrorCode() const { return m_errorCode; }
-
-serverExceptions::serverExceptions(const int errorCode) : m_errorCode(errorCode) { }
+#define RPL_TOPIC "%h 332 %p %C :%t" // channel topic
+#define RPL_NOTOPIC "%h 331 %p %C :No topic is set" // channel
+#define RPL_NAMREPLY "%h 353 %p %s %C:%l" //symbol channel list of clients
+#endif

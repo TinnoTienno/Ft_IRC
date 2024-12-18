@@ -6,11 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/12/17 17:37:28 by eschussl         ###   ########.fr       */
-=======
-/*   Updated: 2024/12/17 15:37:32 by aduvilla         ###   ########.fr       */
->>>>>>> 2aef5294e1965bb4b2a8ba74b2a0886033821d3f
+/*   Updated: 2024/12/18 19:06:58 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +16,10 @@
 #include <netdb.h>
 #include <vector>
 #include <sstream>
-
+#include <stdarg.h>
+#include "Server.hpp"
+#include "serverExceptions.hpp"
+#include "Channel.hpp"
 
 void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
 {
@@ -69,8 +68,8 @@ bool charIsNot(char c, const std::string &plage)
 {
 	for (std::string::const_iterator iter = plage.begin(); iter != plage.end(); iter++)
 		if (c == *iter)
-			return true;
-	return false;
+			return false;
+	return true;
 }
 
 bool strCompareNoCase(const std::string &string1, const std::string &string2)
@@ -81,4 +80,55 @@ bool strCompareNoCase(const std::string &string1, const std::string &string2)
 		if (tolower(string1[i]) != tolower(string2[i]))
 			return false;
 	return true;
+}
+
+static std::string addVar(Server *server, Client* client, char identifier, va_list args)
+{
+	if (identifier == '%')
+		return "%";
+	else if (identifier == 'h' && server)
+		return server->getHostname();
+	else if (identifier == 'p' && client)
+		return (client->getPrefix());
+	else if (!charIsNot(identifier, "nCcuHmsDP"))
+		return va_arg(args, char *);
+	return "";
+}
+
+void sendf(Server *server, Client *dest, const std::string str, ...)
+{
+	va_list args;
+	std::string message = "";
+	if (!server || !dest)
+		return ;
+	va_start (args, str);
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		if (str[i] == '%')
+			message += addVar(server, dest, str[++i], args);
+		else
+			message += str[i];
+	}
+	message += "\r\n";
+	send (dest->getFD(), message.c_str(), message.size(), 0);
+	std::cout << dest->getFD() << " << " << message << std::endl;
+}
+
+std::string getMode(Mode mode)
+{
+	switch (mode)
+	{
+	case Founder :
+		return "~";
+	case Protected :
+		return "&";
+	case Operator :
+		return "@";
+	case Halfop :
+		return "%";
+	case Voice :
+		return "+";
+	default:
+		return "";
+	}
 }

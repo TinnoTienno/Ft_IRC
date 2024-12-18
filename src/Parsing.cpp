@@ -6,12 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 13:44:48 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/17 13:50:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 18:51:42 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parsing.hpp"
 #include <iostream>
+#include "serverExceptions.hpp"
 
 Parsing::Parsing(std::string line)
 {

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 13:57:31 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 15:19:16 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "Client.hpp"
 #include "Parsing.hpp"
 #include "utils.hpp"
+#include "serverExceptions.hpp"
 
 /*
 static std::vector<std::string>	vsplit(const std::string & str, char delimiter)
