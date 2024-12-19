@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 00:55:09 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/19 14:23:52 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ class	Channel
 		
 		void removeOP(Client &client);
 		
-		void sendAllMsg(const std::string &);
+		void sendAllMsg(Server *server, Client *client, const std::string &);
 		void sendJoin(Client *source);
 		void sendTopic(Client *client);
 		

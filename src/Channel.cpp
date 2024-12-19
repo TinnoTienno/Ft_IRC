@@ -6,14 +6,16 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 01:09:48 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/19 14:26:04 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 #include <stdexcept>
+#include "Client.hpp"
 #include "Server.hpp"
 #include "Channel.hpp"
+#include "PrivMsg.hpp"
 #include "utils.hpp"
 #include <climits>
 #include "serverExceptions.hpp"
@@ -131,10 +133,11 @@ void Channel::removeOP(Client &client)
 	throw	std::runtime_error("Remove OP: OP not found");
 }
 
-void	Channel::sendAllMsg(const std::string & msg)
+void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
+		sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), m_vClients[i].client->getNick().c_str(), msg.c_str());
+//		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
 }
 
 void	Channel::setTopic(const std::string & topic) { this->m_topic = topic; }

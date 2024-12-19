@@ -3,44 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 15:19:16 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:24:01 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PrivMsg.hpp"
 #include "Server.hpp"
+#include "Err.hpp"
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Parsing.hpp"
 #include "utils.hpp"
 #include "serverExceptions.hpp"
 
-/*
-static std::vector<std::string>	vsplit(const std::string & str, char delimiter)
-{
-	std::vector<std::string>	result;
-	std::string::size_type		start = 0;
-	std::string::size_type		end = 0;
-
-	while ((end = str.find(delimiter, start)) != std::string::npos)
-	{
-		result.push_back(str.substr(start, end - start));
-		start = end + 1;
-	}
-	result.push_back(str.substr(start));
-	return result;
-}
-*/
-
 void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 {
 	if (parse.getArguments()[1].find(":", 0) == 0)
-		sendMessage(client.getFD(), server->getHostname(), "411 " + client.getNick(), "No recipient given PRIVMSG");
+		sendf(server, &client, ERR_NORECIPIENT, parse.getCommand().c_str());
 	else if (parse.getArguments().size() == 2)
-		sendMessage(client.getFD(), server->getHostname(), "412 " + client.getNick(), "No text to send");
+		sendf(server, &client, ERR_NOTEXTTOSEND);
 	std::vector<std::string>	targets = vsplit(parse.getArguments()[1], ',');
 	for (size_t i = 0; i < targets.size(); i++)
 	{
@@ -48,17 +32,17 @@ void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 		{
 			Channel	*chan = server->getChannel(targets[i].substr(1));
 			if (!chan)
-				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
+				sendf(server, &client, ERR_NOSUCHNICK, parse.getArguments()[1].c_str());
 			else
-				chan->sendAllMsg(parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+				chan->sendAllMsg(server, &client, parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{
 			Client *user = server->getClient( targets[i]);
 			if (!user)
-				sendMessage(client.getFD(), server->getHostname(), "401 " + client.getNick() + parse.getArguments()[1], "No such nick/channel");
+				sendf(server, &client, ERR_NOSUCHNICK, parse.getArguments()[1].c_str());
 			else
-				sendMessage(user->getFD(), client.getPrefix(), "PRIVMSG " + targets[i], parse.getArguments()[2]);
+				sendf(server, user, PRIVMSG, client.getPrefix().c_str(), user->getNick().c_str(), parse.getArguments()[2].c_str());
 		}
 	}
 //	else if (no such channel)
