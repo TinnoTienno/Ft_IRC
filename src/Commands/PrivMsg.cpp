@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:24:01 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:33:47 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 	{
 		if (targets[i].find('#') == 0)
 		{
-			Channel	*chan = server->getChannel(targets[i].substr(1));
+			Channel	*chan = server->getChannel(targets[i]);
 			if (!chan)
 				sendf(server, &client, ERR_NOSUCHNICK, parse.getArguments()[1].c_str());
 			else

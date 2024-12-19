@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 15:19:10 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:34:01 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void	Notice::execute(Server *server, const Parsing &parse, Client &client)
 	{
 		if (targets[i].find('#') == 0)
 		{
-			Channel *chan = server->getChannel(targets[i].substr(1));
+			Channel *chan = server->getChannel(targets[i]);
 			if (chan)
-				chan->sendAllMsg(parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+				chan->sendAllMsg(server, &client, parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{
