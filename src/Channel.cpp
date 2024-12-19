@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 19:06:30 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/19 01:09:48 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ bool Channel::parseChannelName(const std::string &channelName)
 	
 	if (charIsNot(channelName[0], "&#+!")|| channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
 		return false;
-	std::cout << "yo" << std::endl;
 	if (channelName.find_first_of(", :") != channelName.npos)
 		return false;
 	return true;
@@ -49,6 +48,7 @@ Channel::Channel(Server *server, const std::string &name, Client &client, const 
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 	this->m_serv = server;
+	std::cout << "server : " << this->m_serv->getHostname() << std::endl;
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = passwd;
@@ -57,22 +57,6 @@ Channel::Channel(Server *server, const std::string &name, Client &client, const 
 	addOP(client);
 }
 
-Channel::Channel	(Channel const & src)
-{
-	*this = src;
-}
-
-Channel&	Channel::operator=(Channel const & rhs)
-{
-	if (this != &rhs)
-	{
-		this->m_isInviteOnly = rhs.m_isInviteOnly;
-		this->setTopic(rhs.getTopic());
-		this->m_password = rhs.m_password;
-		this->m_name = rhs.m_name;
-	}
-	return *this;
-}
 
 Channel::~Channel	(void)
 {
@@ -82,18 +66,20 @@ void	Channel::addClient(Client &client)
 {
 	if (this->getClient(&client))
 		throw serverExceptions(405);
-	if (!this->m_password.empty())
+	if (this->m_password != "")
 		throw serverExceptions(475);
 	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
 		throw serverExceptions(405);
+	if (this->getInvite())
+		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
 	s_clientPair res = {&client, Default} ;
 	this->m_vClients.push_back(res);
 	if (!m_vOP.size())
 		addOP(client);
-	this->sendJoin(client);
-	this->sendTopic(client);
+	this->sendJoin(&client);
+	this->sendTopic(&client);
 }
 
 void	Channel::addClient(Client &client, const std::string & passwd)
@@ -104,13 +90,14 @@ void	Channel::addClient(Client &client, const std::string & passwd)
 		throw serverExceptions(405);
 	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
 		throw serverExceptions(405);
+	if (this->getInvite())
+		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
 	s_clientPair res = {&client, Default} ;
-	
 	this->m_vClients.push_back(res);
-	this->sendJoin(client);
-	this->sendTopic(client);
+	this->sendJoin(&client);
+	this->sendTopic(&client);
 	this->sendClientslist(client);
 }
 
@@ -164,10 +151,10 @@ int Channel::getID() const { return this->m_ID; }
 
 void Channel::setPassword(const std::string &passwd) { m_password = passwd; }
 
-void Channel::sendJoin(const Client &client)
+void Channel::sendJoin(Client *client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendMessage(m_vClients[i].client->getFD(), client.getPrefix(), "JOIN ", this->getName());
+		sendf(this->m_serv, m_vClients[i].client, "%m JOIN %C", client->getPrefix().c_str(), this->getName().c_str());
 }
 
 Client *Channel::getBanned(Client *client)
@@ -186,12 +173,12 @@ Client *Channel::getClient(Client *client)
 	return NULL;
 }
 
-void Channel::sendTopic(Client &client)
+void Channel::sendTopic(Client *client)
 {
 	if (this->getTopic() != "")
-		sendf(this->m_serv, &client, RPL_TOPIC, this->getName().c_str(), this->getTopic().c_str());
+		sendf(this->m_serv, client, RPL_TOPIC, this->getName().c_str(), this->getTopic().c_str());
 	else
-		sendf(this->m_serv, &client, RPL_NOTOPIC, this->getName().c_str());
+		sendf(this->m_serv, client, RPL_NOTOPIC, this->getName().c_str());
 }
 
 void Channel::sendClientslist(Client &dest)

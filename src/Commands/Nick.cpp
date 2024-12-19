@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 16:36:08 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/18 23:28:42 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "Server.hpp"
 #include "Parsing.hpp"
 #include "serverExceptions.hpp"
+#include <iostream>
 
 void Nick::execute(Server *server, const Parsing &parse, Client &client)
 {
@@ -38,13 +39,14 @@ int Nick::parseError(Server *server, const Parsing &parse, Client &client)
 	}
 	catch(const serverExceptions& e)
 	{
+		std::cout << "cout" << std::endl;
 		if (e.getErrorCode() == 431)
 			e.sendError(server, &client);
-		if (e.getErrorCode() == 432)
+		else if (e.getErrorCode() == 432)
 			e.sendError(server, &client, parse.getArguments()[1].c_str());
-		if (e.getErrorCode() == 433)
+		else if (e.getErrorCode() == 433)
 			e.sendError(server, &client, parse.getArguments()[1].c_str());
-		if (e.getErrorCode() == 436)
+		else if (e.getErrorCode() == 436)
 			e.sendError(server, &client, parse.getArguments()[1].c_str());
 	}
 	return 0;
