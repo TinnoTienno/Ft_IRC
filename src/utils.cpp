@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 19:06:58 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/19 01:14:38 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "Server.hpp"
 #include "serverExceptions.hpp"
 #include "Channel.hpp"
+#include <stdio.h>
 
 void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
 {
@@ -91,7 +92,10 @@ static std::string addVar(Server *server, Client* client, char identifier, va_li
 	else if (identifier == 'p' && client)
 		return (client->getPrefix());
 	else if (!charIsNot(identifier, "nCcuHmsDP"))
-		return va_arg(args, char *);
+	{
+		const char * i = (const char*) va_arg(args, const char *);
+		return i;
+	}
 	return "";
 }
 
@@ -109,7 +113,8 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 		else
 			message += str[i];
 	}
-	message += "\r\n";
+	message += "\r\n\0";
+	va_end(args);
 	send (dest->getFD(), message.c_str(), message.size(), 0);
 	std::cout << dest->getFD() << " << " << message << std::endl;
 }

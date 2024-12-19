@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 19:02:59 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/19 00:19:23 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ Channel &Server::createChannel(const std::string &name, Client &client)
 	Channel newChannel(this, name, client);
 	m_vChannels.push_back(newChannel);
 	std::cout << "New channel " << name << " was added " << client.getFD() << " is OP" << std::endl;
-	Channel &tmp = m_vChannels[m_vChannels.size() - 1]; 
+	Channel &tmp = m_vChannels[m_vChannels.size() - 1];
+	std::cout << "tmp " << tmp.getName() << std::endl;
 	client.addChannel(tmp);
 	client.addOP(tmp);
 	return tmp;

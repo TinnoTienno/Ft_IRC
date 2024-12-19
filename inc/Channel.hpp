@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 18:48:41 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/19 00:55:09 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ class	Channel
 	public:
 		Channel(Server *server, const std::string &name, Client &client, const std::string &passwd);
 		Channel(Server *server, const std::string &name, Client &client);
-		Channel(Channel const & src);
-		Channel &operator=(Channel const & rhs);
 		~Channel(void);
 		
 		void addClient(Client &client);
@@ -62,7 +60,8 @@ class	Channel
 		void removeOP(Client &client);
 		
 		void sendAllMsg(const std::string &);
-		void sendJoin(const Client &source);
+		void sendJoin(Client *source);
+		void sendTopic(Client *client);
 		
 		void setName(const std::string &);
 		void setTopic(const std::string &);
@@ -79,7 +78,6 @@ class	Channel
 		Client *getBanned(Client *client);
 		Client *getClient(Client *client);
 
-		void sendTopic(Client &client);
 		Server *getServ();
 
 		void sendClientslist(Client &dest);
@@ -95,7 +93,7 @@ class	Channel
 		std::vector <s_clientPair>	m_vClients;
 		std::vector <Client *>	m_vOP;
 		std::vector <Client *>	m_vBans;
-		Server *				m_serv;
+		Server 					*m_serv;
 		int						m_ID;
 		channelMode				m_channelMode;
 };
