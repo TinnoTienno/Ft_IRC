@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:26:04 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:45:08 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,8 @@ void Channel::removeOP(Client &client)
 void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), m_vClients[i].client->getNick().c_str(), msg.c_str());
+		if (m_vClients[i].client != client)
+			sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
 //		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
 }
 
