@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 16:40:53 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 17:33:44 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class	Channel
 		void addClient(Client &client, Mode clientMode);
 		void addClient(Client &client, const std::string &passwd, Mode clientMode);
 		
-		void removeClient(Server &server, const Client & client);
+		void removeClient(const Client & client);
 		
 		void addOP(Client &client);
 		
@@ -81,6 +81,7 @@ class	Channel
 		
 		Client *getBanned(Client *client);
 		Client *getClient(Client *client);
+		Client *getClient(const std::string &nickname);
 		Mode	getClientMode(Client *client);
 		Server *getServ();
 

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 16:28:33 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 16:59:23 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include "Join.hpp"
 #include "Nick.hpp"
 #include "Part.hpp"
+#include "Kick.hpp"
 #include <map>
 #include "serverExceptions.hpp"
 
@@ -86,7 +87,7 @@ void Server::ReceiveNewData(Client &client)
 
 void Server::parseCommand(const std::string line, Client &client)
 {
-	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE", "PART", "TOPIC"};
+	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE", "PART", "TOPIC", "KICK"};
 	void (*fCommands[])(Server &, const Parsing &, Client &) = { &Join::execute,
 		&Nick::execute,
 		&UserHost::execute,
@@ -94,7 +95,8 @@ void Server::parseCommand(const std::string line, Client &client)
 		&PrivMsg::execute,
 		&Notice::execute,
 		&Part::execute,
-		&Topic::execute};
+		&Topic::execute,
+		&Kick::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
 	std::cout << " " << client.getFD() << " >> " << line << std::endl;
 	Parsing parse(line);

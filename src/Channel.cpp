@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 16:52:31 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 17:33:53 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	Channel::addClient(Client &client, const std::string & passwd, Mode clientM
 	this->sendClientslist(client);
 }
 
-void	Channel::removeClient(Server &server, const Client & client)
+void	Channel::removeClient(const Client & client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
@@ -114,7 +114,7 @@ void	Channel::removeClient(Server &server, const Client & client)
 		{
 			m_vClients.erase(m_vClients.begin() + i);
 			if (!m_vClients.size())
-				server.deleteChannel(*this);
+				m_serv->deleteChannel(*this);
 			return;
 		}
 	}
@@ -174,6 +174,15 @@ Client *Channel::getClient(Client *client)
 			return m_vClients[i].client;
 	return NULL;
 }
+
+Client *Channel::getClient(const std::string &nickname)
+{
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		if (strCompareNoCase(m_vClients[i].client->getNick(), nickname))
+			return m_vClients[i].client;
+	return NULL;
+}
+
 
 Mode	Channel::getClientMode(Client *client)
 {
