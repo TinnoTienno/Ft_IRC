@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/19 01:11:34 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 09:33:25 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "utils.hpp"
 #include "serverExceptions.hpp"
 
-void Join::execute(Server *server, const Parsing &parse, Client &client)
+void Join::execute(Server &server, const Parsing &parse, Client &client)
 {
 	try
 	{
@@ -35,7 +35,7 @@ void Join::execute(Server *server, const Parsing &parse, Client &client)
 	}
 }
 
-void Join::execChannels(Server *server, const Parsing &parse, Client &client)
+void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 {
 	std::vector<std::string> channels = vsplit(parse.getArguments()[1], ',');
 	std::vector<std::string> passwords;
@@ -49,23 +49,22 @@ void Join::execChannels(Server *server, const Parsing &parse, Client &client)
 		try
 		{
 			std::cout << "iterchannel " << *iterChannels << std::endl;
-			Channel *channel = server->findChannel(*iterChannels);
+			Channel *channel = server.findChannel(*iterChannels);
 			if (iterPasswords != passwords.end() && channel)
 			{
-				channel->addClient(client, *iterPasswords);
+				channel->addClient(client, *iterPasswords, Default);
 			}
 			else if (iterPasswords != passwords.end())
 			{
-				server->createChannel(*iterChannels, client, *iterPasswords);
+				server.createChannel(*iterChannels, client, *iterPasswords);
 			}
 			else if (channel)
 			{
-				std::cout << "1" << std::endl;
-				channel->addClient(client);
+				channel->addClient(client, Default);
 			}
 			else
 			{
-				server->createChannel(*iterChannels, client);
+				server.createChannel(*iterChannels, client);
 			}
 		}
 		catch(const serverExceptions& e)

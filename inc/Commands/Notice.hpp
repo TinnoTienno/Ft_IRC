@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Notice.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:57:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 23:57:53 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/21 08:22:24 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Client;
 class	Notice
 {
 	public :
-		static void execute(Server *server, const Parsing &parse, Client &client);
+		static void execute(Server &server, const Parsing &parse, Client &client);
 };
 
 #endif

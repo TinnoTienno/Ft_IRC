@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:45:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/21 09:43:29 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,30 +32,32 @@ bool Channel::parseChannelName(const std::string &channelName)
 	return true;
 }
 
-Channel::Channel(Server *server, const std::string &name, Client &client)
+Channel::Channel(Server &server, const std::string &name, Client &client)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
-	this->m_serv = server;
+	this->m_serv = &server;
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = "";
 	this->m_name = name;
-	addClient(client);
+	this->m_channelMode = Public;
+	addClient(client, Founder);
 	addOP(client);
 }
 
-Channel::Channel(Server *server, const std::string &name, Client &client, const std::string &passwd)
+Channel::Channel(Server &server, const std::string &name, Client &client, const std::string &passwd)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
-	this->m_serv = server;
+	this->m_serv = &server;
 	std::cout << "server : " << this->m_serv->getHostname() << std::endl;
 	this->m_isInviteOnly = false;
 	this->setTopic("");
 	this->m_password = passwd;
 	this->m_name = name;
-	addClient(client, passwd);
+	this->m_channelMode = Public;
+	addClient(client, passwd, Founder);
 	addOP(client);
 }
 
@@ -64,7 +66,7 @@ Channel::~Channel	(void)
 {
 }
 
-void	Channel::addClient(Client &client)
+void	Channel::addClient(Client &client, Mode clientMode)
 {
 	if (this->getClient(&client))
 		throw serverExceptions(405);
@@ -76,15 +78,16 @@ void	Channel::addClient(Client &client)
 		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
-	s_clientPair res = {&client, Default} ;
+	s_clientPair res = {&client, clientMode} ;
 	this->m_vClients.push_back(res);
 	if (!m_vOP.size())
 		addOP(client);
-	this->sendJoin(&client);
+	this->sendJoin(client);
 	this->sendTopic(&client);
+	this->sendClientslist(client);
 }
 
-void	Channel::addClient(Client &client, const std::string & passwd)
+void	Channel::addClient(Client &client, const std::string & passwd, Mode clientMode)
 {
 	if (this->m_password != passwd)
 		throw serverExceptions(475);
@@ -96,14 +99,14 @@ void	Channel::addClient(Client &client, const std::string & passwd)
 		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
-	s_clientPair res = {&client, Default} ;
+	s_clientPair res = {&client, clientMode} ;
 	this->m_vClients.push_back(res);
-	this->sendJoin(&client);
+	this->sendJoin(client);
 	this->sendTopic(&client);
 	this->sendClientslist(client);
 }
 
-void	Channel::removeClient(Server *server, const Client & client)
+void	Channel::removeClient(Server &server, const Client & client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
@@ -111,7 +114,7 @@ void	Channel::removeClient(Server *server, const Client & client)
 		{
 			m_vClients.erase(m_vClients.begin() + i);
 			if (!m_vClients.size())
-				server->deleteChannel(*this);
+				server.deleteChannel(*this);
 			return;
 		}
 	}
@@ -133,11 +136,11 @@ void Channel::removeOP(Client &client)
 	throw	std::runtime_error("Remove OP: OP not found");
 }
 
-void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg)
+void	Channel::sendAllMsg(Server &server, Client *client, const std::string & msg)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		if (m_vClients[i].client != client)
-			sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
+			sendf(&server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
 //		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
 }
 
@@ -154,12 +157,6 @@ bool	Channel::getInvite() const { return this->m_isInviteOnly; }
 int Channel::getID() const { return this->m_ID; }
 
 void Channel::setPassword(const std::string &passwd) { m_password = passwd; }
-
-void Channel::sendJoin(Client *client)
-{
-	for (size_t i = 0; i < m_vClients.size(); i++)
-		sendf(this->m_serv, m_vClients[i].client, "%m JOIN %C", client->getPrefix().c_str(), this->getName().c_str());
-}
 
 Client *Channel::getBanned(Client *client)
 {
@@ -181,14 +178,18 @@ void Channel::sendTopic(Client *client)
 {
 	if (this->getTopic() != "")
 		sendf(this->m_serv, client, RPL_TOPIC, this->getName().c_str(), this->getTopic().c_str());
-	else
-		sendf(this->m_serv, client, RPL_NOTOPIC, this->getName().c_str());
+	// else
+	// 	sendf(this->m_serv, client, RPL_NOTOPIC, this->getName().c_str());
 }
 
 void Channel::sendClientslist(Client &dest)
 {
 	std::string list = this->clientsList();
+	std::cout << list << std::endl;
+	if (this->m_serv)
+		std::cout << "m_Serv is in" << std::endl;
 	sendf(this->m_serv, &dest, RPL_NAMREPLY, this->getSymbol().c_str(), this->getName().c_str(), list.c_str());
+	sendf(this->m_serv, &dest, RPL_ENDOFNAMES, this->getName().c_str(), list.c_str());
 }
 
 std::string Channel::clientsList()
@@ -204,12 +205,19 @@ std::string Channel::getSymbol()
 	switch (m_channelMode)
 	{
 	case Public :
-		return "=";
+		return " =";
 	case Secret :
-		return "@";
+		return " @";
 	case Private :
-		return "*";
+		return " *";
 	default :
 		return "";
 	}
 }
+
+void Channel::sendJoin(Client &client)
+{
+	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		sendf(this->m_serv, this->m_vClients[i].client, ":%m JOIN :%C", client.getPrefix().c_str(), this->getName().c_str());
+}
+

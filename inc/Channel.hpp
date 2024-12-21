@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:23:52 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/21 09:32:31 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,21 @@ class	Server;
 class	Channel
 {
 	public:
-		Channel(Server *server, const std::string &name, Client &client, const std::string &passwd);
-		Channel(Server *server, const std::string &name, Client &client);
+		Channel(Server &server, const std::string &name, Client &client, const std::string &passwd);
+		Channel(Server &server, const std::string &name, Client &client);
 		~Channel(void);
 		
-		void addClient(Client &client);
-		void addClient(Client &client, const std::string &passwd);
+		void addClient(Client &client, Mode clientMode);
+		void addClient(Client &client, const std::string &passwd, Mode clientMode);
 		
-		void removeClient(Server *server, const Client & client);
+		void removeClient(Server &server, const Client & client);
 		
 		void addOP(Client &client);
 		
 		void removeOP(Client &client);
 		
-		void sendAllMsg(Server *server, Client *client, const std::string &);
-		void sendJoin(Client *source);
+		void sendAllMsg(Server &server, Client *client, const std::string &);
+		void sendJoin(Client &source);
 		void sendTopic(Client *client);
 		
 		void setName(const std::string &);

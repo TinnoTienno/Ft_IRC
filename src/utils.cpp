@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 11:53:44 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/21 09:09:43 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,9 @@ static std::string addVar(Server *server, Client* client, char identifier, va_li
 		return server->getHostname();
 	else if (identifier == 'p' && client)
 		return (client->getPrefix());
-	else if (!charIsNot(identifier, "nCcuHmsDP"))
+	else if (identifier == 'n' && client)
+		return client->getNick();
+	else if (!charIsNot(identifier, "CcuHmsDPl"))
 	{
 		const char * i = (const char*) va_arg(args, const char *);
 		return i;

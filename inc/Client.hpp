@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 17:35:01 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/21 08:23:58 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Client
 		const int& getFD() const;
 		void setFD(const int&);
 		void setIPadd(const std::string&);
-		void setHost(struct sockaddr * addr, Server * server);
+		void setHost(struct sockaddr *addr, Server &server);
 		void setAuth(const bool &);
 		const bool& getAuth() const;
 		const std::string& getUser() const;
@@ -49,9 +49,9 @@ class Client
 		
 		void addPacket(const std::string &);
 		std::string getPacket();
-		void sendMsg(const std::string &, Server *server) const;
+		void sendMsg(const std::string &, Server &server) const;
 		void kill(const std::string &) const;
-		void connect(Server *server);
+		void connect(Server &server);
 
 		void addChannel(Channel &channel);
 		void addOP(Channel &channel);

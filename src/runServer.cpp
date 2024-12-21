@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 15:19:55 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/21 08:28:34 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Server::AcceptNewClient()
 	
 	client.setFD(incoFd);
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
-	client.setHost((struct sockaddr*)&clientAdd, this);
+	client.setHost((struct sockaddr*)&clientAdd, *this);
 	// m_mClients.insert({incoFd, client});
 	m_mClients[incoFd] = client;
 	m_vFds.push_back(newPoll);
@@ -85,7 +85,7 @@ void Server::ReceiveNewData(Client &client)
 void Server::parseCommand(const std::string line, Client &client)
 {
 	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE"};
-	void (*fCommands[])(Server *, const Parsing &, Client &) = { &Join::execute,
+	void (*fCommands[])(Server &, const Parsing &, Client &) = { &Join::execute,
 		&Nick::execute,
 		&UserHost::execute,
 		&Ping::execute,
@@ -97,7 +97,7 @@ void Server::parseCommand(const std::string line, Client &client)
 	for (size_t i = 0; i < size; i++)
 	{
 		if (parse.getCommand() == Commands[i])
-			fCommands[i](this, parse, client);
+			fCommands[i](*this, parse, client);
 	}
 }
 

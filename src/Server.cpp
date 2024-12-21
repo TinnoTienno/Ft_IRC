@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/19 00:19:23 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 08:25:44 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ Server::~Server()
 
 Channel &Server::createChannel(const std::string &name, Client &client)
 {
-	Channel newChannel(this, name, client);
+	Channel newChannel(*this, name, client);
 	m_vChannels.push_back(newChannel);
 	std::cout << "New channel " << name << " was added " << client.getFD() << " is OP" << std::endl;
 	Channel &tmp = m_vChannels[m_vChannels.size() - 1];
