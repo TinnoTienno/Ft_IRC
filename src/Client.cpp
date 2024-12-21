@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 09:41:43 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 14:53:10 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@ Client::~Client()
 	// close(m_fd);
 	// for (size_t i = 0; i < m_vChannels.size(); i++)
 	// 	m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
-	for (size_t i = 0; i < m_vChannels.size(); i++)
-		m_vChannels[i]->removeOP(*this);
 	// std::cout << "client is dead" << std::endl;
 };
 

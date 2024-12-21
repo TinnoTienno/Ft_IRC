@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 08:25:44 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 14:59:25 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,20 @@ Channel &Server::createChannel(const std::string &name, Client &client, const st
 
 void 	Server::deleteChannel(Channel &channel)
 {
-	for (std::vector<Channel>::iterator iter = m_vChannels.begin(); iter != m_vChannels.end(); iter++)
-	{
-		if (iter->getName() == channel.getName())
+	// for (std::vector<Channel>::iterator iter = m_vChannels.begin(); iter != m_vChannels.end(); iter++)
+	// {
+	// 	if (iter->getName() == channel.getName())
+	// 	{
+	// 		std::cout << "Now deleting the " << channel.getName() << "channel" << std::endl;
+	// 		m_vChannels.erase(iter);
+	// 	}
+	// }
+	for (size_t i = 0; i < m_vChannels.size(); i++)
+		if (&m_vChannels[i] == &channel)
 		{
-			std::cout << "Now deleting the " << channel.getName() << "channel" << std::endl;
-			m_vChannels.erase(iter);
+			std::cout << "Now deleting the " << m_vChannels[i].getName() << " channel" << std::endl;
+			m_vChannels.erase(m_vChannels.begin() + i);
 		}
-	}
 }
 
 Client *Server::getClient(const std::string &nickname)

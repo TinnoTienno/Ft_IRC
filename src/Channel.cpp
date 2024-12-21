@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 14:11:53 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 15:07:18 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,23 +118,9 @@ void	Channel::removeClient(Server &server, const Client & client)
 			return;
 		}
 	}
-	throw	std::runtime_error("Remove client: client not found");
 }
 
 void Channel::addOP(Client &client) { this->m_vOP.push_back(&client); }
-
-void Channel::removeOP(Client &client)
-{
-	for (size_t i = 0; i < m_vOP.size(); i++)
-	{
-		if (m_vOP[i] == &client)
-		{
-			m_vOP.erase(m_vOP.begin() + i);
-			return;
-		}
-	}
-	throw	std::runtime_error("Remove OP: OP not found");
-}
 
 void	Channel::sendAllMsg(Server &server, Client *client, const std::string & msg)
 {
@@ -221,3 +207,8 @@ void Channel::sendJoin(Client &client)
 		sendf(this->m_serv, this->m_vClients[i].client, ":%m JOIN :%C", client.getPrefix().c_str(), this->getName().c_str());
 }
 
+void Channel::sendPart(Client &client, const std::string &message)
+{
+	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		sendf(this->m_serv, this->m_vClients[i].client, ":%m PART %C :%m", client.getPrefix().c_str(), this->getName().c_str(), message.c_str());
+}

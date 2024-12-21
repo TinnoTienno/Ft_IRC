@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
+#    By: noda <noda@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/18 17:05:14 by eschussl         ###   ########.fr        #
+#    Updated: 2024/12/21 14:50:14 by noda             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ SRCS		=	main.cpp\
 				getServer.cpp\
 				exitServer.cpp\
 				serverExceptions.cpp\
-				$(addprefix $(COMMAND_PATH), Nick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp)
+				$(addprefix $(COMMAND_PATH), Nick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp Part.cpp)
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))
 
