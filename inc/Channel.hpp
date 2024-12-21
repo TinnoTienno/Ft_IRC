@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 17:33:44 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 21:36:13 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "Client.hpp"
 
 
-typedef enum Mode
+typedef enum clientMode
 {
 	Founder, 
 	Protected, 
@@ -26,7 +26,7 @@ typedef enum Mode
 	Halfop, 
 	Voice,
 	Default
-}	Mode;
+}	clientMode;
 
 typedef enum channelMode
 {
@@ -39,7 +39,7 @@ typedef enum channelMode
 typedef struct s_clientPair
 {
 	Client *client;
-	Mode mode;
+	clientMode mode;
 }	s_clientPair;
 
 class	Server;
@@ -50,8 +50,8 @@ class	Channel
 		Channel(Server &server, const std::string &name, Client &client);
 		~Channel(void);
 		
-		void addClient(Client &client, Mode clientMode);
-		void addClient(Client &client, const std::string &passwd, Mode clientMode);
+		void addClient(Client &client, clientMode clientMode);
+		void addClient(Client &client, const std::string &passwd, clientMode clientMode);
 		
 		void removeClient(const Client & client);
 		
@@ -82,7 +82,7 @@ class	Channel
 		Client *getBanned(Client *client);
 		Client *getClient(Client *client);
 		Client *getClient(const std::string &nickname);
-		Mode	getClientMode(Client *client);
+		clientMode	getClientMode(Client *client);
 		Server *getServ();
 
 		void sendClientslist(Client &dest);
@@ -93,6 +93,8 @@ class	Channel
 	private:
 		bool 					m_isInviteOnly;
 		bool					m_isProtectedTopic;
+		bool					m_isChannelSizeLimited;
+		size_t					m_sizelimit;
 		std::string 			m_topic;
 		std::string				m_name;
 		std::string				m_password;

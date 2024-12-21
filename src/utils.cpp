@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 16:52:25 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 21:36:41 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 	std::cout << dest->getFD() << " << " << message << std::endl;
 }
 
-std::string getMode(Mode mode)
+std::string getMode(clientMode mode)
 {
 	switch (mode)
 	{

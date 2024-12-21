@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 16:06:42 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 08:38:37 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 17:54:44 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ void serverExceptions::sendError(Server &server, Client *dest, ...) const
 			if (!str1)
 				std::cout << m_errorCode << " no command was given" << std::endl;
 			else
-				sendf(&server, dest,  ERR_UNKNOWNCOMMAND, str1);
+				sendf(&server, dest, ERR_UNKNOWNCOMMAND, str1);
 			break ;	
 		case 422 :
-			sendf(&server, dest,  ERR_NOMOTD);
+			sendf(&server, dest, ERR_NOMOTD);
 			break ;
 		case 431 :
 			sendf(&server, dest,  ERR_NONICKNAMEGIVEN);

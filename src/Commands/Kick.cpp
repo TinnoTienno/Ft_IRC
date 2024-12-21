@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:57:02 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 17:43:35 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 19:12:33 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@
 
 void Kick::execute(Server &server, const Parsing &parse, Client &client)
 {
+	Channel *chan;
 	try
 	{
 		if (parse.getArguments().size() < 3)
 			throw 461;
-		Channel *chan = server.findChannel(parse.getArguments()[1]);
+		chan = server.findChannel(parse.getArguments()[1]);
 		if (!chan)
 			throw 403;
 		Client *op = chan->getClient(&client);
@@ -54,18 +55,9 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 		{
 			switch (e.getErrorCode())
 			{
-			case 403 :
-				e.sendError(server, &client, chan->getName().c_str());
-				break;
 			case 441 :
             	e.sendError(server, &client, iter->c_str(), chan->getName().c_str());
            		break;
-			case 442 :
-            	e.sendError(server, &client, chan->getName().c_str());
-            	break;
-			case 482 :
-            	e.sendError(server, &client, chan->getName().c_str());
-            	break;
 			}
 		}
 	}
@@ -73,8 +65,17 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 	{
 		switch (e.getErrorCode())
 		{
+			case 403 :
+				e.sendError(server, &client, chan->getName().c_str());
+				break;
+			case 442 :
+            	e.sendError(server, &client, chan->getName().c_str());
+            	break;
 			case 461 :
             	e.sendError(server, &client, parse.getCommand().c_str());
+            	break;
+			case 482 :
+            	e.sendError(server, &client, chan->getName().c_str());
             	break;
 		}
 	}

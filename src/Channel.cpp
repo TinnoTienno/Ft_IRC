@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 17:33:53 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 21:36:26 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ Channel::~Channel	(void)
 {
 }
 
-void	Channel::addClient(Client &client, Mode clientMode)
+void	Channel::addClient(Client &client, clientMode clientMode)
 {
 	if (this->getClient(&client))
 		throw serverExceptions(405);
@@ -78,7 +78,9 @@ void	Channel::addClient(Client &client, Mode clientMode)
 		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
-	s_clientPair res = {&client, clientMode} ;
+	if (this->m_isChannelSizeLimited && m_vClients.size() == this->m_sizelimit)
+		throw serverExceptions(471);
+	s_clientPair res = {&client, clientMode};
 	this->m_vClients.push_back(res);
 	if (!m_vOP.size())
 		addOP(client);
@@ -87,7 +89,7 @@ void	Channel::addClient(Client &client, Mode clientMode)
 	this->sendClientslist(client);
 }
 
-void	Channel::addClient(Client &client, const std::string & passwd, Mode clientMode)
+void	Channel::addClient(Client &client, const std::string & passwd, clientMode clientMode)
 {
 	if (this->m_password != passwd)
 		throw serverExceptions(475);
@@ -95,6 +97,8 @@ void	Channel::addClient(Client &client, const std::string & passwd, Mode clientM
 		throw serverExceptions(405);
 	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
 		throw serverExceptions(405);
+	if (this->m_isChannelSizeLimited && m_vClients.size() == this->m_sizelimit)
+		throw serverExceptions(471);
 	if (this->getInviteMode())
 		throw serverExceptions(473);
 	if (this->getBanned(&client))
@@ -184,7 +188,7 @@ Client *Channel::getClient(const std::string &nickname)
 }
 
 
-Mode	Channel::getClientMode(Client *client)
+clientMode	Channel::getClientMode(Client *client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		if (m_vClients[i].client == client)
