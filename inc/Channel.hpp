@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 14:41:34 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 16:40:53 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,22 +63,25 @@ class	Channel
 		void sendJoin(Client &source);
 		void sendPart(Client &client, const std::string &message);
 		void sendTopic(Client *client);
+		void sendAllTopic();
 		
-		void setName(const std::string &);
-		void setTopic(const std::string &);
-		void	setInvite(bool);
+		void 	setName(const std::string &);
+		void 	setTopic(Client *client, const std::string &);
 		
 		const std::string getName() const;
 		const std::string getTopic() const;
 		int getID() const;
-		bool	getInvite() const;
+		void	setInviteMode(bool);
+		bool	getInviteMode() const;
+		void	setProtectedTopicMode(bool);
+		bool	getProtectedTopicMode() const;
 
 		void setPassword(const std::string &passwd);
 		bool parseChannelName(const std::string &channelName);
 		
 		Client *getBanned(Client *client);
 		Client *getClient(Client *client);
-
+		Mode	getClientMode(Client *client);
 		Server *getServ();
 
 		void sendClientslist(Client &dest);
@@ -88,6 +91,7 @@ class	Channel
 		
 	private:
 		bool 					m_isInviteOnly;
+		bool					m_isProtectedTopic;
 		std::string 			m_topic;
 		std::string				m_name;
 		std::string				m_password;

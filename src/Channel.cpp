@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 15:07:18 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 16:52:31 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 		throw serverExceptions(476);
 	this->m_serv = &server;
 	this->m_isInviteOnly = false;
-	this->setTopic("");
+	this->setTopic(NULL, "");
 	this->m_password = "";
 	this->m_name = name;
 	this->m_channelMode = Public;
@@ -53,7 +53,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client, const 
 	this->m_serv = &server;
 	std::cout << "server : " << this->m_serv->getHostname() << std::endl;
 	this->m_isInviteOnly = false;
-	this->setTopic("");
+	this->setTopic(NULL, "");
 	this->m_password = passwd;
 	this->m_name = name;
 	this->m_channelMode = Public;
@@ -74,7 +74,7 @@ void	Channel::addClient(Client &client, Mode clientMode)
 		throw serverExceptions(475);
 	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
 		throw serverExceptions(405);
-	if (this->getInvite())
+	if (this->getInviteMode())
 		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
@@ -95,7 +95,7 @@ void	Channel::addClient(Client &client, const std::string & passwd, Mode clientM
 		throw serverExceptions(405);
 	if (client.getChannelsCount() == MAX_CHANNEL_JOINED + 1)
 		throw serverExceptions(405);
-	if (this->getInvite())
+	if (this->getInviteMode())
 		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
@@ -130,16 +130,31 @@ void	Channel::sendAllMsg(Server &server, Client *client, const std::string & msg
 //		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
 }
 
-void	Channel::setTopic(const std::string & topic) { this->m_topic = topic; }
+void	Channel::setTopic(Client *client, const std::string &topic)
+{
+	if (client && this->getProtectedTopicMode() && this->getClientMode(client) != Operator)
+			throw serverExceptions(482);
+	if (topic == "\"\"")
+		this->m_topic = "";
+	else
+		this->m_topic = topic;
+	std::cout << "Channel " << this->getName() << "'s topic set to " << this->m_topic << std::endl;
+	sendAllTopic();
+}
 
 const std::string	Channel::getName(void) const { return this->m_name; }
 
 const std::string	Channel::getTopic(void) const {	return this->m_topic; }
 
-void	Channel::setInvite(bool status) { this->m_isInviteOnly = status; }
+void	Channel::setInviteMode(bool status) { this->m_isInviteOnly = status; }
 
-bool	Channel::getInvite() const { return this->m_isInviteOnly; }
+bool	Channel::getInviteMode() const { return this->m_isInviteOnly; }
 
+void	Channel::setProtectedTopicMode(bool status) { this->m_isProtectedTopic = status; }
+
+bool	Channel::getProtectedTopicMode() const { return this->m_isProtectedTopic; }
+
+		
 int Channel::getID() const { return this->m_ID; }
 
 void Channel::setPassword(const std::string &passwd) { m_password = passwd; }
@@ -158,6 +173,20 @@ Client *Channel::getClient(Client *client)
 		if (m_vClients[i].client == client)
 			return m_vClients[i].client;
 	return NULL;
+}
+
+Mode	Channel::getClientMode(Client *client)
+{
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		if (m_vClients[i].client == client)
+			return m_vClients[i].mode;
+	return Default;
+}
+
+void Channel::sendAllTopic()
+{
+	for (std::vector <s_clientPair>::iterator iter = this->m_vClients.begin(); iter != this->m_vClients.end(); iter++)
+		sendf(this->m_serv, iter->client, ":%p TOPIC %C :%t", this->getName().c_str(), this->getTopic().c_str());
 }
 
 void Channel::sendTopic(Client *client)
