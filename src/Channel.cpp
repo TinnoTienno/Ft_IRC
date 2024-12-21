@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 09:43:29 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 14:11:53 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 	this->m_password = "";
 	this->m_name = name;
 	this->m_channelMode = Public;
-	addClient(client, Founder);
+	addClient(client, Operator);
 	addOP(client);
 }
 
@@ -57,7 +57,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client, const 
 	this->m_password = passwd;
 	this->m_name = name;
 	this->m_channelMode = Public;
-	addClient(client, passwd, Founder);
+	addClient(client, passwd, Operator);
 	addOP(client);
 }
 
