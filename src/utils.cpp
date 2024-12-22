@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 21:36:41 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/22 13:30:12 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,4 +138,13 @@ std::string getMode(clientMode mode)
 	default:
 		return "";
 	}
+}
+
+int atoi(const std::string &str)
+{
+	std::stringstream val;
+	val << str;
+	int res = 0;
+	val >> res;
+	return res;
 }

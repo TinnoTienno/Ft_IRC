@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 21:36:26 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/22 13:35:29 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	Channel::addClient(Client &client, clientMode clientMode)
 		throw serverExceptions(473);
 	if (this->getBanned(&client))
 		throw serverExceptions(474);
-	if (this->m_isChannelSizeLimited && m_vClients.size() == this->m_sizelimit)
+	if (this->m_isChannelSizeLimited && m_vClients.size() >= this->m_sizelimit)
 		throw serverExceptions(471);
 	s_clientPair res = {&client, clientMode};
 	this->m_vClients.push_back(res);
@@ -158,6 +158,13 @@ void	Channel::setProtectedTopicMode(bool status) { this->m_isProtectedTopic = st
 
 bool	Channel::getProtectedTopicMode() const { return this->m_isProtectedTopic; }
 
+void	Channel::setIsSizeLimited(bool status) { this->m_isChannelSizeLimited = status; }
+
+void	Channel::setSizeLimit(unsigned int value) 
+{
+	if (value != 0)
+		this->m_sizelimit = value;
+}
 		
 int Channel::getID() const { return this->m_ID; }
 

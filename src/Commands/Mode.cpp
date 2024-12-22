@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 21:42:45 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/22 13:30:53 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "serverExceptions.hpp"
 #include "Channel.hpp"
 #include <iostream>
+#include "utils.hpp"
 
 void Mode::execute(Server &server, const Parsing &parse, Client &client)
 {
@@ -39,12 +40,19 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 			throw serverExceptions(461);
 		if (parse.getArguments()[3].find('i'))
 			chan->setInviteMode(modifier);
-		if (parse.getArguments()[3].find('t'))
+		else if (parse.getArguments()[3].find('t'))
 			chan->setProtectedTopicMode(modifier);
-		if (parse.getArguments()[3].find('l'))
-			chan->setSizeMax(modifier);
-		if (parse.getArguments()[3].find('k'))
-			chan->setPassword();	
+		else if (parse.getArguments()[3].find('l') && !modifier)
+			chan->setIsSizeLimited(modifier);
+		else if (parse.getArguments()[3].find('l') && parse.getArguments().size() > 3)
+		{
+			chan->setIsSizeLimited(modifier);
+			chan->setSizeLimit(atoi(parse.getArguments()[3]));
+		}
+		else if (parse.getArguments()[3].find('k') && !modifier)
+			chan->setPassword("");
+		else if (parse.getArguments()[3].find('k') && parse.getArguments().size() > 3)
+			chan->setPassword(parse.getArguments()[3]);
 	}
 	catch(const serverExceptions& e)
 	{

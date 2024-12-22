@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 21:36:13 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/22 13:34:50 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ class	Channel
 		bool	getInviteMode() const;
 		void	setProtectedTopicMode(bool);
 		bool	getProtectedTopicMode() const;
+		void	setIsSizeLimited(bool);
+		void	setSizeLimit(unsigned int);
+		
 
 		void setPassword(const std::string &passwd);
 		bool parseChannelName(const std::string &channelName);
