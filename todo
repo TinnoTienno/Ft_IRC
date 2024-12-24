@@ -1,11 +1,14 @@
+		TODO
 invite
 join
 kick
 kill
 (list)
 mode
-notice
 (oper)
-privmsg
-quit
 (topic)
+
+		DONE
+privmsg
+notice
+quit
