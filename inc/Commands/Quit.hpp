@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Ping.hpp                                           :+:      :+:    :+:   */
+/*   Quit.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/12 15:55:52 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/24 14:55:51 by aduvilla         ###   ########.fr       */
+/*   Created: 2024/12/24 14:54:11 by aduvilla          #+#    #+#             */
+/*   Updated: 2024/12/24 14:55:54 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PING_HPP
-# define PING_HPP
+#ifndef QUIT_HPP
+# define QUIT_HPP
 
 class Server;
 class Client;
 class Parsing;
 
-class Ping
+class Quit
 {
 	public :
 		static void execute(Server *server, const Parsing &parse, Client &client);

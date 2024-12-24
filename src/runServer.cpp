@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 15:19:55 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/24 15:20:48 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "Notice.hpp"
 #include "Join.hpp"
 #include "Nick.hpp"
+#include "Quit.hpp"
 #include <map>
 #include "serverExceptions.hpp"
 
@@ -84,13 +85,14 @@ void Server::ReceiveNewData(Client &client)
 
 void Server::parseCommand(const std::string line, Client &client)
 {
-	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE"};
+	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE", "QUIT"};
 	void (*fCommands[])(Server *, const Parsing &, Client &) = { &Join::execute,
 		&Nick::execute,
 		&UserHost::execute,
 		&Ping::execute,
 		&PrivMsg::execute,
-		&Notice::execute};
+		&Notice::execute,
+		&Quit::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
 	std::cout << " " << client.getFD() << " >> " << line << std::endl;
 	Parsing parse(line);
@@ -103,6 +105,29 @@ void Server::parseCommand(const std::string line, Client &client)
 
 std::string Server::parseBuffer(Client &client, std::string buffer)
 {
+	if (buffer.find("\n") == buffer.npos)
+	{
+		client.addPacket(buffer);
+		return "";
+	}
+	size_t	pos = 0;
+	while ((pos = buffer.find('\n', pos)) != std::string::npos)
+	{
+		if (pos == 0 || buffer[pos - 1] != '\r')
+		{
+			buffer.insert(pos, 1, '\r');
+			pos++;
+		}
+		pos++;
+	}
+	std::string result = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
+	size_t	lastN = result.rfind('\n');
+	client.addPacket(result.substr(lastN + 1));
+	return result.substr(0, lastN + 1);
+}
+/*
+std::string Server::parseBuffer(Client &client, std::string buffer)
+{
 	if (buffer.find("\r\n") == buffer.npos)
 	{
 		client.addPacket(buffer);
@@ -110,4 +135,5 @@ std::string Server::parseBuffer(Client &client, std::string buffer)
 	}
 	std::string line = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
 	return line;
-} 
+}
+*/
