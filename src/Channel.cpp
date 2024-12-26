@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:45:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/26 09:03:56 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "Channel.hpp"
 #include "PrivMsg.hpp"
 #include "utils.hpp"
-#include <climits>
 #include "serverExceptions.hpp"
 #include "Rpl.hpp"
 #include <iostream>
@@ -133,13 +132,35 @@ void Channel::removeOP(Client &client)
 	throw	std::runtime_error("Remove OP: OP not found");
 }
 
-void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg)
+void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
+	{
 		if (m_vClients[i].client != client)
-			sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
-//		sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
+		{
+			switch (mode)
+			{
+				case ePrivMsg:
+					sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
+					break;
+				case eNotice:
+					sendf(server, m_vClients[i].client, "NOTICE", client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
+					break;
+				case eQuit:
+					sendf(server, m_vClients[i].client, ":%s NOTICE", client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
+					break;
+				default:
+	  				;
+			}
+		}
+	}
+//			sendf(server, usersurchan, ":%s QUIT :Quit: %m", client.getPrefix().c_str(), parse.getArguments()[1]);
+//			:clientnick!clientuser@host QUIT :parse.getArguments()[1]
+//			sendf(server, m_vClients[i].client, msg, args);
+//			sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
+//			sendMessage(m_vClients[i].client->getFD(), m_vClients[i].client->getPrefix(), "PRIVMSG", msg);
 }
+
 
 void	Channel::setTopic(const std::string & topic) { this->m_topic = topic; }
 

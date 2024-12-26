@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:33:47 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/26 08:56:44 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	PrivMsg::execute(Server *server, const Parsing &parse, Client &client)
 			if (!chan)
 				sendf(server, &client, ERR_NOSUCHNICK, parse.getArguments()[1].c_str());
 			else
-				chan->sendAllMsg(server, &client, parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+//				chan->sendAllMsg(server, &client, PRIVMSG, client.getPrefix().c_str(), chan->getName().c_str(), parse.getArguments()[2].c_str());
+				chan->sendAllMsg(server, &client, parse.getArguments()[2], ePrivMsg); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{

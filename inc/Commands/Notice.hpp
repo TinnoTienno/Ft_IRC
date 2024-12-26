@@ -6,13 +6,14 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:57:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/16 23:57:53 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/26 08:59:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NOTICE_HPP
 # define NOTICE_HPP
 # include "Parsing.hpp"
+# define NOTICE ":%s NOTICE %n :%m" // source, nickname, message
 
 class Server;
 class Client;

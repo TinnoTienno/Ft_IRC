@@ -6,7 +6,7 @@
 #    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/24 15:21:34 by aduvilla         ###   ########.fr        #
+#    Updated: 2024/12/24 17:19:09 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,7 @@ NAME		=	ircserv
 
 CC 			=	c++ 
 CFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g3
+#CFLAGS		=	-Wall -Wextra -Werror -g3
 
 COMMAND_PATH	= Commands/
 SRCS		=	main.cpp\

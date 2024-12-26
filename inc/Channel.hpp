@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:23:52 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/26 08:56:18 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 #include <vector>
 #include "Client.hpp"
 
+
+typedef enum messageMode
+{
+	ePrivMsg,
+	eNotice,
+	eQuit
+}	messageMode;
 
 typedef enum Mode
 {
@@ -59,7 +66,8 @@ class	Channel
 		
 		void removeOP(Client &client);
 		
-		void sendAllMsg(Server *server, Client *client, const std::string &);
+		void sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
+//		void sendAllMsg(Server *server, Client *client, const std::string &);
 		void sendJoin(Client *source);
 		void sendTopic(Client *client);
 		
@@ -77,6 +85,7 @@ class	Channel
 		
 		Client *getBanned(Client *client);
 		Client *getClient(Client *client);
+		Client *getClient(const std::string & name);
 
 		Server *getServ();
 

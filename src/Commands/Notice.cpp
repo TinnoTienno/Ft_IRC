@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 14:34:01 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/26 09:03:02 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	Notice::execute(Server *server, const Parsing &parse, Client &client)
 		{
 			Channel *chan = server->getChannel(targets[i]);
 			if (chan)
-				chan->sendAllMsg(server, &client, parse.getArguments()[2]); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+				chan->sendAllMsg(server, &client, parse.getArguments()[2], eNotice); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{
 			Client *user = server->getClient( targets[i]);
 			if (user)
-				sendMessage(user->getFD(), client.getPrefix(), "NOTICE " + targets[i], parse.getArguments()[2]);
+				sendf(server, user, NOTICE, client.getPrefix().c_str(), user->getNick().c_str(), parse.getArguments()[2].c_str());
 		}
 	}
 }
