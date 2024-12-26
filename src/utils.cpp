@@ -6,11 +6,12 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 11:53:44 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:36:45 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <ctime>
 #include <netdb.h>
@@ -37,6 +38,18 @@ const std::string	getTime()
 	std::strftime(buffer, sizeof(buffer), "%a %b %d %Y at %H:%M:%S GMT", timeStruct);
 	return std::string(buffer);
 }
+
+/*
+std::vector<std::string>	vsplit(const std::string & str, char delimiter)
+{
+	std::stringstream			strStream(str);
+	std::vector<std::string>	result;
+	std::string					token;
+	while (std::getline(strStream, token, delimiter))
+		result.push_back(token);
+	return result;
+}
+*/
 
 std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 {
