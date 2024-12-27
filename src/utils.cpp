@@ -6,12 +6,15 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/26 16:36:45 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/27 14:43:20 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <exception>
 #include <iostream>
+#include <stdexcept>
 #include <string>
+#include <unistd.h>
 #include <vector>
 #include <ctime>
 #include <netdb.h>
@@ -23,11 +26,13 @@
 #include "Channel.hpp"
 #include <stdio.h>
 
+//int	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
 void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
 {
 	std::string message = ":" + source + " " + command + " :" + msg + "\r\n";
-	send(fd, message.c_str(), message.size(), 0);
 	std::cout << " " << fd << " << " << message << std::endl;
+	if (send(fd, message.c_str(), message.size(), 0) != (ssize_t)message.length())
+		throw std::runtime_error("Failed to send the message: " + msg);
 }
 
 const std::string	getTime()
@@ -117,7 +122,7 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 	va_list args;
 	std::string message = "";
 	if (!server || !dest)
-		return ;
+		throw std::invalid_argument("invalid argument: server or dest");
 	va_start (args, str);
 	for (size_t i = 0; i < str.size(); i++)
 	{
@@ -128,8 +133,9 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 	}
 	message += "\r\n\0";
 	va_end(args);
-	send (dest->getFD(), message.c_str(), message.size(), 0);
 	std::cout << dest->getFD() << " << " << message << std::endl;
+	if (send (dest->getFD(), message.c_str(), message.size(), 0) != (ssize_t)message.length())
+		throw std::runtime_error("Failed to send the message: " + message);
 }
 
 std::string getMode(Mode mode)

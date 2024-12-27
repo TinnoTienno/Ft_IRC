@@ -6,7 +6,7 @@
 #    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2024/12/27 12:34:10 by aduvilla         ###   ########.fr        #
+#    Updated: 2024/12/27 15:33:09 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ BOT_SRCS	=  $(addprefix $(BOT_PATH),Bot.cpp main.cpp)
 
 BOT_OBJS	= $(addprefix .botObj/,$(BOT_SRCS:.cpp=.o))
 
-all : $(NAME)
+all : $(NAME) $(BOT_NAME)
 
 $(NAME):	$(OBJS)
 	$(CXX) $(CXXFLAGS) $^ -o $@ -Iinc -I  inc/$(COMMAND_PATH)
@@ -73,7 +73,7 @@ fclean : clean
 	@rm -f $(NAME)
 	@rm -f $(BOT_NAME)
 
-re : fclean $(NAME)
+re : fclean $(NAME) $(BOT_NAME)
 
 -include $(OBJS:.o=.d)
 -include $(BOT_OBJS:.o=.d)

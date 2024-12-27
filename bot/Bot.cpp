@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/27 13:51:52 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/27 15:34:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,13 @@ int	Bot::init()
 		throw std::runtime_error("Error: Socket failed");
 	if(connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd))) != 0)
 		throw std::runtime_error("Error: Cannot connect to server");
-	std::cout << "avant envoi pass" << std::endl;
-//	sleep(1);
-//	/*
 	if(speak("PASS " + this->m_password + "\r\n"))
 		return this->quit();
-	std::cout << "apres pass" << std::endl;
 	if(speak("NICK " + this->m_name + "\r\n"))
 		return this->quit();
-	std::cout << "apres nick" << std::endl;
 	if(speak("USER U-" + this->m_name + " 0 * :R-" + this->m_name + "\r\n"))
 		return this->quit();
 	std::cout << "fin d'envoie des infos" << std::endl;
-//	*/
 	if(this->m_run())
 		return this->quit();
 	return 0;
@@ -81,8 +75,7 @@ int	Bot::m_run()
 int	Bot::speak(const std::string & msg)
 {
 	std::cout << msg << std::endl;
-	ssize_t bytes = send(this->m_serSocket, msg.c_str(), msg.size(), 0);
-	if (bytes != (ssize_t)msg.length())
+	if (send(this->m_serSocket, msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
 	{
 		std::cout << "Error: Message not sent" << std::endl;
 		return 1;
