@@ -1,0 +1,11 @@
+/dcc send Noda /mnt/nfs/homes/aduvilla/Code/Ft_IRC/todo
+# envoie à noda le fichier todo
+
+/dcc get aduvilla todo
+# recois le fichier de aduvilla
+
+nc -l 12345 < test.txt
+# envoie le fichier test avec netcat (on doit se trouver dans le dossier dans lequel est test.txt)
+
+nc <server_ip> 12345 > test.txt
+# recois le fichier avec server_ip étant l'adresse IP de l'envoyeur
