@@ -6,11 +6,12 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 15:19:45 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/28 12:50:55 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <exception>
 #include <iostream>
 #include <stddef.h>
 #include <fcntl.h>
@@ -27,24 +28,30 @@ void Server::ServerInit(const std::string &port)
 	if (port.find_first_not_of("0123456789") != std::string::npos)
 		throw std::invalid_argument("error: invalid argument: port: " + port);
 	this->m_port = atoi(port.c_str());
-	SerSocket();
-	
-	std::cout << "Server <" << m_serverSocketFd << "> Connected" << std::endl;
-	std::cout << "Waiting for a connection..." << std::endl;
-	while (m_signal == false)
+	try
 	{
-		if ((poll(&m_vFds[0], m_vFds.size(), -1) == -1) && m_signal == false)
-			throw(std::runtime_error("Poll failed"));
-		for (size_t i = 0; i < m_vFds.size(); i++)
+		SerSocket();
+		std::cout << "Server <" << m_serverSocketFd << "> Connected" << std::endl;
+		std::cout << "Waiting for a connection..." << std::endl;
+		while (m_signal == false)
 		{
-			if (m_vFds[i].revents & POLLIN)
+			if ((poll(&m_vFds[0], m_vFds.size(), -1) == -1) && m_signal == false)
+				throw(std::runtime_error("Poll failed"));
+			for (size_t i = 0; i < m_vFds.size(); i++)
 			{
-				if (m_vFds[i].fd == m_serverSocketFd)
-					AcceptNewClient();
-				else
-					ReceiveNewData(m_mClients[m_vFds[i].fd]);
+				if (m_vFds[i].revents & POLLIN)
+				{
+					if (m_vFds[i].fd == m_serverSocketFd)
+						AcceptNewClient();
+					else
+						ReceiveNewData(m_mClients[m_vFds[i].fd]);
+				}
 			}
 		}
+	}
+	catch (std::exception & e)
+	{
+		std::cerr << e.what() << std::endl;
 	}
 }
 

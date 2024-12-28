@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/27 15:34:35 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/28 12:36:08 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ int	Bot::init()
 		return this->quit();
 	if(speak("USER U-" + this->m_name + " 0 * :R-" + this->m_name + "\r\n"))
 		return this->quit();
-	std::cout << "fin d'envoie des infos" << std::endl;
 	if(this->m_run())
 		return this->quit();
 	return 0;
