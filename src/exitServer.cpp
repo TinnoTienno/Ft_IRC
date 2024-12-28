@@ -26,7 +26,15 @@ void	Server::CloseFds()
 		close(m_serverSocketFd);
 	}
 }
-
+/*
+void Server::ClearClient(Client &client)
+{
+	(void)client;
+	m_mClients.erase(m_vFds[0].fd);
+	close (m_vFds[0].fd);
+	m_vFds.erase(m_vFds.begin() + 0);
+}
+*/
 void Server::ClearClient(Client &client)
 {
 	for (size_t i = 0; i < m_vFds.size(); i++)
@@ -36,7 +44,8 @@ void Server::ClearClient(Client &client)
 			m_mClients.erase(m_vFds[i].fd);
 			close (m_vFds[i].fd);
 			m_vFds.erase(m_vFds.begin() + i);
-			break;	
+			break;
 		}
 	}
 }
+
