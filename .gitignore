@@ -2,7 +2,9 @@ compile_commands.json
 compile_flags.txt
 .cache/
 .obj/
+.botObj/
 .vscode/
 .cache/
 ircserv
+ircbot
 *.log
