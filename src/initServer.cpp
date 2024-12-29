@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/28 12:50:55 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/29 08:55:31 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,3 @@ void Server::SerSocket()
 	m_vFds.push_back(Poll);
 	std::cout << "Server listening on port " << m_port << std::endl;
 }
-
