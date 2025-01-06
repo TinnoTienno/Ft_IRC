@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Notice.hpp                                         :+:      :+:    :+:   */
+/*   Kick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/16 23:57:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 13:57:30 by noda             ###   ########.fr       */
+/*   Created: 2024/12/21 16:55:53 by noda              #+#    #+#             */
+/*   Updated: 2024/12/21 16:59:41 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef NOTICE_HPP
-# define NOTICE_HPP
-# include "Parsing.hpp"
-# define NOTICE ":%s NOTICE %n :%m" // source, nickname, message
+#ifndef KICK_HPP
+# define KICK_HPP
 
 class Server;
 class Client;
+class Parsing;
 
-class	Notice
+class Kick
 {
-	public :
-		static void execute(Server &server, const Parsing &parse, Client &client);
-};
+    public :
+	    static void execute(Server &server, const Parsing &parse, Client &client);
+}   ;
 
 #endif

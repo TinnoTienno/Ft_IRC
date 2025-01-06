@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 15:15:26 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/21 17:29:09 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@
 #define REALNAME_MAX_LENGTH		15
 #define MAX_CHANNEL_JOINED		15
 #define DEFAULT_CHANNEL_MODES	"+t +n"
+#define TARG_MAX				10
+#define KICK_DEFAULT_MESSAGE	"You've been kicked for absolutely no reason... SHAME"
 
 
 class Client;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/27 14:43:20 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 14:02:32 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ static std::string addVar(Server *server, Client* client, char identifier, va_li
 		return server->getHostname();
 	else if (identifier == 'p' && client)
 		return (client->getPrefix());
-	else if (!charIsNot(identifier, "nCcuHmsDP"))
+	else if (identifier == 'n' && client)
+		return client->getNick();
+	else if (!charIsNot(identifier, "CcuHmsDPlt"))
 	{
 		const char * i = (const char*) va_arg(args, const char *);
 		return i;
@@ -138,7 +140,7 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 		throw std::runtime_error("Failed to send the message: " + message);
 }
 
-std::string getMode(Mode mode)
+std::string getMode(clientMode mode)
 {
 	switch (mode)
 	{

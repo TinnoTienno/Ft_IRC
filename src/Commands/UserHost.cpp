@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserHost.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 15:34:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 15:19:18 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/21 08:23:00 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 #include "Parsing.hpp"
 #include "serverExceptions.hpp"
 
-void UserHost::execute(Server *server, const Parsing &parse, Client &client)
+void UserHost::execute(Server &server, const Parsing &parse, Client &client)
 {
 	(void) server;
 	(void) parse;
 	(void) client;
-//	server->sendMsg(client, "UserHost is" + server->getHostname(), "");
+//	server.sendMsg(client, "UserHost is" + server.getHostname(), "");
 }

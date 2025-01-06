@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/27 15:07:14 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 14:00:52 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Client::setFD(const int &fd) {	m_fd = fd; }
 
 void Client::setIPadd(const std::string &ipadd) { m_ipAdd = ipadd; }
 
-void	Client::setHost(struct sockaddr * addr, Server * server)
+void	Client::setHost(struct sockaddr *addr, Server &server)
 {
 	char	host[NI_MAXHOST];
 	int		res = getnameinfo(addr, sizeof(&addr), host, sizeof(host), NULL, 0, 0);
@@ -98,8 +98,6 @@ Client::~Client()
 	// close(m_fd);
 	// for (size_t i = 0; i < m_vChannels.size(); i++)
 	// 	m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
-	for (size_t i = 0; i < m_vChannels.size(); i++)
-		m_vChannels[i]->removeOP(*this);
 	// std::cout << "client is dead" << std::endl;
 };
 

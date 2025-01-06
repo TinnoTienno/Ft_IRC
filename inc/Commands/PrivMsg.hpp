@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 15:31:04 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/19 11:59:49 by aduvilla         ###   ########.fr       */
+/*   Updated: 2024/12/21 08:22:24 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Client;
 class	PrivMsg
 {
 	public :
-		static void execute(Server *server, const Parsing &parse, Client &client);
+		static void execute(Server &server, const Parsing &parse, Client &client);
 };
 
 #endif

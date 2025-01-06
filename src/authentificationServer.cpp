@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   authentificationServer.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 12:48:28 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 13:57:41 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		Parsing parse(line);
 		if (parse.getCommand() == "NICK")
 		{
-			if (Nick::parseError(this, parse, client))
+			if (Nick::parseError(*this, parse, client))
 				client.setNick(getNextGuest());
 		}
 		else if (parse.getCommand() == "PASS")
@@ -50,7 +50,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 			{
 				client.setAuth(true);
 				std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;
-				client.connect(this);
+				client.connect(*this);
 			}
 			return false;
 		}

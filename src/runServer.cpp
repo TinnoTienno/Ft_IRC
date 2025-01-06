@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/24 15:20:48 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 13:54:51 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,17 @@
 #include <string.h>
 #include "UserHost.hpp"
 #include "Ping.hpp"
+#include "Topic.hpp"
 #include "PrivMsg.hpp"
 #include "Notice.hpp"
 #include "Join.hpp"
 #include "Nick.hpp"
+#include "Part.hpp"
+#include "Kick.hpp"
 #include "Quit.hpp"
 #include <map>
 #include "serverExceptions.hpp"
+#include "Mode.hpp"
 
 void Server::AcceptNewClient()
 {
@@ -50,7 +54,7 @@ void Server::AcceptNewClient()
 	
 	client.setFD(incoFd);
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
-	client.setHost((struct sockaddr*)&clientAdd, this);
+	client.setHost((struct sockaddr*)&clientAdd, *this);
 	// m_mClients.insert({incoFd, client});
 	m_mClients[incoFd] = client;
 	m_vFds.push_back(newPoll);
@@ -85,13 +89,27 @@ void Server::ReceiveNewData(Client &client)
 
 void Server::parseCommand(const std::string line, Client &client)
 {
-	std::string		Commands[] = {"JOIN", "NICK", "userhost", "PING", "PRIVMSG", "NOTICE", "QUIT"};
-	void (*fCommands[])(Server *, const Parsing &, Client &) = { &Join::execute,
+	std::string		Commands[] = {"JOIN", 
+	"NICK", 
+	"userhost", 
+	"PING", 
+	"PRIVMSG", 
+	"NOTICE", 
+	"PART", 
+	"TOPIC", 
+	"KICK", 
+	"MODE",
+	"QUIT"};
+	void (*fCommands[])(Server &, const Parsing &, Client &) = { &Join::execute,
 		&Nick::execute,
 		&UserHost::execute,
 		&Ping::execute,
 		&PrivMsg::execute,
 		&Notice::execute,
+		&Part::execute,
+		&Topic::execute,
+		&Kick::execute,
+		&Mode::execute,
 		&Quit::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
 	std::cout << " " << client.getFD() << " >> " << line << std::endl;
@@ -99,7 +117,7 @@ void Server::parseCommand(const std::string line, Client &client)
 	for (size_t i = 0; i < size; i++)
 	{
 		if (parse.getCommand() == Commands[i])
-			fCommands[i](this, parse, client);
+			fCommands[i](*this, parse, client);
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parsing.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 13:44:48 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 18:51:42 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/21 13:55:15 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@ Parsing::Parsing(std::string line)
 		m_arguments.push_back(word);
 		wordIndex++;
 	}
-	// for (size_t i = 0; i < m_arguments[0].size(); i++)
-	// 	std::cout << (int) m_arguments[0][i] << " ";
-	// std::cout << std::endl;
 }
 
 const std::vector<std::string> &Parsing::getArguments() const {	return m_arguments; }

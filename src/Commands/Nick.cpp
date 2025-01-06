@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 23:28:42 by noda             ###   ########.fr       */
+/*   Updated: 2024/12/21 08:23:00 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,20 @@
 #include "serverExceptions.hpp"
 #include <iostream>
 
-void Nick::execute(Server *server, const Parsing &parse, Client &client)
+void Nick::execute(Server &server, const Parsing &parse, Client &client)
 {
 	std::string nickTmp = client.getNick();
 	std::string source = client.getPrefix();
 	Nick::parseError(server, parse, client);
 }
 
-int Nick::parseError(Server *server, const Parsing &parse, Client &client)
+int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 {
 	try
 	{
 		if (!parse.getArguments()[1].size())
 			throw(serverExceptions(431));
-		if (server->getClient(parse.getArguments()[1]))
+		if (server.getClient(parse.getArguments()[1]))
 			throw(serverExceptions(433));
 		if (!isNickFormatted(parse.getArguments()[1]))
 			throw(serverExceptions(432));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Notice.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/26 09:03:02 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 14:02:38 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "utils.hpp"
 #include "serverExceptions.hpp"
 
-void	Notice::execute(Server *server, const Parsing &parse, Client &client)
+void	Notice::execute(Server &server, const Parsing &parse, Client &client)
 {
 	if (parse.getArguments().size() < 3)
 		return ;
@@ -27,13 +27,13 @@ void	Notice::execute(Server *server, const Parsing &parse, Client &client)
 	{
 		if (targets[i].find('#') == 0)
 		{
-			Channel *chan = server->getChannel(targets[i]);
+			Channel *chan = server.getChannel(targets[i]);
 			if (chan)
 				chan->sendAllMsg(server, &client, parse.getArguments()[2], eNotice); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
 	  	{
-			Client *user = server->getClient( targets[i]);
+			Client *user = server.getClient( targets[i]);
 			if (user)
 				sendf(server, user, NOTICE, client.getPrefix().c_str(), user->getNick().c_str(), parse.getArguments()[2].c_str());
 		}

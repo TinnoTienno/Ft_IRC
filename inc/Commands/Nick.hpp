@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 16:30:49 by eschussl         ###   ########.fr       */
+/*   Updated: 2024/12/21 08:22:24 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ class Parsing;
 class Nick
 {
 	public :
-		static void	execute(Server *server, const Parsing &parse, Client &client);
-		static int parseError(Server *server, const Parsing &parse, Client &client);
+		static void	execute(Server &server, const Parsing &parse, Client &client);
+		static int parseError(Server &server, const Parsing &parse, Client &client);
 		static bool	isNickFormatted(const std::string &nickname);
 }	;
 
