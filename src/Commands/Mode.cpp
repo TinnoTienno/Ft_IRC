@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2024/12/22 13:30:53 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 14:10:09 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "Channel.hpp"
 #include <iostream>
 #include "utils.hpp"
+#include <cstdlib>
 
 void Mode::execute(Server &server, const Parsing &parse, Client &client)
 {
@@ -47,7 +48,7 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 		else if (parse.getArguments()[3].find('l') && parse.getArguments().size() > 3)
 		{
 			chan->setIsSizeLimited(modifier);
-			chan->setSizeLimit(atoi(parse.getArguments()[3]));
+			chan->setSizeLimit(std::atoi(parse.getArguments()[3].c_str()));
 		}
 		else if (parse.getArguments()[3].find('k') && !modifier)
 			chan->setPassword("");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 14:56:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/24 15:57:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 14:08:59 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "Parsing.hpp"
 #include "serverExceptions.hpp"
 
-void Quit::execute(Server *server, const Parsing &parse, Client &client)
+void Quit::execute(Server &server, const Parsing &parse, Client &client)
 {
 	std::string	message;
 	if (parse.getArguments().size() < 2)
@@ -30,8 +30,8 @@ void Quit::execute(Server *server, const Parsing &parse, Client &client)
 	// envoyer à tous les user de ces chan un message :
 	// :clientnick!clientuser@host QUIT :parse.getArguments()[1]
 	// sendf(server, usersurchan, ":%s QUIT :Quit: %m", client.getPrefix().c_str(), parse.getArguments()[1]);
-	sendf(server, &client, ":%h ERROR :Closing Link: %c (Quit: %m)", client.getNick().c_str(), message.c_str()); 
+	sendf(&server, &client, ":%h ERROR :Closing Link: %c (Quit: %m)", client.getNick().c_str(), message.c_str()); 
 	std::cout << RED << "Client <" << client.getFD() << "> Disconnected" << WHI << std::endl;
-	server->ClearClient(client);
+	server.ClearClient(client);
 }
 

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 14:00:16 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 14:07:49 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	Channel::addClient(Client &client, clientMode clientMode)
 	this->m_vClients.push_back(res);
 	if (!m_vOP.size())
 		addOP(client);
-	this->sendJoin(client);
+	this->sendJoin(&client);
 	this->sendTopic(&client);
 	this->sendClientslist(client);
 }
@@ -104,7 +104,7 @@ void	Channel::addClient(Client &client, const std::string & passwd, clientMode c
 		throw serverExceptions(474);
 	s_clientPair res = {&client, clientMode} ;
 	this->m_vClients.push_back(res);
-	this->sendJoin(client);
+	this->sendJoin(&client);
 	this->sendTopic(&client);
 	this->sendClientslist(client);
 }
@@ -127,7 +127,7 @@ void Channel::addOP(Client &client) { this->m_vOP.push_back(&client); }
 
 
 
-void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg)
+void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
@@ -272,10 +272,10 @@ std::string Channel::getSymbol()
 	}
 }
 
-void Channel::sendJoin(Client &client)
+void Channel::sendJoin(Client *client)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		sendf(this->m_serv, this->m_vClients[i].client, ":%m JOIN :%C", client.getPrefix().c_str(), this->getName().c_str());
+		sendf(this->m_serv, this->m_vClients[i].client, ":%m JOIN :%C", client->getPrefix().c_str(), this->getName().c_str());
 }
 
 void Channel::sendPart(Client &client, const std::string &message)
