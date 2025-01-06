@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 17:29:09 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 17:53:17 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ class Server
 		static bool 						m_signal;
 		const std::string					m_pass;
 		std::vector<struct pollfd>			m_vFds;
-		std::map<int, Client> 				m_mClients;
+		std::vector<Client> 				m_vClients;
 		std::vector<Channel>				m_vChannels;
 		std::string							m_hostname;
 		unsigned int						m_nextChannelID;
@@ -83,7 +83,7 @@ class Server
 		
 		void CloseFds();
 		void ClearClient(Client &client);
-	
+		
 		const std::string	getPort() const;
 		const std::string	getNextGuest();
 		const std::string	getHostname() const;

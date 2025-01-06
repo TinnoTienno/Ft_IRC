@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 14:07:49 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 19:14:43 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 	this->m_password = "";
 	this->m_name = name;
 	this->m_channelMode = Public;
+	this->m_isChannelSizeLimited = false;
 	addClient(client, Operator);
 	addOP(client);
 }
@@ -56,6 +57,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client, const 
 	this->m_password = passwd;
 	this->m_name = name;
 	this->m_channelMode = Public;
+	this->m_isChannelSizeLimited = false;
 	addClient(client, passwd, Operator);
 	addOP(client);
 }
@@ -282,4 +284,10 @@ void Channel::sendPart(Client &client, const std::string &message)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
 		sendf(this->m_serv, this->m_vClients[i].client, ":%m PART %C :%m", client.getPrefix().c_str(), this->getName().c_str(), message.c_str());
+}
+
+void Channel::sendKick(Client &source, Client &target, const std::string &message)
+{
+	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		sendf(this->m_serv, this->m_vClients[i].client, ":%P KICK %C %n :%m",source.getPrefix().c_str() ,this->getName().c_str(), target.getNick().c_str(), message.c_str());
 }

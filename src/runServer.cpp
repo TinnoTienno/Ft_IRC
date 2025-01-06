@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 13:54:51 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 17:55:54 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void Server::AcceptNewClient()
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
 	client.setHost((struct sockaddr*)&clientAdd, *this);
 	// m_mClients.insert({incoFd, client});
-	m_mClients[incoFd] = client;
+	m_vClients.push_back(client);
 	m_vFds.push_back(newPoll);
 	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:57:02 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 19:12:33 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 18:17:01 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 				if (!target)
 					throw 441;
 				if (parse.getArguments().size() > 3)
-					sendf(&server, target, ":%p KICK %C %n :%m", chan->getName().c_str(), target->getNick().c_str(), parse.getArguments()[3].c_str());
+					chan->sendKick(*op, *target, parse.getArguments()[3]);
 				else
-					sendf(&server, target, ":%p KICK %C %n :%m", chan->getName().c_str(), target->getNick().c_str(), KICK_DEFAULT_MESSAGE);
+					chan->sendKick(*op, *target, KICK_DEFAULT_MESSAGE);
 				chan->removeClient(*target);
 			}
 		}

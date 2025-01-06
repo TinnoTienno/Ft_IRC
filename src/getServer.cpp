@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:05:05 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 08:37:04 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 17:57:16 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ const std::string Server::getHostname() const { return m_hostname; }
 const std::string	Server::getUserNumber() const
 {
 	std::ostringstream	oss;
-	oss << this->m_mClients.size();
+	oss << this->m_vClients.size();
 	return oss.str();
 }
 
@@ -32,7 +32,13 @@ const std::string	Server::getChannelNumber() const
 	return oss.str();
 }
 
-Client *Server::getClient(int clientFd) { return (&m_mClients.find(clientFd)->second); }
+Client *Server::getClient(int clientFd) 
+{
+	for (size_t i = 0; i < m_vClients.size(); i++)
+	if (clientFd == m_vClients[i].getFD())
+		return (&m_vClients[i]);
+	return NULL;
+}
 
 const std::string Server::getNextGuest()
 {

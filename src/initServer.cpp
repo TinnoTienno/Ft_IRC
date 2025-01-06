@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/29 08:55:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 17:55:22 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void Server::ServerInit(const std::string &port)
 					if (m_vFds[i].fd == m_serverSocketFd)
 						AcceptNewClient();
 					else
-						ReceiveNewData(m_mClients[m_vFds[i].fd]);
+						ReceiveNewData(*getClient(m_vFds[i].fd));
 				}
 			}
 		}
