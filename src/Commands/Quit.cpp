@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 14:56:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 14:08:59 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 20:30:37 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,7 @@ void Quit::execute(Server &server, const Parsing &parse, Client &client)
 		message = "";
 	else
 		message = parse.getArguments()[1];
-	// chercher tous les chan sur lequel le client est présent
-	// envoyer à tous les user de ces chan un message :
-	// :clientnick!clientuser@host QUIT :parse.getArguments()[1]
-	// sendf(server, usersurchan, ":%s QUIT :Quit: %m", client.getPrefix().c_str(), parse.getArguments()[1]);
+	client.sendQuitMsg(&server, message);
 	sendf(&server, &client, ":%h ERROR :Closing Link: %c (Quit: %m)", client.getNick().c_str(), message.c_str()); 
 	std::cout << RED << "Client <" << client.getFD() << "> Disconnected" << WHI << std::endl;
 	server.ClearClient(client);

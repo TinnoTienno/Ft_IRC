@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 14:07:39 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 20:05:08 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,27 +56,29 @@ class	Channel
 		Channel(Server &server, const std::string &name, Client &client);
 		~Channel(void);
 		
-		void addClient(Client &client, clientMode clientMode);
-		void addClient(Client &client, const std::string &passwd, clientMode clientMode);
+		bool	isInvited(Client *client);
+		bool	isJoinable(Client *client);
+		void	addClient(Client &client, clientMode clientMode);
+		void	addClient(Client &client, const std::string &passwd, clientMode clientMode);
 		
-		void removeClient(const Client & client);
+		void	removeClient(const Client & client);
 		
-		void addOP(Client &client);
+		void	addOP(Client &client);
 		
-		void removeOP(Client &client);
+		void	removeOP(Client &client);
 		
-		void sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
-		void sendJoin(Client *source);
-		void sendTopic(Client *client);
-		void sendPart(Client &client, const std::string &message);
-		void sendAllTopic();
+		void	sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
+		void	sendJoin(Client *source);
+		void	sendTopic(Client *client);
+		void	sendPart(Client &client, const std::string &message);
+		void	sendAllTopic();
 		
 		void 	setName(const std::string &);
 		void 	setTopic(Client *client, const std::string &);
 		
 		const std::string getName() const;
 		const std::string getTopic() const;
-		int getID() const;
+		int		getID() const;
 		void	setInviteMode(bool);
 		bool	getInviteMode() const;
 		void	setProtectedTopicMode(bool);
@@ -110,6 +112,7 @@ class	Channel
 		std::vector <s_clientPair>	m_vClients;
 		std::vector <Client *>	m_vOP;
 		std::vector <Client *>	m_vBans;
+		std::vector<Client *>	m_vInvited;
 		Server 					*m_serv;
 		int						m_ID;
 		channelMode				m_channelMode;

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/06 14:05:44 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/06 20:11:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,12 @@ const std::string& Client::getReal() const { return this->m_realname; }
 
 void Client::setReal(const std::string &real) { this->m_realname = real; }
 		
+void	Client::sendQuitMsg(Server *server, const std::string & msg)
+{
+	for (size_t i = 0; i < this->m_vChannels.size(); i++)
+		this->m_vChannels[i]->sendAllMsg(server, this, msg, eQuit);
+}
+
 Client::~Client()
 {
 	// close(m_fd);
