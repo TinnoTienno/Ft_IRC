@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 10:39:46 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/27 13:14:58 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 12:57:22 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int ac, char **av)
 	} 
 	catch (std::exception &e)
 	{
-		std::cout << e.what() << std::endl;	
+		std::cerr << e.what() << std::endl;	
 	}
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/18 16:31:19 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/06 12:48:28 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 {
 	size_t j = 0;
 	if (client.getAuth() == 1 && !client.getUser().empty() )
-		return 1;
+		return true;
 	for (size_t i = 0; i < buffer.size() ; i = j + 1)
 	{
 		j = buffer.find("\n", i + 1);
@@ -41,7 +41,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 			{
 				client.kill("password is wrong");
 				ClearClient(client);
-				return 0;
+				return false;
 			}
 		}
 		else if (parse.getCommand() == "USER" && !userErrorCode(client, parse))
@@ -52,7 +52,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 				std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;
 				client.connect(this);
 			}
-			return 0;
+			return false;
 		}
 		else if (parse.getCommand() == "CAP")
 			;
@@ -61,5 +61,5 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 	}
 	if (m_pass != "" && client.getAuth() == false && !client.getUser().empty())
 	    std::cout << RED << "Client <" << client.getFD() << "> has not set a password" << WHI << std::endl;
-	return 0;
+	return false;
 }

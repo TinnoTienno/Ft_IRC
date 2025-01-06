@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/28 12:36:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 13:15:03 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	Bot::speak(const std::string & msg)
 	std::cout << msg << std::endl;
 	if (send(this->m_serSocket, msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
 	{
-		std::cout << "Error: Message not sent" << std::endl;
+		std::cerr << "Error: Message not sent" << std::endl;
 		return 1;
 	}
 	return 0;
@@ -85,6 +85,6 @@ int	Bot::speak(const std::string & msg)
 int	Bot::quit()
 {
 	close(this->m_serSocket);
-	std::cout << "ircbot Disconected" << std::endl;
+	std::cout << "ircbot Disconnected" << std::endl;
 	return 1;
 }
