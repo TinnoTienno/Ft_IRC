@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:19:25 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 17:36:36 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 16:00:41 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,16 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
             else
                 chan->sendPart(client, "");
             chan->removeClient(*cli);
-            std::cout << "coucou" << std::endl;
         }
         catch(const serverExceptions& e)
         {
             switch (e.getErrorCode())
             {
                 case 403 :
-			    	e.sendError(server, &client, *iter);
+			    	e.sendError(server, &client, *iter->c_str());
 			    	break;
                 case 442 :
-                    e.sendError(server, &client, chan->getName());
+                    e.sendError(server, &client, chan->getName().c_str());
                     break;
             }
 			

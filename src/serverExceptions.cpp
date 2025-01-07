@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 16:06:42 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 17:54:44 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 16:49:50 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void serverExceptions::sendError(Server &server, Client *dest, ...) const
 	va_start(args, dest);
 	
 	char *str1 = va_arg(args, char *);
-	std::cout << str1 << std::endl;
 	char *str2 = va_arg(args, char *);
 	char *str3 = va_arg(args, char *);
 	char *str4 = va_arg(args, char *);
@@ -153,21 +152,21 @@ void serverExceptions::sendError(Server &server, Client *dest, ...) const
 			break ;
 		case 472 :
 			if (!str1)
-				std::cout << m_errorCode << " no modechararcter was given" << std::endl;
+				std::cout << m_errorCode << " no modecharacter was given" << std::endl;
 			else
 				sendf(&server, dest,  ERR_UNKNOWNMODE, str1);
 			break ;
 		case 473 :
-			if (!str1)
+			if (!str1 || !str2)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				sendf(&server, dest,  ERR_INVITEONLYCHAN, str1);
+				sendf(&server, dest, ERR_INVITEONLYCHAN, str1, str2);
 			break ;
 		case 474 :
 			if (!str1)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				sendf(&server, dest,  ERR_BANNEDFROMCHAN, str1);
+				sendf(&server, dest, ERR_BANNEDFROMCHAN, str1);
 			break ;
 		case 475 :
 			if (!str1)

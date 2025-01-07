@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:44:33 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 13:57:24 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 15:51:59 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Server;
 class Client;
 
 //int	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg);
-void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg);
+void	sendMessage(const int fd, Server &server, const std::string & command, const std::string msg);
 std::vector<std::string>	vsplit(const std::string & str, char delimiter);
 const std::string	getTime();
 std::vector<std::string>	vsplit(const std::string & str, char delimiter);

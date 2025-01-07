@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/06 17:53:17 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 14:48:10 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <sys/socket.h>
 #include <poll.h>
 #include "Client.hpp"
+#include <fstream>
 
 /*#####################*/
 /*	   MACRO PRINT	   */
@@ -63,7 +64,8 @@ class Server
 		std::vector<Channel>				m_vChannels;
 		std::string							m_hostname;
 		unsigned int						m_nextChannelID;
-
+		std::ofstream						m_logFd;
+		
 	public :
 		Server(const std::string &name, const std::string &password);
 		~Server();
@@ -83,6 +85,9 @@ class Server
 		
 		void CloseFds();
 		void ClearClient(Client &client);
+		
+		std::ofstream&	getLogFd();
+		void			sendLog(const std::string &message);
 		
 		const std::string	getPort() const;
 		const std::string	getNextGuest();

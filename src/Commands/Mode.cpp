@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/06 14:10:09 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 16:18:27 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,26 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 		if (chan->getClientMode(&client) != Operator)
 			throw serverExceptions(482);
 		std::cout << parse.getArguments()[2] << std::endl;
-		if (parse.getArguments()[2] == "+")
+		if (parse.getArguments()[2][0] == '+')
 			modifier = true;
-		else if (parse.getArguments()[2] == "-")
+		else if (parse.getArguments()[2][0] == '-')
 			modifier = false;
 		else
 			throw serverExceptions(461);
-		if (parse.getArguments()[3].find('i'))
+		if (parse.getArguments()[2].find('i'))
 			chan->setInviteMode(modifier);
-		else if (parse.getArguments()[3].find('t'))
+		else if (parse.getArguments()[2].find('t'))
 			chan->setProtectedTopicMode(modifier);
-		else if (parse.getArguments()[3].find('l') && !modifier)
+		else if (parse.getArguments()[2].find('l') && !modifier)
 			chan->setIsSizeLimited(modifier);
-		else if (parse.getArguments()[3].find('l') && parse.getArguments().size() > 3)
+		else if (parse.getArguments()[2].find('l') && parse.getArguments().size() > 3)
 		{
 			chan->setIsSizeLimited(modifier);
 			chan->setSizeLimit(std::atoi(parse.getArguments()[3].c_str()));
 		}
-		else if (parse.getArguments()[3].find('k') && !modifier)
+		else if (parse.getArguments()[2].find('k') && !modifier)
 			chan->setPassword("");
-		else if (parse.getArguments()[3].find('k') && parse.getArguments().size() > 3)
+		else if (parse.getArguments()[2].find('k') && parse.getArguments().size() > 3)
 			chan->setPassword(parse.getArguments()[3]);
 	}
 	catch(const serverExceptions& e)

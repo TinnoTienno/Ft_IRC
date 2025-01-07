@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 17:55:54 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 15:16:03 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <map>
 #include "serverExceptions.hpp"
 #include "Mode.hpp"
+#include "utils.hpp"
 
 void Server::AcceptNewClient()
 {
@@ -40,12 +41,12 @@ void Server::AcceptNewClient()
 	int incoFd = accept(m_serverSocketFd, (sockaddr *)&(clientAdd), &len);
 	if (incoFd == -1)
 	{
-		std::cout << "accept() has failed" << std::endl;
+		sendLog("accept() has failed");
 		return;
 	}
 	if (fcntl(incoFd, F_SETFL, O_NONBLOCK) == -1)
 	{
-		std::cout << "fcntl() has failed" << std::endl;
+		sendLog("fcntl() has failed");
 		return;
 	}
 	newPoll.fd = incoFd;
@@ -58,7 +59,7 @@ void Server::AcceptNewClient()
 	// m_mClients.insert({incoFd, client});
 	m_vClients.push_back(client);
 	m_vFds.push_back(newPoll);
-	std::cout << GRE << "Client <" << incoFd << "> Connected" << WHI << std::endl;
+	sendLog("Client <" + itoa(incoFd) + "> Connected");
 }
 
 void Server::ReceiveNewData(Client &client)
@@ -68,7 +69,7 @@ void Server::ReceiveNewData(Client &client)
 	ssize_t bytes = recv(client.getFD(), buff, sizeof(buff) - 1, 0); //-> receive the data
 
 	if (bytes <= 0){ //-> check if the client disconnected
-		std::cout << RED << "Client <" << client.getFD() << "> Disconnected" << WHI << std::endl;
+		sendLog((std::string) "Client <" + itoa(client.getFD()) + "> Disconnected");
 		ClearClient(client); //-> clear the client
 	}
 	else //-> print the received data
@@ -112,7 +113,7 @@ void Server::parseCommand(const std::string line, Client &client)
 		&Mode::execute,
 		&Quit::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
-	std::cout << " " << client.getFD() << " >> " << line << std::endl;
+	sendLog(itoa(client.getFD()) + " >> " + line);
 	Parsing parse(line);
 	for (size_t i = 0; i < size; i++)
 	{

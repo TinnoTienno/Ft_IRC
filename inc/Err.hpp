@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Err.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:08:00 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 16:41:56 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:52:02 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 #define ERR_YOUREBANNEDCREEP "%h 465 %p :You are banned from this server." //
 #define ERR_CHANNELISFULL "%h 471 %p %C :Cannot join channel (+l)" // channel
 #define ERR_UNKNOWNMODE "%h 472 %p %m :is unknown mode char to me" // modechararcter
-#define ERR_INVITEONLYCHAN "%h 473 %p %C :Cannot join channel (+i)" // channel
+#define ERR_INVITEONLYCHAN ":%h 473 %n %C :Cannot join channel (+i)" // nickname channel
 #define ERR_BANNEDFROMCHAN "%h 474 %p %C :Cannot join channel (+b)" // channel
 #define ERR_BADCHANNELKEY "%h 475 %p %C :Cannot join channel (+k)" // channel
 #define ERR_BADCHANMASK "%h 476 %C :Bad Channel Mask" // channel

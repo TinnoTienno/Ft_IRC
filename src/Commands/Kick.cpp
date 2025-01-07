@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:57:02 by noda              #+#    #+#             */
-/*   Updated: 2025/01/06 18:17:01 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 14:21:04 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,24 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 	try
 	{
 		if (parse.getArguments().size() < 3)
-			throw 461;
+			throw serverExceptions(461);
 		chan = server.findChannel(parse.getArguments()[1]);
 		if (!chan)
-			throw 403;
+			throw serverExceptions(403);
 		Client *op = chan->getClient(&client);
 		if (!op)
-			throw 442;
+			throw serverExceptions(442);
 		if (chan->getClientMode(&client) != Operator)
-			throw 482;
-		std::vector<std::string> names = vsplit(parse.getArguments()[2], ',');
-		std::vector<std::string>::iterator iter;
+			throw serverExceptions(482);
+		std::vector <std::string> names = vsplit(parse.getArguments()[2], ',');
+		std::vector <std::string>::iterator iter;
 		try
 		{
 			for (iter = names.begin(); iter != names.end(); iter++)
 			{
 				Client *target = chan->getClient(*iter);
 				if (!target)
-					throw 441;
+					throw serverExceptions(441);
 				if (parse.getArguments().size() > 3)
 					chan->sendKick(*op, *target, parse.getArguments()[3]);
 				else

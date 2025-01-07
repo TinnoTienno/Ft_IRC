@@ -6,14 +6,14 @@
 #    By: noda <noda@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/06 13:55:16 by noda             ###   ########.fr        #
+#    Updated: 2025/01/07 16:05:55 by noda             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	ircserv
 
 CXX 			=	c++ 
-#CC 			=	clang++ 
+# CXX 			=	clang++ 
 
 CXXFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g3
 #CFLAGS		=	-Wall -Wextra -Werror -g3
@@ -42,9 +42,9 @@ BOT_NAME	= 	ircbot
 
 BOT_PATH	=	bot/
 
-BOT_SRCS	=  $(addprefix $(BOT_PATH),Bot.cpp main.cpp)
+BOT_SRCS	=	$(addprefix $(BOT_PATH),Bot.cpp main.cpp)
 
-BOT_OBJS	= $(addprefix .botObj/,$(BOT_SRCS:.cpp=.o))
+BOT_OBJS	=	$(addprefix .botObj/,$(BOT_SRCS:.cpp=.o))
 
 all : $(NAME) $(BOT_NAME)
 
@@ -74,6 +74,9 @@ fclean : clean
 	@rm -f $(BOT_NAME)
 
 re : fclean $(NAME) $(BOT_NAME)
+
+clear :
+	@rm *.log
 
 -include $(OBJS:.o=.d)
 -include $(BOT_OBJS:.o=.d)
