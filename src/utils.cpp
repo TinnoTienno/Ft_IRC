@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 14:02:32 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 15:05:23 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static std::string addVar(Server *server, Client* client, char identifier, va_li
 		return (client->getPrefix());
 	else if (identifier == 'n' && client)
 		return client->getNick();
-	else if (!charIsNot(identifier, "CcuHmsDPlt"))
+	else if (!charIsNot(identifier, "CcuHmsDPltw"))
 	{
 		const char * i = (const char*) va_arg(args, const char *);
 		return i;

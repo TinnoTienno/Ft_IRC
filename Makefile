@@ -6,7 +6,7 @@
 #    By: noda <noda@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/07 10:04:32 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/07 12:00:19 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@ NAME		=	ircserv
 CXX 			=	c++ 
 #CC 			=	clang++ 
 
-CXXFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g3
-#CFLAGS		=	-Wall -Wextra -Werror -g3
+#CXXFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g3
+CFLAGS		=	-Wall -Wextra -Werror -g3
 
 COMMAND_PATH	= Commands/
 

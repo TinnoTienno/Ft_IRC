@@ -14,6 +14,7 @@
 #include <exception>
 #include <iostream>
 #include <cstdlib>
+# define USAGE "Usage: ./bot [server adress] [name] [password] [port]"
 
 int	main(int ac, char **av)
 {

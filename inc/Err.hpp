@@ -6,28 +6,29 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:08:00 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/18 16:41:56 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/07 15:17:46 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ERR_HPP
 # define ERR_HPP
 
-#define ERR_NOSUCHNICK "%h 401 %p %n :No such nick/channel" // nick
-#define ERR_NOSUCHCHANNEL "%h 403 %p %C :No such channel" // channel
-#define ERR_CANNOTSENDTOCHAN "%h 404 %p %C :Cannot send to channel" // channel
-#define ERR_TOOMANYCHANNELS "%h 405 %p %C : You have joined too many channels" // channel
-#define ERR_WASNOSUCHNICK "%h 406 %p %n :There was no such nickname" // nickname
-#define ERR_NOORIGIN "%h 409 %p :No origin specified" //
-#define ERR_NORECIPIENT "%h 411 %p :No recipient given (%c)" // command
-#define ERR_NOTEXTTOSEND "%h 412 %p :No text to send" //
-#define ERR_INPUTTOOLONG "%h 417 %c :Input line was too long" //
-#define ERR_UNKNOWNCOMMAND "%h 421 %p %c :Unknown command" // command
-#define ERR_NOMOTD "%h 422 %p :MOTD File is missing" //
-#define ERR_NONICKNAMEGIVEN "%h 431 %p :No nickname given" //
-#define ERR_ERRONEUSNICKNAME "%h 432 %p %n :Erroneus nickname" // nickname
-#define ERR_NICKNAMEINUSE "%h 433 %p %n :Nickname is already in use" // nickname
-#define ERR_NICKCOLLISION "%h 436 %p %n :Nickname collision KILL from %u@%H" // nickname user clienthost
+#define ERR_NOSUCHNICK ":%h 401 %n %w :No such nick/channel" // wrongnick
+#define ERR_NOSUCHCHANNEL ":%h 403 %n %C :No such channel" // channel
+#define ERR_CANNOTSENDTOCHAN ":%h 404 %n %C :Cannot send to channel" // channel
+#define ERR_TOOMANYCHANNELS ":%h 405 %n %C : You have joined too many channels" // channel
+#define ERR_WASNOSUCHNICK ":%h 406 %n %w :There was no such nickname" // wrongnick
+#define ERR_NOORIGIN ":%h 409 %s :No origin specified"
+#define ERR_NORECIPIENT ":%h 411 %n :No recipient given (%c)" // command
+#define ERR_NOTEXTTOSEND ":%h 412 %n :No text to send"
+#define ERR_INPUTTOOLONG ":%h 417 %c :Input line was too long"
+#define ERR_UNKNOWNCOMMAND ":%h 421 %n %c :Unknown command" // command
+#define ERR_NOMOTD ":%h 422 %p :MOTD File is missing" //
+#define ERR_NONICKNAMEGIVEN ":%h 431 %w :No nickname given" //
+#define ERR_ERRONEUSNICKNAME ":%h 432 %w %n :Erroneus nickname" // wrongnickname
+#define ERR_NICKNAMEINUSE ":%h 433 %n %w :Nickname is already in use" // wrongnickname
+#define ERR_NICKCOLLISION ":%h 436 %n %w :Nickname collision KILL from %u@%H" // wrongnickname user clienthost
+
 #define ERR_USERNOTINCHANNEL "%h 441 %p %n %C :They aren't on that channel" // nickname channel
 #define ERR_NOTONCHANNEL "%h 442 %p %C :You're not on that channel" // channel
 #define ERR_USERONCHANNEL "%h 443 %p %n %C :is already on channel" // nickname channel

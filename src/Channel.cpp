@@ -6,12 +6,11 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 20:28:14 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/07 12:16:49 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
-#include <stdexcept>
 #include "Client.hpp"
 #include "Server.hpp"
 #include "Channel.hpp"
@@ -154,10 +153,11 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 			switch (mode)
 			{
 				case ePrivMsg:
-					sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
+					sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), msg.c_str());
+//					sendf(server, m_vClients[i].client, PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
 					break;
 				case eNotice:
-					sendf(server, m_vClients[i].client, NOTICE, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
+					sendf(server, m_vClients[i].client, NOTICE, client->getPrefix().c_str(), msg.c_str());
 					break;
 				case eQuit:
 					sendf(server, m_vClients[i].client, QUIT, client->getPrefix().c_str(), msg.c_str());

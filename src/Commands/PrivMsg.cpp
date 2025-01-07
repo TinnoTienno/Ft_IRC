@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 20:31:33 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/07 15:10:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@
 /*
 void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 {
-	if (parse.getArguments()[1].find(":", 0) == 0)
-		sendf(&server, &client, ERR_NORECIPIENT, parse.getCommand().c_str());
-	else if (parse.getArguments().size() == 2)
-		sendf(&server, &client, ERR_NOTEXTTOSEND);
+	if (parse.getArguments().size() < 3)
+	{
+		if (parse.getArguments().size() < 2 || parse.getArguments()[1].find(":", 0) == 0)
+			sendf(&server, &client, ERR_NORECIPIENT, parse.getCommand().c_str());
+		else
+			sendf(&server, &client, ERR_NOTEXTTOSEND);
 	std::vector<std::string>	targets = vsplit(parse.getArguments()[1], ',');
 	for (size_t i = 0; i < targets.size(); i++)
 	{
@@ -33,8 +35,8 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 			Channel	*chan = server.getChannel(targets[i]);
 			if (!chan)
 				sendf(&server, &client, ERR_NOSUCHNICK, parse.getArguments()[1].c_str());
+			else if (!chan->isJoinable(&client))
 			else
-//				chan->sendAllMsg(server, &client, PRIVMSG, client.getPrefix().c_str(), chan->getName().c_str(), parse.getArguments()[2].c_str());
 				chan->sendAllMsg(&server, &client, parse.getArguments()[2], ePrivMsg); // !!!! il faut aussi envoyer le client actuel pour la source du msg
 		}
 		else
@@ -58,9 +60,9 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 		if (parse.getArguments().size() < 3)
 		{
 			if (parse.getArguments().size() < 2 || parse.getArguments()[1].find(":", 0) == 0)
-				throw 411;
+				throw serverExceptions(411);
 			else
-				throw 412;
+				throw serverExceptions(412);
 		}
 		std::vector<std::string>	targets = vsplit(parse.getArguments()[1], ',');
 		for (size_t i = 0; i < targets.size(); i++)
@@ -71,9 +73,9 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 				{
 					Channel	*chan = server.getChannel(targets[i]);
 					if (!chan)
-						throw 401;
+						throw serverExceptions(401);
 					else if (!chan->isJoinable(&client))
-						throw 404;
+						throw serverExceptions(404);
 					else
 						chan->sendAllMsg(&server, &client, parse.getArguments()[2], ePrivMsg);
 				}
@@ -81,9 +83,9 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 				{
 					Client *user = server.getClient( targets[i]);
 					if (!user)
-						throw 401;
+						throw serverExceptions(401);
 					else
-						sendf(&server, user, PRIVMSG, client.getPrefix().c_str(), user->getNick().c_str(), parse.getArguments()[2].c_str());
+						sendf(&server, user, PRIVMSG, client.getPrefix().c_str(), parse.getArguments()[2].c_str());
 				}
 			}
 	   		catch (const serverExceptions & e)
