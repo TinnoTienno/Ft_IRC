@@ -1,40 +1,38 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Bot.hpp                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/27 08:27:45 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/27 10:47:57 by aduvilla         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#ifndef BOT_HPP
+#define BOT_HPP
 
-#ifndef __BOT_HPP__
-# define __BOT_HPP__
-# include <string>
-# define USAGE "Usage: ./bot [server adress] [name] [password] [port]"
+#include <string>
+#include <arpa/inet.h>
+#include <iostream>
+#include <netinet/in.h>
+#include <stdexcept>
+#include <vector>
+#include <sstream>
+#include <fstream>
 
-class	Bot
-{
-	public:
-		Bot	(std::string serAdd, std::string botname, std::string password, int port);
-		int	init();
-		int	speak(const std::string & msg);
-		int	quit();
-		std::string	getNick() const;
-		std::string getUsername() const;
-		std::string getRealname() const;
-		~Bot(void);
+class Bot {
+public:
+    Bot(std::string serAdd, std::string botname, std::string password, int port);
+    ~Bot();
 
-	private:
-		std::string	m_serAddress;
-		std::string	m_name;
-		std::string	m_password;
-		int			m_serSocket;
-		int			m_port;
-		int			m_run();
-		bool		m_signal;
+    std::string getNick() const;
+    std::string getUsername() const;
+    std::string getRealname() const;
+    int init();
+    int quit();
+    int speak(const std::string & msg);
+
+private:
+    int m_run();
+    int handle_dcc_send(const std::string& user, const std::string& filename);
+     uint32_t ip_to_int(const std::string& ip_str);
+    std::string get_local_ip();
+    std::string m_serAddress;
+    std::string m_name;
+    std::string m_password;
+    int m_port;
+    int m_serSocket;
+    bool m_signal;
 };
 
-#endif /* __BOT_HPP__ */
+#endif
