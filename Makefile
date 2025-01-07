@@ -6,7 +6,7 @@
 #    By: noda <noda@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/06 22:09:38 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/07 10:04:32 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,4 +78,4 @@ re : fclean $(NAME) $(BOT_NAME)
 -include $(OBJS:.o=.d)
 -include $(BOT_OBJS:.o=.d)
 
-.phony clean fclean re bot
+.PHONY	: all clean fclean re bot
