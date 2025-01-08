@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 08:23:00 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 17:09:29 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 void Nick::execute(Server &server, const Parsing &parse, Client &client)
 {
-	std::string nickTmp = client.getNick();
+	std::string nickTmp = client.getNickname();
 	std::string source = client.getPrefix();
 	Nick::parseError(server, parse, client);
 }
@@ -35,11 +35,10 @@ int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 			throw(serverExceptions(433));
 		if (!isNickFormatted(parse.getArguments()[1]))
 			throw(serverExceptions(432));
-		client.setNick(parse.getArguments()[1]);
+		client.setNickname(parse.getArguments()[1]);
 	}
 	catch(const serverExceptions& e)
 	{
-		std::cout << "cout" << std::endl;
 		if (e.getErrorCode() == 431)
 			e.sendError(server, &client);
 		else if (e.getErrorCode() == 432)

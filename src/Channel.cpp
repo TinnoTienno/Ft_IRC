@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 16:59:48 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:05:45 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ Client *Channel::getClient(Client *client)
 Client *Channel::getClient(const std::string &nickname)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		if (strCompareNoCase(m_vClients[i]->getNick(), nickname))
+		if (strCompareNoCase(m_vClients[i]->getNickname(), nickname))
 			return m_vClients[i];
 	return NULL;
 }
@@ -164,7 +164,7 @@ std::string Channel::clientsList()
 			mode = '@';
 		else
 			mode = ' ';
-		res += mode + m_vClients[i]->getNick() + " ";
+		res += mode + m_vClients[i]->getNickname() + " ";
 	}
 	return res;
 }
@@ -199,7 +199,7 @@ void Channel::sendPart(Client &client, const std::string &message)
 void Channel::sendKick(Client &source, Client &target, const std::string &message)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		sendf(this->m_serv, this->m_vClients[i], ":%P KICK %C %n :%m",source.getPrefix().c_str() ,this->getName().c_str(), target.getNick().c_str(), message.c_str());
+		sendf(this->m_serv, this->m_vClients[i], ":%P KICK %C %n :%m",source.getPrefix().c_str() ,this->getName().c_str(), target.getNickname().c_str(), message.c_str());
 }
 
 Server *Channel::getServ() { return m_serv; }
@@ -222,8 +222,8 @@ bool	Channel::getInviteMode() const { return this->m_sModes.i; }
 
 void	Channel::setInvited(Client &client)
 {
-	this->m_serv->sendLog("Client : " + client.getNick() + " was invited to " + this->getName() + " channel");
-	// ADD invite sending("%p INVITE %n :%C", client->getNick(), this->getName())
+	this->m_serv->sendLog("Client : " + client.getNickname() + " was invited to " + this->getName() + " channel");
+	// ADD invite sending("%p INVITE %n :%C", client->getNickname(), this->getName())
 	this->m_sModes.m_vInvitedHostNames.push_back(client.getPrefix());
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 14:54:53 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 17:06:00 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 bool Server::userErrorCode(Client &client, const Parsing &parse)
 {
-	client.setUser(parse.getArguments()[1]);
-	client.setReal(parse.getArguments()[4]);
+	client.setUsername(parse.getArguments()[1]);
+	client.setRealname(parse.getArguments()[4]);
 	return 0;
 }
 

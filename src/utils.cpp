@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 16:30:44 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:06:10 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ static std::string addVar(Server *server, Client* client, char identifier, va_li
 	else if (identifier == 'p' && client)
 		return (client->getPrefix());
 	else if (identifier == 'n' && client)
-		return client->getNick();
+		return client->getNickname();
 	else if (!charIsNot(identifier, "CcuHmsDPltw"))
 	{
 		const char * i = (const char*) va_arg(args, const char *);

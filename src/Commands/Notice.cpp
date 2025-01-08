@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Notice.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 14:09:18 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 17:07:09 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	Notice::execute(Server &server, const Parsing &parse, Client &client)
 	  	{
 			Client *user = server.getClient( targets[i]);
 			if (user)
-				sendf(&server, user, NOTICE, client.getPrefix().c_str(), user->getNick().c_str(), parse.getArguments()[2].c_str());
+				sendf(&server, user, NOTICE, client.getPrefix().c_str(), user->getNickname().c_str(), parse.getArguments()[2].c_str());
 		}
 	}
 }

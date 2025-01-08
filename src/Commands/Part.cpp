@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:19:25 by noda              #+#    #+#             */
-/*   Updated: 2025/01/07 16:00:41 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 17:09:34 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
 				break;
         }
     }
-    std::cout << "yo " << parse.getArguments()[1] << std::endl;
 	std::vector<std::string> channelnames = vsplit(parse.getArguments()[1], ',');
     Channel *chan;
     for (std::vector<std::string>::iterator iter = channelnames.begin(); iter != channelnames.end(); iter++)

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/08 16:38:08 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:09:23 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 			throw serverExceptions(324);
 		if (!chan->isClientOP(client))
 			throw serverExceptions(482);
-		std::cout << parse.getArguments()[2] << std::endl;
 		if (parse.getArguments()[2][0] == '+')
 			modifier = true;
 		else if (parse.getArguments()[2][0] == '-')
