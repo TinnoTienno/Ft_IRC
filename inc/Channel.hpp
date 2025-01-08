@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 16:34:14 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:48:03 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ class	Channel
 		//Topic
 		void	setProtectedTopicMode(bool);
 		bool	getProtectedTopicMode() const;
-		void 	setTopic(Client *client, const std::string &); // * needed to set at channels creation
+		void 	setTopic(Client &client, const std::string &); // * needed to set at channels creation
 		const	std::string getTopic() const;
 		//Password
 		void	setPasswordMode(bool);

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 16:43:10 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:59:48 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 #include "serverExceptions.hpp"
 #include "Rpl.hpp"
 #include <iostream>
+#include <cstring>
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
-	
 	if (charIsNot(channelName[0], "&#+!")|| channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
 		return false;
 	if (channelName.find_first_of(", :") != channelName.npos)
@@ -35,7 +35,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 	this->m_serv = &server;
-	this->setTopic(NULL, "");
+	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
 	this->m_name = name;
 	addClient(client, "");
 	addOP(client);
@@ -45,19 +45,16 @@ Channel::Channel(Server &server, const std::string &name, Client &client, const 
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
+	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
+	this->setPassword(passwd);
 	this->m_serv = &server;
-	std::cout << "server : " << this->m_serv->getHostname() << std::endl;
-	this->setTopic(NULL, "");
 	this->m_name = name;
 	addClient(client, passwd);
 }
 
-
 Channel::~Channel	(void)
 {
 }
-
-
 
 bool	Channel::isJoinable(Client &client)
 {
@@ -85,6 +82,7 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 	if (this->getSizeLimitMode() && m_vClients.size() >= this->getSizeLimit())
 		throw serverExceptions(471);
 	this->m_vClients.push_back(&client);
+	client.addChannel(*this);
 	if (!this->m_sModes.m_vOP.size())
 		addOP(client);
 	this->sendAllJoin(client);
@@ -248,9 +246,9 @@ void	Channel::setProtectedTopicMode(bool status)
 
 bool	Channel::getProtectedTopicMode() const { return this->m_sModes.t; }
 
-void	Channel::setTopic(Client *client, const std::string &topic)
+void	Channel::setTopic(Client &client, const std::string &topic)
 {
-	if (client && this->getProtectedTopicMode() && !this->isClientOP(*client))
+	if (this->getProtectedTopicMode() && !this->isClientOP(client))
 			throw serverExceptions(482);
 	if (topic == "\"\"")
 		this->m_sModes.topic = "";
@@ -306,7 +304,10 @@ bool	Channel::isPasswordValid(const std::string str)
 void Channel::addOP(Client &client) 
 {
 	if (!isClientOP(client))
+	{
 		this->m_sModes.m_vOP.push_back(&client);
+		client.addOP(*this);
+	}
 }
 
 void Channel::removeOP(Client &client)

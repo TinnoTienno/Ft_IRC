@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:32:50 by noda              #+#    #+#             */
-/*   Updated: 2025/01/08 16:35:51 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:48:43 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Topic::execute(Server &server, const Parsing &parse, Client &client)
 		if (parse.getArguments().size() >= 3)
 		{
 			std::cout << "|" << parse.getArguments()[2] << "|" << std::endl;
-			chan->setTopic(&client, parse.getArguments()[2]);
+			chan->setTopic(client, parse.getArguments()[2]);
 		}
 		else
 			chan->sendTopic(client);

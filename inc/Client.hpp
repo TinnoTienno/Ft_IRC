@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/06 20:02:51 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:00:20 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ class Client
 		void	addChannel(Channel &channel);
 		void	addOP(Channel &channel);
 		size_t	getChannelsCount();
-		Client	*getClient(Client *client);
+		Client	*getClient(Client &client);
 		~Client();
 }	;
 
