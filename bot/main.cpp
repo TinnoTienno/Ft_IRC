@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 10:39:46 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 12:38:20 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 23:24:30 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,18 @@
 #include <exception>
 #include <iostream>
 #include <cstdlib>
+#include <csignal>
+#include <string>
 #ifndef BOT_USAGE
-# define BOT_USAGE "Usage: ./bot [server adress] [name] [password] [port]"
+# define BOT_USAGE "Usage: ./bot [server adress] [Channel] [password] [port]"
 #endif
+
+void	Bot::signalHandler(int signum)
+{
+	std::cout << std::endl << "signal Received: " << signum << std::endl;
+	Bot::m_signal = true;
+	Bot::quit();
+}
 
 int	main(int ac, char **av)
 {
@@ -31,11 +40,15 @@ int	main(int ac, char **av)
 		std::cout << "Error: invalid argument: port: " + port << std::endl;
 		return 1;
 	}
-	Bot	bot(av[1], av[2], av[3], std::atoi(av[4]));
-//	if (!bot.init())
-//		return 1
+	std::string adress(av[1]);
+	if (adress == "localhost")
+		adress = "127.0.0.1";
+	Bot	bot(adress, av[2], av[3], std::atoi(av[4]));
 	try
 	{
+		signal(SIGINT, Bot::signalHandler);
+		signal(SIGQUIT, Bot::signalHandler);
+		signal(SIGPIPE, SIG_IGN);
 		if (!bot.init())
 			return 1;
 	} 

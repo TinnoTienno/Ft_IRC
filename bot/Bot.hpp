@@ -16,18 +16,19 @@ public:
     std::string getRealname() const;
     int init();
     int quit();
+	static void	signalHandler(int signum);
     void speak(const std::string & msg);
 
 private:
-    std::string m_serAddress;
-    std::string m_name;
-	std::string	m_channel;
-    std::string m_password;
-	std::string	m_fileDir;
+    static bool 				m_signal;
+    std::string 				m_serAddress;
+    std::string 				m_name;
+	std::string					m_channel;
+    std::string 				m_password;
+	std::string					m_fileDir;
 	std::vector<std::string>	m_vlist;
-    int 		m_port;
-    int 		m_serSocket;
-    bool 		m_signal;
+    int 						m_port;
+    int 						m_serSocket;
 	void		m_authenticate();
 	void		m_connectToServer();
 	void		m_createList();

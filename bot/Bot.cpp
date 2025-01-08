@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 20:17:37 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 23:31:32 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,11 @@
 #include <sys/socket.h>
 #include <vector>
 
-Bot::Bot(std::string serAdd, std::string channel, std::string password, int port) : m_serAddress(serAdd), m_channel(channel), m_password(password), m_port(port), m_signal(false)
+bool Bot::m_signal = false;
+
+Bot::Bot(std::string serAdd, std::string channel, std::string password, int port) : m_serAddress(serAdd), m_password(password), m_port(port)
 {
+	this->m_channel = "#" + channel;
 	this->m_name = "FileHandlerBot";
 	this->m_fileDir = "botShareDirectory";
 }
@@ -78,7 +81,7 @@ int	Bot::init()
 		m_connectToServer();
 		speak("PASS " + this->m_password + "\r\n");
 		speak("NICK " + this->m_name + "\r\n");
-		speak("USER U-" + this->getUsername() + " 0 * :R-" + this->m_name + "\r\n");
+		speak("USER " + this->getUsername() + " 0 * :R-" + this->m_name + "\r\n");
 		return m_run();
 	}
 	catch (const std::exception & e)
@@ -94,17 +97,25 @@ int	Bot::m_run()
 
 	while(this->m_signal == false)
 	{
+		std::cout << "signal is " << (this->m_signal ? "true" : "false") << std::endl;
 		memset(buffer, 0, sizeof(buffer));
 		int	bytes = recv(this->m_serSocket, buffer, sizeof(buffer), 0);
 		if (bytes <= 0)
-			return 1;
+			return quit();
 		buffer[bytes] = '\0';
 		std::string message(buffer);
 		std::cout << ">> " << message << std::endl;
+		if (message.find("376") != std::string::npos)
+		{
+			speak("JOIN " + this->m_channel + "\r\n" );
+			speak("PRIVMSG " + this->m_channel + " :Hi everyone i'm an IRC File Transfer Bot\r\n");
+			speak("PRIVMSG " + this->m_channel + " :You can ask me the list of transferable files with the command 'PRIVMSG FileHandlerBot !list'\r\n");
+			speak("PRIVMSG " + this->m_channel + " :I can transfer you the file you want with the command 'PRIVMSG FileHandlerBot !send [filename]'\r\n");
+		}
 		if (message.find("PRIVMSG") != std::string::npos)
 			m_handlePrivMsg(message);
 	}
-	return 0;
+	return quit();
 }
 
 std::string	&Bot::m_trimNewLines(std::string & str)
