@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/29 08:55:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/07 15:07:31 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <stddef.h>
 #include "serverExceptions.hpp"
+#include "utils.hpp"
 
 void Server::ServerInit(const std::string &port)
 {
@@ -31,8 +32,8 @@ void Server::ServerInit(const std::string &port)
 	try
 	{
 		SerSocket();
-		std::cout << "Server <" << m_serverSocketFd << "> Connected" << std::endl;
-		std::cout << "Waiting for a connection..." << std::endl;
+		sendLog("Server <" + itoa(m_serverSocketFd) + "> Connected");
+		sendLog("Waiting for a connection...");
 		while (m_signal == false)
 		{
 			if ((poll(&m_vFds[0], m_vFds.size(), -1) == -1) && m_signal == false)
@@ -44,14 +45,14 @@ void Server::ServerInit(const std::string &port)
 					if (m_vFds[i].fd == m_serverSocketFd)
 						AcceptNewClient();
 					else
-						ReceiveNewData(m_mClients[m_vFds[i].fd]);
+						ReceiveNewData(*getClient(m_vFds[i].fd));
 				}
 			}
 		}
 	}
 	catch (std::exception & e)
 	{
-		std::cerr << e.what() << std::endl;
+		sendLog(e.what());
 	}
 }
 
@@ -81,5 +82,5 @@ void Server::SerSocket()
 	Poll.events = POLLIN;
 	Poll.revents = 0;
 	m_vFds.push_back(Poll);
-	std::cout << "Server listening on port " << m_port << std::endl;
+	sendLog("Server listening on port " + itoa(m_port));
 }

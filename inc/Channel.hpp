@@ -67,11 +67,12 @@ class	Channel
 		
 		void	removeOP(Client &client);
 		
-		void	sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
-		void	sendJoin(Client *source);
-		void	sendTopic(Client *client);
-		void	sendPart(Client &client, const std::string &message);
-		void	sendAllTopic();
+		void sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
+		void sendJoin(Client *source);
+		void sendTopic(Client *client);
+		void sendPart(Client &client, const std::string &message);
+		void sendKick(Client &source, Client &target, const std::string &message);
+		void sendAllTopic();
 		
 		void 	setName(const std::string &);
 		void 	setTopic(Client *client, const std::string &);

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 13:57:41 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 15:55:50 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 	{
 		j = buffer.find("\n", i + 1);
 		std::string line = buffer.substr(i, j - i - 1);
-		std::cout << " " << client.getFD() << " >> " << line << std::endl;
+		sendLog(itoa(client.getFD()) + " >> " + line);
 		Parsing parse(line);
 		if (parse.getCommand() == "NICK")
 		{
@@ -49,7 +49,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 			if (client.getAuth() == 1  || (m_pass.empty() && client.getAuth() == false))
 			{
 				client.setAuth(true);
-				std::cout << GRE << "Client <" << client.getFD() << "> is now authentified" << WHI << std::endl;
+				sendLog("Client <" + itoa(client.getFD()) + "> is now authentified");
 				client.connect(*this);
 			}
 			return false;
@@ -57,9 +57,9 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		else if (parse.getCommand() == "CAP")
 			;
 		else
-			sendMessage(client.getFD(), this->getHostname(), "451 * " + parse.getCommand(), "You must finish connecting with another nickname first.");
+			sendMessage(client.getFD(), *this, "451 * " + parse.getCommand(), "You must finish connecting with another nickname first.");
 	}
 	if (m_pass != "" && client.getAuth() == false && !client.getUser().empty())
-	    std::cout << RED << "Client <" << client.getFD() << "> has not set a password" << WHI << std::endl;
+		sendLog("Client <" + itoa(client.getFD()) + "> has not set a password");
 	return false;
 }

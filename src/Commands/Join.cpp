@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 09:33:25 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 12:40:32 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void Join::execute(Server &server, const Parsing &parse, Client &client)
 	}
 	catch(const serverExceptions& e)
 	{
-		std::cout << "catch" << std::endl;
 		if (e.getErrorCode() == 461)
 			e.sendError(server, &client, parse.getCommand().c_str());
 	}
@@ -41,14 +40,12 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 	std::vector<std::string> passwords;
 	if (parse.getArguments().size() == 3)
 		passwords = vsplit(parse.getArguments()[2], ',');
-	std::cout << "size : " << channels.size() << std::endl;
 	std::vector<std::string>::iterator iterPasswords = passwords.begin();
 	std::vector<std::string>::iterator iterChannels = channels.begin();
 	while (iterChannels != channels.end())
 	{
 		try
 		{
-			std::cout << "iterchannel " << *iterChannels << std::endl;
 			Channel *channel = server.findChannel(*iterChannels);
 			if (iterPasswords != passwords.end() && channel)
 			{
@@ -69,7 +66,6 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 		}
 		catch(const serverExceptions& e)
 		{
-			std::cout << e.getErrorCode();
 			switch (e.getErrorCode())
 			{
 			case 403 :

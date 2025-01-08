@@ -42,9 +42,9 @@ BOT_NAME	= 	ircbot
 
 BOT_PATH	=	bot/
 
-BOT_SRCS	=  $(addprefix $(BOT_PATH),Bot.cpp main.cpp)
+BOT_SRCS	=	$(addprefix $(BOT_PATH),Bot.cpp main.cpp)
 
-BOT_OBJS	= $(addprefix .botObj/,$(BOT_SRCS:.cpp=.o))
+BOT_OBJS	=	$(addprefix .botObj/,$(BOT_SRCS:.cpp=.o))
 
 all : $(NAME) $(BOT_NAME)
 
@@ -74,6 +74,9 @@ fclean : clean
 	@rm -f $(BOT_NAME)
 
 re : fclean $(NAME) $(BOT_NAME)
+
+clear :
+	@rm *.log
 
 -include $(OBJS:.o=.d)
 -include $(BOT_OBJS:.o=.d)

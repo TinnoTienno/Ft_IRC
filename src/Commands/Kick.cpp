@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:57:02 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 19:12:33 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 14:21:04 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,28 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 	try
 	{
 		if (parse.getArguments().size() < 3)
-			throw 461;
+			throw serverExceptions(461);
 		chan = server.findChannel(parse.getArguments()[1]);
 		if (!chan)
-			throw 403;
+			throw serverExceptions(403);
 		Client *op = chan->getClient(&client);
 		if (!op)
-			throw 442;
+			throw serverExceptions(442);
 		if (chan->getClientMode(&client) != Operator)
-			throw 482;
-		std::vector<std::string> names = vsplit(parse.getArguments()[2], ',');
-		std::vector<std::string>::iterator iter;
+			throw serverExceptions(482);
+		std::vector <std::string> names = vsplit(parse.getArguments()[2], ',');
+		std::vector <std::string>::iterator iter;
 		try
 		{
 			for (iter = names.begin(); iter != names.end(); iter++)
 			{
 				Client *target = chan->getClient(*iter);
 				if (!target)
-					throw 441;
+					throw serverExceptions(441);
 				if (parse.getArguments().size() > 3)
-					sendf(&server, target, ":%p KICK %C %n :%m", chan->getName().c_str(), target->getNick().c_str(), parse.getArguments()[3].c_str());
+					chan->sendKick(*op, *target, parse.getArguments()[3]);
 				else
-					sendf(&server, target, ":%p KICK %C %n :%m", chan->getName().c_str(), target->getNick().c_str(), KICK_DEFAULT_MESSAGE);
+					chan->sendKick(*op, *target, KICK_DEFAULT_MESSAGE);
 				chan->removeClient(*target);
 			}
 		}

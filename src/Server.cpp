@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/06 14:01:08 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 16:10:58 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,20 @@ Server::Server(const std::string &name, const std::string &pass) : m_pass(pass),
 { 
 	m_serverSocketFd = -1;
 	m_nextChannelID = 0;
-}
-
-Server::~Server()
-{
-	for (std::map<int, Client>::iterator iter = m_mClients.begin(); iter != m_mClients.end(); iter++)
-		ClearClient((*iter).second);
-	CloseFds();
+	std::string logName = name + ".log";
+	m_logFd.open (logName.c_str(), std::fstream::in | std::fstream::out | std::fstream::app);
+	if (!m_logFd.is_open())
+		std::cerr << "Error : Couldn't open log file" << std::endl;
+	sendLog("Server created");
 }
 
 Channel &Server::createChannel(const std::string &name, Client &client)
 {
 	Channel newChannel(*this, name, client);
 	m_vChannels.push_back(newChannel);
-	std::cout << "New channel " << name << " was added " << client.getFD() << " is OP" << std::endl;
+	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
 	Channel &tmp = m_vChannels[m_vChannels.size() - 1];
-	std::cout << "tmp " << tmp.getName() << std::endl;
+	sendLog("tmp " + tmp.getName());
 	client.addChannel(tmp);
 	client.addOP(tmp);
 	return tmp;
@@ -73,8 +71,8 @@ void 	Server::deleteChannel(Channel &channel)
 
 Client *Server::getClient(const std::string &nickname)
 {
-	for (size_t i = 0; i < m_mClients.size(); i++)
-		if (strCompareNoCase(m_mClients[i].getNick(), nickname))
-			return &m_mClients[i];
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		if (strCompareNoCase(m_vClients[i].getNick(), nickname))
+			return &m_vClients[i];
 	return NULL;
 }

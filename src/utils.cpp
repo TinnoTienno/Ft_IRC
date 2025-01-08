@@ -25,12 +25,20 @@
 #include "serverExceptions.hpp"
 #include "Channel.hpp"
 #include <stdio.h>
+#include <fstream>
 
-//int	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
-void	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg)
+std::string itoa(int nb)
 {
-	std::string message = ":" + source + " " + command + " :" + msg + "\r\n";
-	std::cout << " " << fd << " << " << message << std::endl;
+	std::ostringstream oss;
+	oss << nb;
+	return (std::string) oss.str();
+}
+
+void	sendMessage(const int fd, Server &server, const std::string & command, const std::string msg)
+{
+	std::string message = ":" + server.getHostname() + " " + command + " :" + msg;
+	server.sendLog(itoa(fd) + " << " + message);
+	message += "\r\n";
 	if (send(fd, message.c_str(), message.size(), 0) != (ssize_t)message.length())
 		throw std::runtime_error("Failed to send the message: " + msg);
 }
@@ -76,12 +84,6 @@ std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 	return result;
 }
 
-std::string itoa(int nb)
-{
-	std::ostringstream oss;
-	oss << nb;
-	return (std::string) oss.str();
-}
 
 bool charIsNot(char c, const std::string &plage)
 {
@@ -133,9 +135,9 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 		else
 			message += str[i];
 	}
+	server->sendLog(itoa(dest->getFD()) + " << " + message);
 	message += "\r\n\0";
 	va_end(args);
-	std::cout << dest->getFD() << " << " << message << std::endl;
 	if (send (dest->getFD(), message.c_str(), message.size(), 0) != (ssize_t)message.length())
 		throw std::runtime_error("Failed to send the message: " + message);
 }

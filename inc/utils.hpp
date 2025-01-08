@@ -23,7 +23,8 @@
 class Server;
 class Client;
 
-void						sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg);
+//int	sendMessage(const int fd, const std::string & source, const std::string & command, const std::string msg);
+void	sendMessage(const int fd, Server &server, const std::string & command, const std::string msg);
 const std::string			getTime();
 std::vector<std::string>	vsplit(const std::string & str, char delimiter);
 std::string					itoa(int nb);

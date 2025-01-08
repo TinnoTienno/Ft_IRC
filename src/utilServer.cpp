@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2024/12/21 08:39:27 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/07 14:54:53 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,3 +36,11 @@ Channel *Server::findChannel(const std::string &channelName)
 	return NULL;
 }
 
+std::ofstream&	Server::getLogFd() { return m_logFd; }
+
+void	Server::sendLog(const std::string &message)
+{
+	if (this->getLogFd().is_open())
+		this->getLogFd() << getTime() << " :" << message << std::endl;
+	std::cerr << message << std::endl;
+}

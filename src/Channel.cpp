@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
 /*   Updated: 2025/01/07 12:16:49 by aduvilla         ###   ########.fr       */
@@ -40,6 +40,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 	this->m_password = "";
 	this->m_name = name;
 	this->m_channelMode = Public;
+	this->m_isChannelSizeLimited = false;
 	addClient(client, Operator);
 	addOP(client);
 }
@@ -55,6 +56,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client, const 
 	this->m_password = passwd;
 	this->m_name = name;
 	this->m_channelMode = Public;
+	this->m_isChannelSizeLimited = false;
 	addClient(client, passwd, Operator);
 	addOP(client);
 }
@@ -177,7 +179,7 @@ void	Channel::setTopic(Client *client, const std::string &topic)
 		this->m_topic = "";
 	else
 		this->m_topic = topic;
-	std::cout << "Channel " << this->getName() << "'s topic set to " << this->m_topic << std::endl;
+	m_serv->sendLog("Channel " + this->getName() + "'s topic was set to " + this->m_topic);
 	sendAllTopic();
 }
 
@@ -185,25 +187,51 @@ const std::string	Channel::getName(void) const { return this->m_name; }
 
 const std::string	Channel::getTopic(void) const {	return this->m_topic; }
 
-void	Channel::setInviteMode(bool status) { this->m_isInviteOnly = status; }
+void	Channel::setInviteMode(bool status)
+{
+	this->m_isInviteOnly = status;
+	if (status)
+		for (size_t i = 0; i < this->m_vClients.size(); i++)
+			sendf(this->m_serv, this->m_vClients[i].client, ":%p MODE %c +i", this->getName().c_str());
+	else
+		for (size_t i = 0; i < this->m_vClients.size(); i++)
+			sendf(this->m_serv, this->m_vClients[i].client, ":%p MODE %c -i", this->getName().c_str());
+	this->m_serv->sendLog(this->getName() + "'s invite mode was set to " + itoa(status));
+}
 
 bool	Channel::getInviteMode() const { return this->m_isInviteOnly; }
 
-void	Channel::setProtectedTopicMode(bool status) { this->m_isProtectedTopic = status; }
+void	Channel::setProtectedTopicMode(bool status) 
+{
+	this->m_isProtectedTopic = status;
+	this->m_serv->sendLog(this->getName() + "'s protected topic mode was set to " + itoa(status));
+
+}
 
 bool	Channel::getProtectedTopicMode() const { return this->m_isProtectedTopic; }
 
-void	Channel::setIsSizeLimited(bool status) { this->m_isChannelSizeLimited = status; }
+void	Channel::setIsSizeLimited(bool status) 
+{
+	this->m_isChannelSizeLimited = status;
+	this->m_serv->sendLog(this->getName() + "'s size limited mode was set to " + itoa(status));
+}
+
 
 void	Channel::setSizeLimit(unsigned int value) 
 {
-	if (value != 0)
-		this->m_sizelimit = value;
+	if (value == 0)
+		return  ;
+	this->m_sizelimit = value;
+	this->m_serv->sendLog(this->getName() + "'s size limit was set to " + itoa(value));
 }
 		
 int Channel::getID() const { return this->m_ID; }
 
-void Channel::setPassword(const std::string &passwd) { m_password = passwd; }
+void Channel::setPassword(const std::string &passwd)
+{
+	m_password = passwd;
+	this->m_serv->sendLog(this->getName() + "'s password was set to " + passwd);
+}
 
 Client *Channel::getBanned(Client *client)
 {
@@ -255,9 +283,6 @@ void Channel::sendTopic(Client *client)
 void Channel::sendClientslist(Client &dest)
 {
 	std::string list = this->clientsList();
-	std::cout << list << std::endl;
-	if (this->m_serv)
-		std::cout << "m_Serv is in" << std::endl;
 	sendf(this->m_serv, &dest, RPL_NAMREPLY, this->getSymbol().c_str(), this->getName().c_str(), list.c_str());
 	sendf(this->m_serv, &dest, RPL_ENDOFNAMES, this->getName().c_str(), list.c_str());
 }
@@ -296,3 +321,12 @@ void Channel::sendPart(Client &client, const std::string &message)
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
 		sendf(this->m_serv, this->m_vClients[i].client, ":%m PART %C :%m", client.getPrefix().c_str(), this->getName().c_str(), message.c_str());
 }
+
+void Channel::sendKick(Client &source, Client &target, const std::string &message)
+{
+	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		sendf(this->m_serv, this->m_vClients[i].client, ":%P KICK %C %n :%m",source.getPrefix().c_str() ,this->getName().c_str(), target.getNick().c_str(), message.c_str());
+}
+
+Server *Channel::getServ() { return m_serv; }
+
