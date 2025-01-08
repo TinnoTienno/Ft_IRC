@@ -21,6 +21,8 @@ private:
 	void	m_authenticate();
 	void	m_connectToServer();
     int		m_run();
+	void	handlePrivMsg(const std::string & message);
+	uint32_t	m_getLocalIpInt() const;
     int		handle_dcc_send(const std::string& user, const std::string& filename);
      uint32_t ip_to_int(const std::string& ip_str);
     std::string get_local_ip();
