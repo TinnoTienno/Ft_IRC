@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 15:05:23 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:30:44 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,21 +142,3 @@ void sendf(Server *server, Client *dest, const std::string str, ...)
 		throw std::runtime_error("Failed to send the message: " + message);
 }
 
-std::string getMode(clientMode mode)
-{
-	switch (mode)
-	{
-	case Founder :
-		return "~";
-	case Protected :
-		return "&";
-	case Operator :
-		return "@";
-	case Halfop :
-		return "%";
-	case Voice :
-		return "+";
-	default:
-		return "";
-	}
-}

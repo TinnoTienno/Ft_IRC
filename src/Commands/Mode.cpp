@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/08 14:20:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:38:08 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 			throw serverExceptions(403);
 		if (parse.getArguments().size() == 2)
 			throw serverExceptions(324);
-		if (chan->getClientMode(&client) != Operator)
+		if (!chan->isClientOP(client))
 			throw serverExceptions(482);
 		std::cout << parse.getArguments()[2] << std::endl;
 		if (parse.getArguments()[2][0] == '+')
@@ -47,20 +47,22 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 		else if (parse.getArguments()[2].find('l') != parse.getArguments()[2].npos && !modifier)
 		{
 			sendf(&server, &client, ":%p MODE %C -l", chan->getName().c_str());
-			chan->setIsSizeLimited(modifier);
+			chan->setSizeLimitMode(modifier);
 		}
 		else if (parse.getArguments()[2].find('l') != parse.getArguments()[2].npos && parse.getArguments().size() > 3 && modifier && parse.getArguments()[3].find_first_not_of("0123456789") == parse.getArguments()[3].npos)
 		{
 			sendf(&server, &client, ":%p MODE %C +l %m", chan->getName().c_str(), parse.getArguments()[3].c_str());
-			chan->setIsSizeLimited(modifier);
+			chan->setSizeLimitMode(modifier);
 			chan->setSizeLimit(std::atoi(parse.getArguments()[3].c_str()));
 		}
-		else if (parse.getArguments()[2].find('k') != parse.getArguments()[2].npos && !modifier)
+		else if (parse.getArguments()[2].find('k') != parse.getArguments()[2].npos)
 		{	
-			chan->setPassword("");
+			chan->setPasswordMode(modifier);
+			if (parse.getArguments().size() > 3)
+				chan->setPassword(parse.getArguments()[3]);
+			else
+				chan->setPassword("");
 		}
-		else if (parse.getArguments()[2].find('k') != parse.getArguments()[2].npos && parse.getArguments().size() > 3)
-			chan->setPassword(parse.getArguments()[3]);
 	}
 	catch(const serverExceptions& e)
 	{

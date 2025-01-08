@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:32:50 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 16:27:10 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 16:35:51 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void Topic::execute(Server &server, const Parsing &parse, Client &client)
 			chan->setTopic(&client, parse.getArguments()[2]);
 		}
 		else
-			chan->sendTopic(&client);
+			chan->sendTopic(client);
 	}
 	catch(const serverExceptions &e)
 	{
