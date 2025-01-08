@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 15:16:03 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 14:44:24 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <fcntl.h>
 #include <arpa/inet.h>
+#include <string>
 #include <unistd.h>
 #include <string.h>
 #include "UserHost.hpp"
@@ -38,7 +39,7 @@ void Server::AcceptNewClient()
 	struct pollfd newPoll;
 	socklen_t len = sizeof(clientAdd);
 
-	int incoFd = accept(m_serverSocketFd, (sockaddr *)&(clientAdd), &len);
+	int incoFd = accept(m_serverSocketFd, reinterpret_cast<struct sockaddr*>(&clientAdd), &len);
 	if (incoFd == -1)
 	{
 		sendLog("accept() has failed");
@@ -55,7 +56,7 @@ void Server::AcceptNewClient()
 	
 	client.setFD(incoFd);
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
-	client.setHost((struct sockaddr*)&clientAdd, *this);
+	client.setHost(reinterpret_cast<struct sockaddr*>(&clientAdd), *this);
 	// m_mClients.insert({incoFd, client});
 	m_vClients.push_back(client);
 	m_vFds.push_back(newPoll);
@@ -69,7 +70,7 @@ void Server::ReceiveNewData(Client &client)
 	ssize_t bytes = recv(client.getFD(), buff, sizeof(buff) - 1, 0); //-> receive the data
 
 	if (bytes <= 0){ //-> check if the client disconnected
-		sendLog((std::string) "Client <" + itoa(client.getFD()) + "> Disconnected");
+		sendLog(static_cast<std::string>("Client <" + itoa(client.getFD()) + "> Disconnected"));
 		ClearClient(client); //-> clear the client
 	}
 	else //-> print the received data

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 15:07:31 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 15:17:24 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void Server::ServerInit(const std::string &port)
 
 void Server::SerSocket()
 {
-	struct sockaddr_in socketAdd;
+	struct sockaddr_in socketAdd = {};
 	struct pollfd Poll;
 
 	socketAdd.sin_family = AF_INET;
@@ -67,17 +67,17 @@ void Server::SerSocket()
 	
 	m_serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
 	if(m_serverSocketFd == -1)
-		throw std::runtime_error("socket");
+		throw std::runtime_error("Error: Socket creation failed");
 	int i = 1;
 
 	if (setsockopt(m_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &i, sizeof(i)) < 0)
-		throw std::runtime_error("failed to set socket option: SO_REUSEADDR");
+		throw std::runtime_error("Error: Failed to set socket option: SO_REUSEADDR");
 	if (fcntl(m_serverSocketFd, F_SETFL, O_NONBLOCK) < 0) // as asked in the subject
-		throw std::runtime_error("failed to set socket: O_NONBLOCK");
+		throw std::runtime_error("Error: Failed to set socket: O_NONBLOCK");
 	if (bind(m_serverSocketFd, (struct sockaddr *)&socketAdd, sizeof(socketAdd)) < 0)
-		throw std::runtime_error("failed to bind socket to address");
+		throw std::runtime_error("Error: Failed to bind socket to address");
 	if (listen(m_serverSocketFd, SOMAXCONN) < 0)
-		throw std::runtime_error("failed to listen");
+		throw std::runtime_error("Error: Failed to listen");
 	Poll.fd = m_serverSocketFd;
 	Poll.events = POLLIN;
 	Poll.revents = 0;

@@ -6,25 +6,24 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 12:52:12 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:47:19 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <exception>
 #include "Client.hpp"
-#include <stdexcept>
 #include <unistd.h>
 #include <netdb.h>
 #include <sys/socket.h>
 #include "Server.hpp"
 #include "utils.hpp"
-#include <iostream>
 #include "Channel.hpp"
 #include "serverExceptions.hpp"
 
-void Client::kill(const std::string &str) const
+void Client::kill(Server *server, const std::string &str) const
 {
 	std::string msg = "ERROR :Closing Link: " + this->getNick() + "hostname :" + str + "\r\n";
+	server->sendLog(static_cast<std::string>("Client <" + itoa(this->getFD()) + "> Disconnected"));
 	if (send(this->getFD(), msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
 //		throw std::runtime_error("Failed to send message: " + msg);
 		return ;

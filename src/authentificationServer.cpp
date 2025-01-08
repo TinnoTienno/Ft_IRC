@@ -6,13 +6,12 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 15:55:50 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 16:08:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "utils.hpp"
-#include <iostream>
 #include "Nick.hpp"
 #include "Parsing.hpp"
 #include "serverExceptions.hpp"
@@ -39,7 +38,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 				client.setAuth(true);
 			else
 			{
-				client.kill("password is wrong");
+				client.kill(this, "password is wrong");
 				ClearClient(client);
 				return false;
 			}

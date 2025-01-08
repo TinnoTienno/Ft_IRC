@@ -6,14 +6,13 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 16:11:18 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 14:44:30 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Client.hpp"
 #include <unistd.h>
-#include <iostream>
 #include "Channel.hpp"
 #include "utils.hpp"
 

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/06 20:02:51 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:46:33 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ class Client
 		std::string getPacket();
 		void 	sendMsg(const std::string &, Server &server) const;
 		void	sendQuitMsg(Server *server, const std::string & msg);
-		void 	kill(const std::string &) const;
+		void 	kill(Server *server, const std::string &) const;
 		void	connect(Server &server);
 
 		void	addChannel(Channel &channel);
