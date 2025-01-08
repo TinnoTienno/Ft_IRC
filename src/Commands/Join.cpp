@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/07 15:38:09 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 12:40:32 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 		}
 		catch(const serverExceptions& e)
 		{
-			std::cout << e.getErrorCode();
 			switch (e.getErrorCode())
 			{
 			case 403 :
