@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 17:06:10 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 18:23:54 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,42 +103,4 @@ bool strCompareNoCase(const std::string &string1, const std::string &string2)
 	return true;
 }
 
-static std::string addVar(Server *server, Client* client, char identifier, va_list args)
-{
-	if (identifier == '%')
-		return "%";
-	else if (identifier == 'h' && server)
-		return server->getHostname();
-	else if (identifier == 'p' && client)
-		return (client->getPrefix());
-	else if (identifier == 'n' && client)
-		return client->getNickname();
-	else if (!charIsNot(identifier, "CcuHmsDPltw"))
-	{
-		const char * i = (const char*) va_arg(args, const char *);
-		return i;
-	}
-	return "";
-}
-
-void sendf(Server *server, Client *dest, const std::string str, ...)
-{
-	va_list args;
-	std::string message = "";
-	if (!server || !dest)
-		throw std::invalid_argument("invalid argument: server or dest");
-	va_start (args, str);
-	for (size_t i = 0; i < str.size(); i++)
-	{
-		if (str[i] == '%')
-			message += addVar(server, dest, str[++i], args);
-		else
-			message += str[i];
-	}
-	server->sendLog(itoa(dest->getFD()) + " << " + message);
-	message += "\r\n\0";
-	va_end(args);
-	if (send (dest->getFD(), message.c_str(), message.size(), 0) != (ssize_t)message.length())
-		throw std::runtime_error("Failed to send the message: " + message);
-}
 

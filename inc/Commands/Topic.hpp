@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Topic.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:31:20 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 15:32:20 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 18:58:28 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOPIC_HPP
 # define TOPIC_HPP
-
+# define TOPIC ":%p TOPIC %C :%T"
 class Server;
 class Client;
 class Parsing;

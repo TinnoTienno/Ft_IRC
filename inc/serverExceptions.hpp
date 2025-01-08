@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   serverExceptions.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:28:06 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 08:22:24 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 19:08:33 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class serverExceptions : public std::exception
 	public :
 		int getErrorCode() const;
 		serverExceptions(const int errorCode); 
-		void sendError(Server &server, Client *dest, ...) const ;
+		void sendError(Server &server, Client *dest,...) const;
 }	;
 
 #endif

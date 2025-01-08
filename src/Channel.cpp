@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 17:05:45 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 18:59:36 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 #include "Rpl.hpp"
 #include <iostream>
 #include <cstring>
+#include "Join.hpp"
+#include "Part.hpp"
+#include "Kick.hpp"
+#include "Mode.hpp"
+#include "Topic.hpp"
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
@@ -113,14 +118,14 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 			switch (mode)
 			{
 				case ePrivMsg:
-					sendf(server, m_vClients[i], PRIVMSG, client->getPrefix().c_str(), msg.c_str());
+					server->sendf(m_vClients[i], client, NULL, PRIVMSG, msg.c_str());
 //					sendf(server, m_vClients[i], PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
 					break;
 				case eNotice:
-					sendf(server, m_vClients[i], NOTICE, client->getPrefix().c_str(), msg.c_str());
+					server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
 					break;
 				case eQuit:
-					sendf(server, m_vClients[i], QUIT, client->getPrefix().c_str(), msg.c_str());
+					server->sendf( m_vClients[i], client, NULL, QUIT, msg.c_str());
 					break;
 				default:
 	  				;
@@ -150,8 +155,8 @@ Client *Channel::getClient(const std::string &nickname)
 void Channel::sendClientslist(Client &dest)
 {
 	std::string list = this->clientsList();
-	sendf(this->m_serv, &dest, RPL_NAMREPLY, this->getSymbol().c_str(), this->getName().c_str(), list.c_str());
-	sendf(this->m_serv, &dest, RPL_ENDOFNAMES, this->getName().c_str(), list.c_str());
+	m_serv->sendf(&dest, NULL, this, RPL_NAMREPLY, this->getSymbol().c_str(), list.c_str());
+	m_serv->sendf(&dest, NULL, this, RPL_ENDOFNAMES, list.c_str());
 }
 
 std::string Channel::clientsList()
@@ -187,19 +192,19 @@ std::string Channel::getSymbol()
 void Channel::sendAllJoin(Client &source)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		sendf(this->m_serv, this->m_vClients[i], ":%m JOIN :%C", source.getPrefix().c_str(), this->getName().c_str());
+		this->m_serv->sendf(this->m_vClients[i], &source, this, JOIN);
 }
 
-void Channel::sendPart(Client &client, const std::string &message)
+void Channel::sendPart(Client &source, const std::string &message)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		sendf(this->m_serv, this->m_vClients[i], ":%m PART %C :%m", client.getPrefix().c_str(), this->getName().c_str(), message.c_str());
+		this->m_serv->sendf(this->m_vClients[i], &source, this, PART, message.c_str());
 }
 
 void Channel::sendKick(Client &source, Client &target, const std::string &message)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		sendf(this->m_serv, this->m_vClients[i], ":%P KICK %C %n :%m",source.getPrefix().c_str() ,this->getName().c_str(), target.getNickname().c_str(), message.c_str());
+		this->m_serv->sendf(this->m_vClients[i], &source, this, KICK, target.getNickname().c_str(), message.c_str());
 }
 
 Server *Channel::getServ() { return m_serv; }
@@ -211,10 +216,10 @@ void	Channel::setInviteMode(bool status)
 	this->m_sModes.i = status;
 	if (status)
 		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			sendf(this->m_serv, this->m_vClients[i], ":%p MODE %c +i", this->getName().c_str());
+			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "+i");
 	else
 		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			sendf(this->m_serv, this->m_vClients[i], ":%p MODE %c -i", this->getName().c_str());
+			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "-i");
 	this->m_serv->sendLog(this->getName() + "'s invite mode was set to " + itoa(status));
 }
 
@@ -261,15 +266,15 @@ void	Channel::setTopic(Client &client, const std::string &topic)
 void Channel::sendTopic(Client &dest)
 {
 	if (this->getTopic() != "")
-		sendf(this->m_serv, &dest, RPL_TOPIC, this->getName().c_str(), this->getTopic().c_str());
+		this->m_serv->sendf(&dest, NULL, this, RPL_TOPIC);
 	else
-		sendf(this->m_serv, &dest, RPL_NOTOPIC, this->getName().c_str());
+		this->m_serv->sendf(&dest, NULL, this, RPL_NOTOPIC);
 }
 
 void Channel::sendAllTopic()
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		sendf(this->m_serv, m_vClients[i], ":%p TOPIC %C :%t", this->getName().c_str(), this->getTopic().c_str());
+		this->m_serv->sendf(m_vClients[i], NULL, this, TOPIC);
 }
 
 const std::string	Channel::getTopic(void) const {	return this->m_sModes.topic; }

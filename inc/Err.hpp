@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:08:00 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/07 15:17:46 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 19:11:15 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define ERR_HPP
 
 #define ERR_NOSUCHNICK ":%h 401 %n %w :No such nick/channel" // wrongnick
-#define ERR_NOSUCHCHANNEL ":%h 403 %n %C :No such channel" // channel
+#define ERR_NOSUCHCHANNEL ":%h 403 %n %c :No such channel" // channel
 #define ERR_CANNOTSENDTOCHAN ":%h 404 %n %C :Cannot send to channel" // channel
 #define ERR_TOOMANYCHANNELS ":%h 405 %n %C : You have joined too many channels" // channel
 #define ERR_WASNOSUCHNICK ":%h 406 %n %w :There was no such nickname" // wrongnick
