@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 14:19:48 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:28:30 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,13 @@ static std::string	&trimNewLines(std::string & str)
 	while (!str.empty() && (str[str.size() - 1] == '\r' || str[str.size() - 1] == '\n'))
 		str.erase(str.size() - 1, 1);
 	return str;
+}
+
+int	Bot::handleSendFile(const std::string & user, const std::string & filename)
+{
+	(void)user;
+	(void)filename;
+	return 0;
 }
 
 void	Bot::handlePrivMsg(const std::string & message)
