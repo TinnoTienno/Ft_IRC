@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/06 20:11:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 12:52:12 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 void Client::kill(const std::string &str) const
 {
-	std::string msg = "ERROR :Closing Link: " + this->getNick() + "hostname" +" :" + str + "\r\n";
+	std::string msg = "ERROR :Closing Link: " + this->getNick() + "hostname :" + str + "\r\n";
 	if (send(this->getFD(), msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
 //		throw std::runtime_error("Failed to send message: " + msg);
 		return ;

@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 10:39:46 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 12:57:22 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/08 12:38:20 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 #include <exception>
 #include <iostream>
 #include <cstdlib>
-# define USAGE "Usage: ./bot [server adress] [name] [password] [port]"
+#ifndef BOT_USAGE
+# define BOT_USAGE "Usage: ./bot [server adress] [name] [password] [port]"
+#endif
 
 int	main(int ac, char **av)
 {
 	if (ac != 5)
 	{
-		std::cout << USAGE << std::endl;
+		std::cout << BOT_USAGE << std::endl;
 		return 1;
 	}
 	std::string port = av[4];

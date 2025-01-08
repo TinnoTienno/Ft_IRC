@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 13:53:51 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/06 13:15:03 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	Bot::m_run()
 {
 	char	buffer[513];
 
-	int i = 0;
 	while(this->m_signal == false)
 	{
 		memset(buffer, 0, sizeof(buffer));
@@ -68,12 +67,6 @@ int	Bot::m_run()
 			return 1;
 		buffer[bytes] = '\0';
 		std::cout << buffer << std::endl;
-		i++;
-		std::cout << "i = " << i << std::endl;
-		if (i > 18)
-		{
-			speak("PRIVMSG per :hello \r\n");
-		}
 	}
 	return 0;
 }

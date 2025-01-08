@@ -3,7 +3,12 @@
 
 #include <string>
 #include <arpa/inet.h>
+#include <iostream>
 #include <netinet/in.h>
+#include <stdexcept>
+#include <vector>
+#include <sstream>
+#include <fstream>
 
 class Bot {
 public:
@@ -15,13 +20,11 @@ public:
     std::string getRealname() const;
     int init();
     int quit();
-    void speak(const std::string & msg);
+    int speak(const std::string & msg);
 
 private:
-	void	m_authenticate();
-	void	m_connectToServer();
-    int		m_run();
-    int		handle_dcc_send(const std::string& user, const std::string& filename);
+    int m_run();
+    int handle_dcc_send(const std::string& user, const std::string& filename);
      uint32_t ip_to_int(const std::string& ip_str);
     std::string get_local_ip();
     std::string m_serAddress;
