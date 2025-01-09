@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 17:06:31 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:20:19 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		Parsing parse(line);
 		if (parse.getCommand() == "NICK")
 		{
-			if (Nick::parseError(*this, parse, client))
-				client.setNickname(getNextGuest());
+			Nick::parseError(*this, parse, client);
 		}
 		else if (parse.getCommand() == "PASS")
 		{

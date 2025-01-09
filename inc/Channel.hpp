@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 16:48:03 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:45:05 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct s_channelMode
 	std::string					topic;
 	bool	k;
 	std::string					password;
-	bool	o;
 	std::vector <Client *>		m_vOP;
 	bool	l;
 	size_t						limitedSize;
@@ -72,12 +71,15 @@ class	Channel
 		std::string getSymbol();
 		void 	sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
 		void	sendAllJoin(Client &source);
+		void	sendAllQuit(Client &client, const std::string &message);
+		void	sendAllMode(bool status, const std::string &modeLetter);
 		void 	sendTopic(Client &dest);
 		void 	sendAllTopic();
 		void 	sendPart(Client &client, const std::string &message);
 		void 	sendKick(Client &source, Client &target, const std::string &message);
 		void 	sendClientslist(Client &dest);
 		//sModes
+		std::string modeToStr();
 		//Invite
 		void	setInviteMode(bool);
 		bool	getInviteMode() const;
@@ -106,10 +108,10 @@ class	Channel
 		void	setBanned(Client &client);
 		bool	isBanned(Client &client);
 		
+		std::vector <Client *>		m_vClients;
 	private:
 		s_channelMode				m_sModes;
 		std::string					m_name;
-		std::vector <Client *>		m_vClients;
 		Server 						*m_serv;
 		channelType					m_channelType;
 };

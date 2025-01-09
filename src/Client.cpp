@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 17:26:11 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:34:04 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 Client::Client() {
 	m_authentified = false;
 	m_irssiPacket = "";
+	m_vChannels.clear();
+	m_vOpChannels.clear();
 }
 		
 Client::~Client() { };
@@ -96,10 +98,11 @@ std::string Client::getPacket()
 }
 
 //messages
-void	Client::sendQuitMsg(Server *server, const std::string & msg)
+void	Client::sendQuitMsg(const std::string & msg)
 {
-	for (size_t i = 0; i < this->m_vChannels.size(); i++)
-		this->m_vChannels[i]->sendAllMsg(server, this, msg, eQuit);
+	// for (size_t i = 0; i < this->m_vChannels.size(); i++)
+	for (std::vector<Channel *>::iterator iter = this->m_vChannels.begin(); iter != this->m_vChannels.end(); iter++)
+		(*iter)->sendAllQuit(*this, msg);
 }
 
 void Client::kill(const std::string &str) const

@@ -3,16 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Nick.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 08:22:24 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/09 14:14:43 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NICK_HPP
 # define NICK_HPP
 # include <string>
+# define NICK ":%p NICK :%m"
+# define NICK2 ":%m%p NICK :%m"
+
 
 class Server;
 class Client;

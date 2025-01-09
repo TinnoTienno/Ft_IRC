@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 16:35:36 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:14:29 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 					if (!user)
 						throw serverExceptions(401);
 					else
-						sendf(&server, user, PRIVMSG, client.getPrefix().c_str(), parse.getArguments()[2].c_str());
+						server.sendf(user, &client, NULL, PRIVMSG, parse.getArguments()[2].c_str());
 				}
 			}
 	   		catch (const serverExceptions & e)

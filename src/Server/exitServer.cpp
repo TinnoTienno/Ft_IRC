@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exitServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 16:11:18 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/09 17:51:41 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,7 @@ void	Server::CloseFds()
 		close(m_serverSocketFd);
 	}
 }
-/*
-void Server::ClearClient(Client &client)
-{
-	(void)client;
-	m_mClients.erase(m_vFds[0].fd);
-	close (m_vFds[0].fd);
-	m_vFds.erase(m_vFds.begin() + 0);
-}
-*/
+
 void Server::ClearClient(Client &client)
 {
 	close (client.getFD());
@@ -62,8 +54,10 @@ void Server::ClearClient(Client &client)
 	{
 		if (&m_vClients[i] == &client)
 		{
+			sendLog("deleting client : " + m_vClients[i].getNickname());
 			m_vClients.erase(m_vClients.begin() + i);
 			break;
 		}
 	}
+	sendLog("Bug checking : vclient size : " + itoa(m_vClients.size()));
 }

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 17:24:20 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:45:28 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ class Client
 		std::string 			m_username;
 		std::string 			m_realname;
 		std::string 			m_irssiPacket;
-		std::vector<Channel *>	m_vChannels;
 		std::vector<Channel *> 	m_vOpChannels;
 	public : 
+		std::vector<Channel *>	m_vChannels;
 		Client();
 
 		//getters / setters
@@ -53,7 +53,7 @@ class Client
 		std::string getPacket();
 		//messages
 		// void 	sendMsg(const std::string &, Server &server) const;
-		void	sendQuitMsg(Server *server, const std::string & msg);
+		void	sendQuitMsg(const std::string & msg);
 		void 	kill(const std::string &) const;
 		void	connect(Server &server);
 		//vectors

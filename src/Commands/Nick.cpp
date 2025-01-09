@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 17:09:29 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:33:43 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,16 @@ void Nick::execute(Server &server, const Parsing &parse, Client &client)
 
 int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 {
+	
 	try
 	{
 		if (!parse.getArguments()[1].size())
 			throw(serverExceptions(431));
-		if (server.getClient(parse.getArguments()[1]))
-			throw(serverExceptions(433));
 		if (!isNickFormatted(parse.getArguments()[1]))
 			throw(serverExceptions(432));
+		if (server.getClient(parse.getArguments()[1]) && server.getClient(parse.getArguments()[1]) != &client)
+			throw(serverExceptions(433));
+		server.sendf(&client, NULL, NULL, NICK, parse.getArguments()[1].c_str());
 		client.setNickname(parse.getArguments()[1]);
 	}
 	catch(const serverExceptions& e)
@@ -44,9 +46,20 @@ int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 		else if (e.getErrorCode() == 432)
 			e.sendError(server, &client, parse.getArguments()[1].c_str());
 		else if (e.getErrorCode() == 433)
-			e.sendError(server, &client, parse.getArguments()[1].c_str());
+		{
+			if (client.getNickname() != "")
+				e.sendError(server, &client, parse.getArguments()[1].c_str());
+			else
+			{
+				std::string newNick = server.getNextGuest();
+				server.sendf(&client, NULL, NULL, ":%h 433 %m %m :Nickname is already in use", parse.getArguments()[1].c_str(), parse.getArguments()[1].c_str());
+				server.sendf(&client, NULL, NULL, NICK2, parse.getArguments()[1].c_str(), newNick.c_str());
+				client.setNickname(newNick);
+			}
+		}
 		else if (e.getErrorCode() == 436)
 			e.sendError(server, &client, parse.getArguments()[1].c_str());
+		return 1;
 	}
 	return 0;
 }

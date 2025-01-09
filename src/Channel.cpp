@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 18:59:36 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:55:28 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 #include "Kick.hpp"
 #include "Mode.hpp"
 #include "Topic.hpp"
+#include "Notice.hpp"
+#include "Quit.hpp"
+#include <stdio.h>
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
@@ -37,10 +40,12 @@ bool Channel::parseChannelName(const std::string &channelName)
 
 Channel::Channel(Server &server, const std::string &name, Client &client)
 {
+	this->m_vClients = std::vector<Client *>();
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 	this->m_serv = &server;
 	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
+	this->m_channelType = Public;
 	this->m_name = name;
 	addClient(client, "");
 	addOP(client);
@@ -48,12 +53,14 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 
 Channel::Channel(Server &server, const std::string &name, Client &client, const std::string &passwd)
 {
+	this->m_vClients.clear();
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
 	this->setPassword(passwd);
 	this->m_serv = &server;
 	this->m_name = name;
+	this->m_channelType = Public;
 	addClient(client, passwd);
 }
 
@@ -86,8 +93,10 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 		throw serverExceptions(474);
 	if (this->getSizeLimitMode() && m_vClients.size() >= this->getSizeLimit())
 		throw serverExceptions(471);
+	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
 	this->m_vClients.push_back(&client);
 	client.addChannel(*this);
+	std::cout << client.m_vChannels[0]->getName() << std::endl;
 	if (!this->m_sModes.m_vOP.size())
 		addOP(client);
 	this->sendAllJoin(client);
@@ -101,6 +110,7 @@ void	Channel::removeClient(const Client & client)
 	{
 		if (m_vClients[i] == &client)
 		{
+			this->m_serv->sendLog("removing client " + client.getNickname() + " from " + this->getName() + " channel");
 			m_vClients.erase(m_vClients.begin() + i);
 			if (!m_vClients.size())
 				m_serv->deleteChannel(*this);
@@ -134,6 +144,26 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 	}
 }
 
+void	Channel::sendAllMode(bool status, const std::string &modeLetter)
+{
+	std::string statuschar;
+	if (status)
+		statuschar = "+";
+	else
+		statuschar = '-';
+	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + statuschar + modeLetter);
+}
+
+void	Channel::sendAllQuit(Client &client, const std::string &message)
+{
+	if (this->m_vClients.empty())
+		std::cout << "client vide" << std::endl;
+	printf("%p \n", &this->m_vClients);
+	for (std::vector<Client *>::iterator iter = this->m_vClients.begin(); iter != this->m_vClients.end(); iter++)
+		this->m_serv->sendf(*iter, &client, this, QUIT, message.c_str());
+}
+
 const std::string	Channel::getName(void) const { return this->m_name; }
 		
 Client *Channel::getClient(Client *client)
@@ -164,12 +194,10 @@ std::string Channel::clientsList()
 	std::string res = "";
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		char mode;
 		if (this->isClientOP(*m_vClients[i]))
-			mode = '@';
+			res += '@' + m_vClients[i]->getNickname() + " ";
 		else
-			mode = ' ';
-		res += mode + m_vClients[i]->getNickname() + " ";
+			res += m_vClients[i]->getNickname() + " ";
 	}
 	return res;
 }
@@ -210,16 +238,28 @@ void Channel::sendKick(Client &source, Client &target, const std::string &messag
 Server *Channel::getServ() { return m_serv; }
 
 //sMODES
+
+std::string Channel::modeToStr()
+{
+	if (!(this->m_sModes.i || this->m_sModes.t || this->m_sModes.k || this->m_sModes.l))
+		return "";
+	std::string res = "+";
+	if (this->m_sModes.i)
+		res += "i";
+	if (this->m_sModes.t)
+		res += "t";
+	if (this->m_sModes.k)
+		res += "k";
+	if (this->m_sModes.l)
+		res += "l" + itoa(this->getSizeLimit());
+	return res;
+}	
+
+
 //Invite
 void	Channel::setInviteMode(bool status)
 {
 	this->m_sModes.i = status;
-	if (status)
-		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "+i");
-	else
-		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "-i");
 	this->m_serv->sendLog(this->getName() + "'s invite mode was set to " + itoa(status));
 }
 
@@ -245,7 +285,12 @@ bool	Channel::isInvited(Client &client)
 void	Channel::setProtectedTopicMode(bool status) 
 {
 	this->m_sModes.t = status;
-	// sendMode()
+	if (status)
+		for (size_t i = 0; i < this->m_vClients.size(); i++)
+			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "+t");
+	else
+		for (size_t i = 0; i < this->m_vClients.size(); i++)
+			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "-t");
 	this->m_serv->sendLog(this->getName() + "'s protected topic mode was set to " + itoa(status));
 }
 
@@ -284,7 +329,12 @@ const std::string	Channel::getTopic(void) const {	return this->m_sModes.topic; }
 void	Channel::setPasswordMode(bool status)
 {
 	this->m_sModes.k = status;
-	// sendMode()
+	if (status)
+		for (size_t i = 0; i < this->m_vClients.size(); i++)
+			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "+k");
+	else
+		for (size_t i = 0; i < this->m_vClients.size(); i++)
+			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "-k");
 	this->m_serv->sendLog(this->getName() + "'s password mode was set to " + itoa(status));
 }
 
@@ -335,7 +385,6 @@ bool	Channel::isClientOP(Client &client)	//No more channel founder and such, onl
 void	Channel::setSizeLimitMode(bool status)
 {
 	this->m_sModes.l = status;
-	// sendMode()
 	this->m_serv->sendLog(this->getName() + "'s size limit mode was set to " + itoa(status));
 }
 

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:44:33 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 18:42:36 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 13:31:25 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 # include "Channel.hpp"
 # include <vector>
 # include <string>
-# define NOTICE ":%P NOTICE %n :%m" // source, nickname, message
-# define QUIT ":%P QUIT :Quit: %m" // source, message
 
 class Server;
 class Client;

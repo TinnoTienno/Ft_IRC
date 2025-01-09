@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 14:56:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 17:07:57 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:52:51 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void Quit::execute(Server &server, const Parsing &parse, Client &client)
 		message = "";
 	else
 		message = parse.getArguments()[1];
-	client.sendQuitMsg(&server, message);
-	sendf(&server, &client, ":%h ERROR :Closing Link: %c (Quit: %m)", client.getNickname().c_str(), message.c_str()); 
 	server.sendLog("Client <" + itoa(client.getFD()) + "> Disconnected");
+	std::cout << client.m_vChannels[0]->getName() << std::endl;
+	client.sendQuitMsg(message);
 	server.ClearClient(client);
 }
 
