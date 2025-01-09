@@ -36,7 +36,7 @@ private:
 	void		m_handlePrivMsg(const std::string & message);
 	uint32_t	m_getLocalIpInt() const;
 	void		m_createSocket(struct sockaddr_in & serverAddr, int & serverSock);
-	void		m_acceptAndSend(int serverSock, const std::string & user, std::ifstream & file);
+	void		m_acceptAndSend(int serverSock, std::ifstream & file);
 	void		m_handleList(const std::string & user);
 	bool		isInList(const std::string & user, const std::string & filename);
     int			m_handleSendFile(const std::string& user, const std::string& filename);

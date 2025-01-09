@@ -6,12 +6,13 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 23:31:32 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:51:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
 #include <arpa/inet.h>
+#include <cerrno>
 #include <exception>
 #include <iostream>
 #include <netinet/in.h>
@@ -24,6 +25,8 @@
 #include <dirent.h>
 #include <sys/socket.h>
 #include <vector>
+#include <fcntl.h>
+#include <poll.h>
 
 bool Bot::m_signal = false;
 
@@ -32,6 +35,8 @@ Bot::Bot(std::string serAdd, std::string channel, std::string password, int port
 	this->m_channel = "#" + channel;
 	this->m_name = "FileHandlerBot";
 	this->m_fileDir = "botShareDirectory";
+	this->m_serSocket = -1;
+	this->m_serSocket = -1;
 }
 
 Bot::~Bot() {}
@@ -44,7 +49,7 @@ std::string	Bot::getRealname() const { return "R-" + this->m_name; }
 
 void	Bot::m_connectToServer()
 {
-	struct sockaddr_in	socketAdd;
+	struct sockaddr_in	socketAdd = {};
 
 	socketAdd.sin_family = AF_INET;
 	socketAdd.sin_port = htons(this->m_port);
@@ -55,6 +60,8 @@ void	Bot::m_connectToServer()
 		throw std::runtime_error("Error: Socket failed");
 	if(connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd))) != 0)
 		throw std::runtime_error("Error: Cannot connect to server");
+	if (fcntl(this->m_serSocket, F_SETFL, O_NONBLOCK) == -1)
+		throw std::runtime_error("Error: Failed to set non-blocking mode");
 
 }
 
@@ -64,6 +71,8 @@ void	Bot::m_createList()
 	struct dirent* ent;
 	if ((directory = opendir(this->m_fileDir.c_str())) == NULL)
 		throw std::runtime_error("Error: Cannot open directory : " + this->m_fileDir);
+	if (!this->m_vlist.empty())
+		this->m_vlist.clear();
 	while ((ent = readdir(directory)) != NULL)
 	{
 		std::string fileName(ent->d_name);
@@ -94,10 +103,15 @@ int	Bot::init()
 int	Bot::m_run()
 {
 	char	buffer[513];
+	struct	pollfd pfd;
+	pfd.fd = this->m_serSocket;
+	pfd.events = POLLIN;
 
 	while(this->m_signal == false)
 	{
-		std::cout << "signal is " << (this->m_signal ? "true" : "false") << std::endl;
+		if ((poll(&pfd, 1, -1) == -1) || this->m_signal == true)
+			return quit();
+		else if (pfd.revents & POLLIN)
 		memset(buffer, 0, sizeof(buffer));
 		int	bytes = recv(this->m_serSocket, buffer, sizeof(buffer), 0);
 		if (bytes <= 0)
@@ -166,11 +180,16 @@ void	Bot::m_handlePrivMsg(const std::string & message)
 		std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
 		m_handleList(user);
 	}
+	else if (tokens.size() > 3 && m_trimNewLines(tokens[3]) == ":!refresh")
+	{
+		std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
+		m_createList();
+	}
 }
 
 void	Bot::speak(const std::string & msg)
 {
-	std::cout << msg << std::endl;
+	std::cout << "<< " << msg << std::endl;
 	if (send(this->m_serSocket, msg.c_str(), msg.size(), 0) != static_cast<ssize_t>(msg.length()))
 		throw std::runtime_error("Error: Message not sent");
 }
@@ -183,86 +202,3 @@ int	Bot::quit()
 	std::cout << "ircbot Disconnected" << std::endl;
 	return 1;
 }
-/*
-int	Bot::m_handleSendFile(const std::string & user, const std::string & filename)
-{
-	try
-	{
-		u_int32_t localIp = m_getLocalIpInt();
-		if (localIp == 0)
-		{
-			speak("PRIVMSG " + user + " :Error: can't get local IP\r\n");
-			return 1;
-		}
-		std::ifstream file;
-		file.open(filename.c_str(), std::ios::binary | std::ios::ate); // binary -> binary mode ; ate -> cursor is placed at the end
-		if (!file.is_open())
-		{
-			speak("PRIVMSG " + user + " :Error: Cannot open file " + filename + "\r\n");
-			return 1;
-		}
-		size_t	fileSize = file.tellg(); // get the file size in bytes with the current cursor position
-		file.seekg(0, std::ios::beg); // move the cursor back to the begining
-		int	serverSock = socket(AF_INET, SOCK_STREAM, 0);
-		if (serverSock == -1)
-			throw std::runtime_error("Error: Socket creation failed");
-		struct sockaddr_in	serverAddr = {};
-		serverAddr.sin_family = AF_INET;
-		serverAddr.sin_addr.s_addr = INADDR_ANY;
-		serverAddr.sin_port = 0; // OS will chose a random free port
-//		if (bind(serverSock, (sockaddr*)&serverAddr, sizeof(serverAddr)) == -1)
-		if (bind(serverSock, reinterpret_cast<struct sockaddr*>(&serverAddr), sizeof(serverAddr)) == -1)
-		{
-			close(serverSock);
-			throw std::runtime_error("Error: socket bind failed");
-		}
-		socklen_t	serverAddrLen = sizeof(serverAddr);
-//		if (getsockname(serverSock, (sockaddr*)&serverAddr, &serverAddrLen) == -1) // fill the serverAddr with the ip and the port of the socket
-		if (getsockname(serverSock, reinterpret_cast<struct sockaddr*>(&serverAddr), &serverAddrLen) == -1) // fill the serverAddr with the ip and the port of the socket
-		{
-			close(serverSock);
-			throw std::runtime_error("Error: Getting socket name failed");
-		}
-		int	port = ntohs(serverAddr.sin_port);
-		if (listen(serverSock, 1) == -1)
-		{
-			close(serverSock);
-			throw std::runtime_error("Error: Listening on socket failed");
-		}
-		std::ostringstream DccMessage;
-		DccMessage << "PRIVMSG " << user << " :\001DCC SEND " << filename << " " << localIp << " " << port << " " << fileSize << "\001\r\n";
-		speak(DccMessage.str());
-		struct sockaddr_in clientAddr = {};
-		socklen_t	clientAddrLen = sizeof(clientAddr);
-//		int	clientSock = accept(serverSock, (sockaddr*)&clientAddr, &clientAddrLen);
-		int	clientSock = accept(serverSock, reinterpret_cast<struct sockaddr*>(&clientAddr), &clientAddrLen);
-		if (clientSock == -1)
-		{
-			close(serverSock);
-			throw std::runtime_error("Error: accepting connection failed");
-		}
-		char	buffer[4096];
-		std::cout << "on est al" << std::endl;
-		while (file.read(buffer, sizeof(buffer)).gcount() > 0)
-		{
-			std::cout << "bytes envoyés = " << file.gcount() << std::endl;
-			if (send(clientSock, buffer, file.gcount(), 0) == -1)
-			{
-				speak("PRIVMSG " + user + " :Error: Sending file failed\r\n");
-				close(clientSock);
-				close(serverSock);
-				throw std::runtime_error("Error: Sending file failed");
-			}
-		}
-		close(clientSock);
-		close(serverSock);
-		speak("PRIVMSG " + user + " :Send complete\r\n");
-		return 0;
-	}
-	catch (const std::exception & e)
-	{
-		speak("PRIVMSG " + user + " :" + std::string(e.what()) + "\r\n");
-		return 1;
-	}
-}
-*/

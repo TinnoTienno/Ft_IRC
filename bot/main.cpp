@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 10:39:46 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 23:24:30 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:19:23 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	Bot::signalHandler(int signum)
 {
 	std::cout << std::endl << "signal Received: " << signum << std::endl;
 	Bot::m_signal = true;
-	Bot::quit();
 }
 
 int	main(int ac, char **av)

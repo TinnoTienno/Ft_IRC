@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:38:15 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 20:14:49 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:00:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	Bot::m_createSocket(struct sockaddr_in & serverAddr, int & serverSock)
 	}
 }
 
-void	Bot::m_acceptAndSend(int serverSock, const std::string & user, std::ifstream & file)
+void	Bot::m_acceptAndSend(int serverSock, std::ifstream & file)
 {
 	struct sockaddr_in clientAddr = {};
 	socklen_t	clientAddrLen = sizeof(clientAddr);
@@ -83,15 +83,12 @@ void	Bot::m_acceptAndSend(int serverSock, const std::string & user, std::ifstrea
 		throw std::runtime_error("Error: accepting connection failed");
 	}
 	char	buffer[4096];
-	std::cout << "on est al" << std::endl;
 	while (file.read(buffer, sizeof(buffer)).gcount() > 0)
 	{
-		std::cout << "bytes envoyés = " << file.gcount() << std::endl;
 		if (send(clientSock, buffer, file.gcount(), 0) == -1)
 		{
-			speak("PRIVMSG " + user + " :Error: Sending file failed\r\n");
 			close(clientSock);
-			close(serverSock);
+//			close(serverSock);
 			throw std::runtime_error("Error: Sending file failed");
 		}
 	}
@@ -137,7 +134,7 @@ int	Bot::m_handleSendFile(const std::string & user, const std::string & filename
 		std::ostringstream DccMessage;
 		DccMessage << "PRIVMSG " << user << " :\001DCC SEND " << filename << " " << localIp << " " << port << " " << fileSize << "\001\r\n";
 		speak(DccMessage.str());
-		m_acceptAndSend(serverSock, user, file);
+		m_acceptAndSend(serverSock, file);
 		close(serverSock);
 		speak("PRIVMSG " + user + " :Send complete\r\n");
 		return 0;
