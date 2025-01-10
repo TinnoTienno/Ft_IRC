@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 16:08:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 12:52:56 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "utils.hpp"
 #include "Nick.hpp"
 #include "Parsing.hpp"
+#include "Err.hpp"
 #include "serverExceptions.hpp"
 
 bool Server::checkAuth(Client &client, const std::string &buffer)
@@ -56,7 +57,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		else if (parse.getCommand() == "CAP")
 			;
 		else
-			sendMessage(client.getFD(), *this, "451 * " + parse.getCommand(), "You must finish connecting with another nickname first.");
+			sendf(this, &client, ERR_NOTREGISTERED, parse.getCommand().c_str());
 	}
 	if (m_pass != "" && client.getAuth() == false && !client.getUser().empty())
 		sendLog("Client <" + itoa(client.getFD()) + "> has not set a password");
