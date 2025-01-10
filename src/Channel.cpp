@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:12:51 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:32:09 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool Channel::parseChannelName(const std::string &channelName)
 	return true;
 }
 
-Channel::Channel(Server &server, const std::string &name, Client &client)
+Channel::Channel(Server &server, const std::string &name)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
@@ -46,11 +46,9 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
 	this->m_channelType = Public;
 	this->m_name = name;
-	addClient(client, "");
-	addOP(client);
 }
 
-Channel::Channel(Server &server, const std::string &name, Client &client, const std::string &passwd)
+Channel::Channel(Server &server, const std::string &name, const std::string &passwd)
 {
 	
 	if (!parseChannelName(name))
@@ -60,7 +58,6 @@ Channel::Channel(Server &server, const std::string &name, Client &client, const 
 	this->m_serv = &server;
 	this->m_name = name;
 	this->m_channelType = Public;
-	addClient(client, passwd);
 }
 
 Channel::~Channel	(void)
@@ -111,6 +108,7 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 
 void	Channel::removeClient(const Client & client)
 {
+	this->getServ()->sendLog("Bug : RemoveClient");
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
 		if (m_vClients[i] == &client)
@@ -140,7 +138,7 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 					server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
 					break;
 				case eQuit:
-					server->sendf( m_vClients[i], client, NULL, QUIT, msg.c_str());
+					server->sendf( m_vClients[i], client, this, QUIT, msg.c_str());
 					break;
 				default:
 	  				;
@@ -374,7 +372,10 @@ void Channel::removeOP(Client &client)
 {
 	for (size_t i = 0; i < this->m_sModes.m_vOP.size(); i++)
 		if (this->m_sModes.m_vOP[i] == &client)
+		{
+			this->getServ()->sendLog("Removing OP " + client.getNickname() + " from " + this->getName() + " channel");
 			this->m_sModes.m_vOP.erase(this->m_sModes.m_vOP.begin() + i);
+		}
 	// Message ??
 }
 

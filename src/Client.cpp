@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 16:53:39 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:38:34 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ Client::Client() {
 	m_vChannels.clear();
 	m_vOpChannels.clear();
 }
-		
+	
 Client::~Client()
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++)
@@ -180,7 +180,10 @@ void Client::leaveOP(Channel &channel)
 {
 	for (size_t i = 0; i < m_vOpChannels.size(); i++)
 		if (&channel == m_vOpChannels[i])
+		{
+			channel.getServ()->sendLog("Removing " + this->getNickname() + " from " + channel.getName() + " channel's OP's list");
 			m_vOpChannels.erase(m_vOpChannels.begin() + i);
+		}
 }
 
 size_t Client::getChannelsCount() { return m_vChannels.size(); }

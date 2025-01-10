@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 15:15:49 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:35:36 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,13 @@ Server::Server(const std::string &name, const std::string &pass) : m_pass(pass),
 
 Channel &Server::createChannel(const std::string &name, Client &client)
 {
-	Channel newChannel(*this, name, client);
+	Channel newChannel(*this, name);
 	m_vChannels.push_back(newChannel);
 	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
 	Channel &tmp = m_vChannels[m_vChannels.size() - 1];
 	sendLog("tmp " + tmp.getName());
+	m_vChannels[m_vChannels.size() - 1].addClient(client, "");
+	m_vChannels[m_vChannels.size() - 1].addOP(client);
 	return tmp;
 }
 

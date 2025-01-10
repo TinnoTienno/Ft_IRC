@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:13:41 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:32:20 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ class	Server;
 class	Channel
 {
 	public:
-		Channel(Server &server, const std::string &name, Client &client, const std::string &passwd);
-		Channel(Server &server, const std::string &name, Client &client);
+		Channel(Server &server, const std::string &name, const std::string &passwd);
+		Channel(Server &server, const std::string &name);
 		~Channel(void);
 		
 		bool	isJoinable(Client &client);
