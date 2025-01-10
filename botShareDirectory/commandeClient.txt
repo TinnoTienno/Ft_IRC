@@ -1,8 +1,9 @@
 /dcc send Noda /mnt/nfs/homes/aduvilla/Code/Ft_IRC/todo
 # envoie à noda le fichier todo
 
-/dcc get aduvilla todo
-# recois le fichier de aduvilla
+/dcc get <user> <file>
+/dcc get -n <nouveau_nom_de_fichier> -d <chemin/vers/le/repertoire> <user> <file>
+# recois le file de user
 
 nc -l 12345 < test.txt
 # envoie le fichier test avec netcat (on doit se trouver dans le dossier dans lequel est test.txt)

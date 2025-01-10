@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
+#    By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/08 17:42:33 by eschussl         ###   ########.fr        #
+#    Updated: 2025/01/10 15:37:46 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ BOT_NAME	= 	ircbot
 
 BOT_PATH	=	bot/
 
-BOT_SRCS	=	$(addprefix $(BOT_PATH),Bot.cpp main.cpp)
+BOT_SRCS	=	$(addprefix $(BOT_PATH),Bot.cpp fileTransferBot.cpp main.cpp)
 
 BOT_OBJS	=	$(addprefix .botObj/,$(BOT_SRCS:.cpp=.o))
 

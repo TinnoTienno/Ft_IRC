@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:29:13 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:42:31 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,22 @@ Channel::~Channel	(void)
 		m_sModes.m_vOP[i]->leaveOP(*this);
 }
 
+bool	Channel::isInvited(Client *client)
+{
+	for (size_t i = 0; i < this->m_vInvited.size(); i++)
+		if (this->m_vInvited[i] == client)
+			return true;
+	return false;
+}
+
+bool	Channel::isOp(Client *client)
+{
+	for (size_t i = 0; i < this->m_vOP.size(); i++)
+		if (this->m_vOP[i] == client)
+			return true;
+	return false;
+}
+
 bool	Channel::isJoinable(Client &client)
 {
 	if (this->isBanned(client))
@@ -123,6 +139,10 @@ void	Channel::removeClient(const Client & client)
 		}
 	}
 }
+
+void Channel::addOP(Client &client) { this->m_vOP.push_back(&client); }
+
+void	Channel::addInvite(Client &client) { this->m_vInvited.push_back(&client); }
 
 void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
 {

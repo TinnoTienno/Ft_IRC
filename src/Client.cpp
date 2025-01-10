@@ -3,24 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 15:26:26 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:45:46 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <exception>
 #include "Client.hpp"
-#include <stdexcept>
+#include <string>
 #include <unistd.h>
 #include <netdb.h>
 #include <sys/socket.h>
 #include "Server.hpp"
 #include "utils.hpp"
-#include <iostream>
 #include "Channel.hpp"
+#include "Rpl.hpp"
 #include "serverExceptions.hpp"
+
+void Client::kill(Server *server, const std::string &str) const
+{
+	std::string msg = "ERROR :Closing Link: " + this->getNick() + "hostname :" + str + "\r\n";
+	server->sendLog(static_cast<std::string>("Client <" + itoa(this->getFD()) + "> Disconnected"));
+	if (send(this->getFD(), msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
+//		throw std::runtime_error("Failed to send message: " + msg);
+		return ;
+}
 
 Client::Client() {
 	m_authentified = false;
@@ -56,24 +65,22 @@ void	Client::setHostname(struct sockaddr *addr, Server &server)
 	int		res = getnameinfo(addr, sizeof(&addr), host, sizeof(host), NULL, 0, 0);
 	try
 	{
-		sendMessage(this->getFD(), server, "NOTICE AUTH", "*** No Identd");
-		sendMessage(this->getFD(), server, "NOTICE AUTH", "*** Looking up your hostname");
+		sendf(&server, this, AUTH_IDENT);
+		sendf(&server, this, AUTH_LOOKHOST);
 		if (!res)
 		{
-			this->m_hostname = (std::string) host;
-			sendMessage(this->getFD(), server, "NOTICE AUTH", "*** Found your hostname");
-				return ;
+			this->m_hostname = static_cast<std::string>(host);
+			sendf(&server, this, AUTH_HOSTFOUND);
 		}
 		else
 		{
 			this->m_hostname = this->m_ipAdd;
-			sendMessage(this->getFD(), server, "NOTICE AUTH", "*** Hostname not found, IP instead");
-				return ;
+			sendf(&server, this, AUTH_HOSTNOTFOUND);
 		}
 	}
 	catch (const std::exception &e)
 	{
-		server.sendLog("Error: set host: " + (std::string) e.what());
+		server.sendLog("Error: set host: " + static_cast<std::string>(e.what()));
 	}
 }
 
@@ -103,6 +110,36 @@ std::string Client::getPacket()
 	return tmp;
 }
 
+const std::string& Client::getNick() const { return this->m_nick; }
+
+void Client::setNick(const std::string &nick) {	this->m_nick = nick; }
+
+const std::string& Client::getUser() const { return this->m_user; }
+
+void Client::setUser(const std::string &user) {	this->m_user = user; }
+
+const std::string& Client::getReal() const { return this->m_realname; } 
+
+void Client::setReal(const std::string &real) { this->m_realname = real; }
+		
+void	Client::sendQuitMsg(Server *server, const std::string & msg)
+{
+	for (size_t i = 0; i < this->m_vChannels.size(); i++)
+		this->m_vChannels[i]->sendAllMsg(server, this, msg, eQuit);
+}
+
+Client::~Client()
+{
+	// close(m_fd);
+	// for (size_t i = 0; i < m_vChannels.size(); i++)
+	// 	m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
+	// std::cout << "client is dead" << std::endl;
+}
+
+std::string	Client::getPrefix() const
+{
+	std::string prefix = this->getNick() + "!" + this->getUser() + "@" + this->m_host;
+	return prefix;
 //messages
 void	Client::sendQuitMsg(const std::string & msg)
 {
@@ -111,50 +148,31 @@ void	Client::sendQuitMsg(const std::string & msg)
 		(*iter)->sendAllQuit(*this, msg);
 }
 
-void Client::kill(const std::string &str) const
-{
-	std::string msg = "ERROR :Closing Link: " + this->getNickname() + "hostname :" + str + "\r\n";
-	if (send(this->getFD(), msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
-//		throw std::runtime_error("Failed to send message: " + msg);
-		return ;
-}
-
 void Client::connect(Server &server)
 {
+	std::string	motd[] = {"-        Welcome to,",
+							"-",
+							"-        " + server.getHostname(),
+							"-",
+							"-        * Host.....: " + server.getHostname(),
+							"-        * Port.....: " + server.getPort(),
+							"-",
+							"-        Welcome to our 42 irc project",
+							"-        by eschussl and aduvilla"};
 	try
 	{
-		std::string y = "10"; // nombre de Operators online
-		std::string	msg = "Welcome to the ft_IRC NETWORK " + this->getPrefix();
-		sendMessage(this->getFD(), server, "001 " + this->getNickname(), msg);
-		msg = "Your host is " + server.getHostname() + ", running version 1.2.3";
-		sendMessage(this->getFD(), server, "002 " + this->getNickname(), msg);
-		msg = "This server was created " + getTime();
-		sendMessage(this->getFD(), server, "003 " + this->getNickname(), msg);
-		msg = server.getHostname() + " 1.2.3 itkOl";
-		sendMessage(this->getFD(), server, "004 " + this->getNickname(), msg);
-		msg = "CHANMODES=i t, k, o, l : are supported by this server";
-		sendMessage(this->getFD(), server, "005 " + this->getNickname(), msg);
-		msg = "There are " + server.getUserNumber() + " users on 1 server";
-		sendMessage(this->getFD(), server, "251 " + this->getNickname(), msg);
-		msg = y + " :IRC Operators online";
-		sendMessage(this->getFD(), server, "252 " + this->getNickname(), msg);
-		msg = server.getChannelNumber() + " :channels formed";
-		sendMessage(this->getFD(), server, "254 " + this->getNickname(), msg);
-		msg = "- " + server.getHostname() + " Message of the Day -";
-		sendMessage(this->getFD(), server, "375 " + this->getNickname(), msg);
-		std::string	motd[] = {"-        Welcome to,",
-								"-",
-								"-        " + server.getHostname(),
-								"-",
-								"-        * Host.....: " + server.getHostname(),
-								"-        * Port.....: " + server.getPort(),
-								"-",
-								"-        Welcome to our 42 irc project",
-								"-        by eschussl and aduvilla"};
+		sendf(&server, this, RPL_WELCOME);
+		sendf(&server, this, RPL_YOURHOST);
+		sendf(&server, this, RPL_CREATED, getTime().c_str());
+		sendf(&server, this, RPL_MYINFO);
+		sendf(&server, this, RPL_ISUPPORT);
+		sendf(&server, this, RPL_LUSERCLIENT, server.getUserNumber().c_str());
+		sendf(&server, this, RPL_LUSEROP);
+		sendf(&server, this, RPL_LUSERCHANNELS, server.getChannelNumber().c_str());
+		sendf(&server, this, RPL_MOTDSTART);
 		for (size_t i = 0; i < sizeof(motd) / sizeof(motd[0]); i++)
-			sendMessage(this->getFD(), server, "372 " + this->getNickname(), motd[i]);
-		msg = server.getHostname() + " End of /MOTD command.";
-		sendMessage(this->getFD(), server, "376 " + this->getNickname(), msg);
+			sendf(&server, this, RPL_MOTD, motd[i].c_str());
+		sendf(&server, this, RPL_ENDOFMOTD);
 	}
 	catch (std::exception &e)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 15:06:31 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:40:24 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,14 @@ class Client
 		void	sendQuitMsg(const std::string & msg);
 		void 	kill(const std::string &) const;
 		void	connect(Server &server);
+		void	sendInviteList(Server *server);
 		//vectors
+
 		void	addChannel(Channel &channel);
 		void	leaveChannel(Channel &channel);
 		void	addOP(Channel &channel);
 		void	leaveOP(Channel &channel);
 		size_t	getChannelsCount();
-		
 		~Client();
 }	;
 

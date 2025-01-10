@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   authentificationServer.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/09 14:20:19 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:46:42 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "utils.hpp"
-#include <iostream>
 #include "Nick.hpp"
 #include "Parsing.hpp"
+#include "Err.hpp"
 #include "serverExceptions.hpp"
 
 bool Server::checkAuth(Client &client, const std::string &buffer)
@@ -38,7 +38,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 				client.setAuth(true);
 			else
 			{
-				client.kill("password is wrong");
+				client.kill(this, "password is wrong");
 				ClearClient(client);
 				return false;
 			}
@@ -56,7 +56,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		else if (parse.getCommand() == "CAP")
 			;
 		else
-			sendMessage(client.getFD(), *this, "451 * " + parse.getCommand(), "You must finish connecting with another nickname first.");
+			sendf(this, &client, ERR_NOTREGISTERED, parse.getCommand().c_str());
 	}
 	if (m_pass != "" && client.getAuth() == false && !client.getUsername().empty())
 		sendLog("Client <" + itoa(client.getFD()) + "> has not set a password");

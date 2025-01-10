@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:06:26 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:38:55 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,16 @@ class	Channel
 		Channel(Server &server, const std::string &name, Client &client);
 		~Channel(void);
 		
-		void	addClient(Client &client, const std::string &passwd);
+		bool	isInvited(Client *client);
+		bool	isOp(Client *client);
+		bool	isJoinable(Client *client);
+		void	addClient(Client &client, clientMode clientMode);
+		void	addClient(Client &client, const std::string &passwd, clientMode clientMode);
+		
 		void	removeClient(const Client & client);
 		
-		bool	isJoinable(Client &client);
+		void	addOP(Client &client);
+		void	addInvite(Client &client);
 		
 		const	std::string getName() const;
 		bool	parseChannelName(const std::string &channelName);

@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exitServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/09 17:51:41 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:46:49 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Client.hpp"
 #include <unistd.h>
-#include <iostream>
 #include "Channel.hpp"
 #include "utils.hpp"
 
