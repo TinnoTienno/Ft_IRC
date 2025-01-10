@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 12:16:49 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:16:39 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,17 @@ Channel::~Channel	(void)
 
 bool	Channel::isInvited(Client *client)
 {
-	(void) client;
+	for (size_t i = 0; i < this->m_vInvited.size(); i++)
+		if (this->m_vInvited[i] == client)
+			return true;
+	return false;
+}
+
+bool	Channel::isOp(Client *client)
+{
+	for (size_t i = 0; i < this->m_vOP.size(); i++)
+		if (this->m_vOP[i] == client)
+			return true;
 	return false;
 }
 
@@ -144,7 +154,7 @@ void	Channel::removeClient(const Client & client)
 
 void Channel::addOP(Client &client) { this->m_vOP.push_back(&client); }
 
-
+void	Channel::addInvite(Client &client) { this->m_vInvited.push_back(&client); }
 
 void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
 {

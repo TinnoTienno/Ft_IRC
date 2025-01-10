@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:46:21 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 12:06:41 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 13:58:38 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 //# define RPL_LUSEROP ":%h 252 %n :0 :IRC Operators online"
 # define RPL_LUSEROP ":%h 252 %n :Operators are disabled on this server"
 # define RPL_LUSERCHANNELS ":%h 254 %n :%C :channels formed" // getChannelNumber
+# define RPL_INVITELIST ":%h 336 %n %c" // channel
+# define RPL_ENDOFINVITELIST ":%h 337 %n :End of /INVITE list"
+# define RPL_INVITING ":%h 341 %n %u %c" // guest channel
 # define RPL_MOTDSTART ":%h 375 %n :- %h Message of the Day -"
 # define RPL_MOTD ":%h 372 %n :%m" // message
 # define RPL_ENDOFMOTD ":%h 376 %n :%h End of /MOTD command."

@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 12:09:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:12:53 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,13 @@ void Client::connect(Server &server)
 	{
 		server.sendLog("Error: Connect: " + static_cast<std::string>(e.what()));
 	}
+}
+
+void	Client::sendInviteList(Server *server)
+{
+	for (size_t i = 0; i < this->m_vChannels.size(); i++)
+		sendf(server, this, RPL_INVITELIST, this->m_vChannels[i]->getName().c_str());
+	sendf(server, this, RPL_ENDOFINVITELIST);
 }
 
 void Client::addChannel(Channel &channel)

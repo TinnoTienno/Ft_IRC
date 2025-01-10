@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 14:46:33 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:13:11 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Client
 		void 	kill(Server *server, const std::string &) const;
 		void	connect(Server &server);
 
+		void	sendInviteList(Server *server);
 		void	addChannel(Channel &channel);
 		void	addOP(Channel &channel);
 		size_t	getChannelsCount();

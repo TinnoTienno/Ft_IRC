@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 20:05:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:16:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ class	Channel
 		~Channel(void);
 		
 		bool	isInvited(Client *client);
+		bool	isOp(Client *client);
 		bool	isJoinable(Client *client);
 		void	addClient(Client &client, clientMode clientMode);
 		void	addClient(Client &client, const std::string &passwd, clientMode clientMode);
@@ -64,6 +65,7 @@ class	Channel
 		void	removeClient(const Client & client);
 		
 		void	addOP(Client &client);
+		void	addInvite(Client &client);
 		
 		void	removeOP(Client &client);
 		
