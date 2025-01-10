@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:54:39 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:32:37 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void	Bot::speak(const std::string & msg)
 
 int	Bot::quit()
 {
-	speak("QUIT\r\n");
+	speak("QUIT :Leaving\r\n");
 	if (this->m_serSocket != -1)
 		close(this->m_serSocket);
 	std::cout << "ircbot Disconnected" << std::endl;

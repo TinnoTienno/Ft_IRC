@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 18:00:45 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:43:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,10 @@
 #include "Rpl.hpp"
 #include "serverExceptions.hpp"
 
-void Client::kill(Server &server, const std::string &str) const
+void Client::kill(Server &server, const std::string &str)
 {
-	std::string msg = "ERROR :Closing Link: " + this->getNickname() + "hostname :" + str + "\r\n";
+	this->sendQuitMsg(str);
 	server.sendLog(static_cast<std::string>("Client <" + itoa(this->getFD()) + "> Disconnected"));
-	if (send(this->getFD(), msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
-//		throw std::runtime_error("Failed to send message: " + msg);
-		return ;
 }
 
 Client::Client() {

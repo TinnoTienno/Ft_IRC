@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 14:54:11 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 18:08:19 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:43:08 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef QUIT_HPP
 # define QUIT_HPP
-#define QUIT ":%p ERROR :Closing Link: %h (Quit: %m)"
+#define QUITMSG ":%P QUIT :Quit: %m"
 
 class Server;
 class Client;
