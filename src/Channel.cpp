@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 17:32:09 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:18:14 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 					server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
 					break;
 				case eQuit:
-					server->sendf( m_vClients[i], client, this, QUIT, msg.c_str());
+					server->sendf( m_vClients[i], client, this, QUITMSG, msg.c_str());
 					break;
 				default:
 	  				;
@@ -164,7 +164,7 @@ void	Channel::sendAllQuit(Client &client, const std::string &message)
 		std::cout << "client vide" << std::endl;
 	printf("%p \n", &this->m_vClients);
 	for (std::vector<Client *>::iterator iter = this->m_vClients.begin(); iter != this->m_vClients.end(); iter++)
-		this->m_serv->sendf(*iter, &client, this, QUIT, message.c_str());
+		this->m_serv->sendf(*iter, &client, this, QUITMSG, message.c_str());
 }
 
 const std::string	Channel::getName(void) const { return this->m_name; }
