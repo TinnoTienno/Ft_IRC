@@ -6,7 +6,7 @@
 #    By: noda <noda@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/08 17:41:58 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/10 15:05:33 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ SRCS		=	main.cpp\
 				getServer.cpp\
 				exitServer.cpp\
 				serverExceptions.cpp\
-				$(addprefix $(COMMAND_PATH), Nick.cpp Kick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp Part.cpp Topic.cpp Mode.cpp Quit.cpp)
+				$(addprefix $(COMMAND_PATH), Nick.cpp Kick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp Part.cpp Topic.cpp Mode.cpp Quit.cpp Invite.cpp)
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))
 

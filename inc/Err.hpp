@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 14:08:00 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 12:22:29 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:54:30 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@
 #define ERR_UMODEUNKNOWNFLAG ":%h 501 %n :Unknown MODE flag" //
 #define ERR_USERDONTMATCH ":%h 502 %n :Cant change mode for other users" //
 #define ERR_HELPNOTFOUND ":%h 524 %n %s :No help available on this topic" // subject (Can be lower case, if invalid parameter : *)
-#define ERR_INVALIDKEY "%h 525 %n %C :Key is not well-formed" // channel
-#define ERR_STARTTLS "%h 691 %n :STARTLS failed (wrong moon phase)" //
-#define ERR_INVALIDMODEPARAM "%h 696 %n %C %m %P :%D" // targetChannel modecharacter parameter description
-#define ERR_NOPRIVS "%h 723 %n %P :Insufficient oper privileges." // privateCommand(Defined by server)
+#define ERR_INVALIDKEY ":%h 525 %n %C :Key is not well-formed" // channel
+#define ERR_STARTTLS ":%h 691 %n :STARTLS failed (wrong moon phase)" //
+#define ERR_INVALIDMODEPARAM ":%h 696 %n %C %m %P :%D" // targetChannel modecharacter parameter description
+#define ERR_NOPRIVS ":%h 723 %n %P :Insufficient oper privileges." // privateCommand(Defined by server)
 #define ERR_NICKLOCKED "%h 902 %n :You must use a nick assigned to you" //
 #define ERR_SASLFAIL "%h 904 %n :SASL authentification failed" //
-#define ERR_SASLTOOLONG "%h 905 %n :SASL message too long" //
-#define ERR_SASLABORTED "%h 906 %n :SASL authentification aborted" //
-#define ERR_SASALREADY "%h 907 %n :You have already authentificated using SASL" //
+#define ERR_SASLTOOLONG ":%h 905 %n :SASL message too long" //
+#define ERR_SASLABORTED ":%h 906 %n :SASL authentification aborted" //
+#define ERR_SASALREADY ":%h 907 %n :You have already authentificated using SASL" //
 
 #endif

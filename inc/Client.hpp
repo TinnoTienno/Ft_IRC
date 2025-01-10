@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 14:13:11 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:08:04 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,24 @@ class Client
 		std::vector<Channel *>	m_vChannels;
 		std::vector<Channel *> 	m_OpChannels;
 	public : 
-		std::string	getPrefix() const;
 		Client();
-		const int& getFD() const;
 		void setFD(const int&);
 		void setIPadd(const std::string&);
 		void setHost(struct sockaddr *addr, Server &server);
 		void setAuth(const bool &);
+		void setUser(const std::string &user);
+		void setNick(const std::string &);
+		void setReal(const std::string &);
+
+		const int& getFD() const;
 		const bool& getAuth() const;
 		const std::string& getUser() const;
-		void setUser(const std::string &user);
 		const std::string& getNick() const;
-		void setNick(const std::string &);
 		const std::string& getReal() const;
-		void setReal(const std::string &);
+		std::string	getPrefix() const;
+		std::string getPacket();
 		
 		void 	addPacket(const std::string &);
-		std::string getPacket();
-		void 	sendMsg(const std::string &, Server &server) const;
 		void	sendQuitMsg(Server *server, const std::string & msg);
 		void 	kill(Server *server, const std::string &) const;
 		void	connect(Server &server);
@@ -58,7 +58,6 @@ class Client
 		void	addChannel(Channel &channel);
 		void	addOP(Channel &channel);
 		size_t	getChannelsCount();
-		Client	*getClient(Client *client);
 		~Client();
 }	;
 

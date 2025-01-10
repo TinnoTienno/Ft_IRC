@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 11:37:54 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:35:43 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,8 @@ void	Bot::m_handlePrivMsg(const std::string & message)
 	{
 		std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
 		m_createList();
-	//	else if (tokens.size() > 4 && m_trimNewLines(tokens[2]) == "JOIN" && m_trimNewLines(tokens[3]) == this->m_channel)
 	}
+	//	else if (tokens.size() > 4 && m_trimNewLines(tokens[2]) == "JOIN" && m_trimNewLines(tokens[3].substr(1, tokens[3].npos) == this->m_channel)
 }
 
 void	Bot::speak(const std::string & msg)
