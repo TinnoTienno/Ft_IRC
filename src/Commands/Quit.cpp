@@ -6,11 +6,10 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 14:56:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:14:33 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 16:48:56 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
 #include "Quit.hpp"
 #include "Server.hpp"
 #include "Client.hpp"

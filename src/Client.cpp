@@ -6,10 +6,11 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 15:45:46 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 16:53:39 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstddef>
 #include <exception>
 #include "Client.hpp"
 #include <string>
@@ -22,10 +23,10 @@
 #include "Rpl.hpp"
 #include "serverExceptions.hpp"
 
-void Client::kill(Server *server, const std::string &str) const
+void Client::kill(Server &server, const std::string &str) const
 {
-	std::string msg = "ERROR :Closing Link: " + this->getNick() + "hostname :" + str + "\r\n";
-	server->sendLog(static_cast<std::string>("Client <" + itoa(this->getFD()) + "> Disconnected"));
+	std::string msg = "ERROR :Closing Link: " + this->getNickname() + "hostname :" + str + "\r\n";
+	server.sendLog(static_cast<std::string>("Client <" + itoa(this->getFD()) + "> Disconnected"));
 	if (send(this->getFD(), msg.c_str(), msg.size(), 0) != (ssize_t)msg.length())
 //		throw std::runtime_error("Failed to send message: " + msg);
 		return ;
@@ -65,17 +66,17 @@ void	Client::setHostname(struct sockaddr *addr, Server &server)
 	int		res = getnameinfo(addr, sizeof(&addr), host, sizeof(host), NULL, 0, 0);
 	try
 	{
-		sendf(&server, this, AUTH_IDENT);
-		sendf(&server, this, AUTH_LOOKHOST);
+		server.sendf(this, NULL, NULL, AUTH_IDENT);
+		server.sendf(this, NULL, NULL, AUTH_LOOKHOST);
 		if (!res)
 		{
 			this->m_hostname = static_cast<std::string>(host);
-			sendf(&server, this, AUTH_HOSTFOUND);
+			server.sendf(this, NULL, NULL, AUTH_HOSTFOUND);
 		}
 		else
 		{
 			this->m_hostname = this->m_ipAdd;
-			sendf(&server, this, AUTH_HOSTNOTFOUND);
+			server.sendf(this, NULL, NULL, AUTH_HOSTNOTFOUND);
 		}
 	}
 	catch (const std::exception &e)
@@ -110,44 +111,6 @@ std::string Client::getPacket()
 	return tmp;
 }
 
-const std::string& Client::getNick() const { return this->m_nick; }
-
-void Client::setNick(const std::string &nick) {	this->m_nick = nick; }
-
-const std::string& Client::getUser() const { return this->m_user; }
-
-void Client::setUser(const std::string &user) {	this->m_user = user; }
-
-const std::string& Client::getReal() const { return this->m_realname; } 
-
-void Client::setReal(const std::string &real) { this->m_realname = real; }
-		
-void	Client::sendQuitMsg(Server *server, const std::string & msg)
-{
-	for (size_t i = 0; i < this->m_vChannels.size(); i++)
-		this->m_vChannels[i]->sendAllMsg(server, this, msg, eQuit);
-}
-
-Client::~Client()
-{
-	// close(m_fd);
-	// for (size_t i = 0; i < m_vChannels.size(); i++)
-	// 	m_vChannels[i]->removeClient(, *this);// We have to fix this dont know how tho
-	// std::cout << "client is dead" << std::endl;
-}
-
-std::string	Client::getPrefix() const
-{
-	std::string prefix = this->getNick() + "!" + this->getUser() + "@" + this->m_host;
-	return prefix;
-//messages
-void	Client::sendQuitMsg(const std::string & msg)
-{
-	// for (size_t i = 0; i < this->m_vChannels.size(); i++)
-	for (std::vector<Channel *>::iterator iter = this->m_vChannels.begin(); iter != this->m_vChannels.end(); iter++)
-		(*iter)->sendAllQuit(*this, msg);
-}
-
 void Client::connect(Server &server)
 {
 	std::string	motd[] = {"-        Welcome to,",
@@ -161,18 +124,18 @@ void Client::connect(Server &server)
 							"-        by eschussl and aduvilla"};
 	try
 	{
-		sendf(&server, this, RPL_WELCOME);
-		sendf(&server, this, RPL_YOURHOST);
-		sendf(&server, this, RPL_CREATED, getTime().c_str());
-		sendf(&server, this, RPL_MYINFO);
-		sendf(&server, this, RPL_ISUPPORT);
-		sendf(&server, this, RPL_LUSERCLIENT, server.getUserNumber().c_str());
-		sendf(&server, this, RPL_LUSEROP);
-		sendf(&server, this, RPL_LUSERCHANNELS, server.getChannelNumber().c_str());
-		sendf(&server, this, RPL_MOTDSTART);
+		server.sendf(this, NULL, NULL, RPL_WELCOME);
+		server.sendf(this, NULL, NULL, RPL_YOURHOST);
+		server.sendf(this, NULL, NULL, RPL_CREATED, getTime().c_str());
+		server.sendf(this, NULL, NULL, RPL_MYINFO);
+		server.sendf(this, NULL, NULL, RPL_ISUPPORT);
+		server.sendf(this, NULL, NULL, RPL_LUSERCLIENT, server.getUserNumber().c_str());
+		server.sendf(this, NULL, NULL, RPL_LUSEROP);
+		server.sendf(this, NULL, NULL, RPL_LUSERCHANNELS, server.getChannelNumber().c_str());
+		server.sendf(this, NULL, NULL, RPL_MOTDSTART);
 		for (size_t i = 0; i < sizeof(motd) / sizeof(motd[0]); i++)
-			sendf(&server, this, RPL_MOTD, motd[i].c_str());
-		sendf(&server, this, RPL_ENDOFMOTD);
+			server.sendf(this, NULL, NULL, RPL_MOTD, motd[i].c_str());
+		server.sendf(this, NULL, NULL, RPL_ENDOFMOTD);
 	}
 	catch (std::exception &e)
 	{
@@ -187,6 +150,12 @@ void Client::addChannel(Channel &channel)
 	channel.getServ()->sendLog("Channel " + channel.getName() + " was added to " + this->getNickname() + "'s channels list");
 }
 
+void	Client::sendQuitMsg(const std::string & message)
+{
+	for (size_t i = 0; i < this->m_vChannels.size(); i++)
+		this->m_vChannels[i]->sendAllMsg(this->m_vChannels[i]->getServ(), this, message, eQuit);
+}
+
 void Client::leaveChannel(Channel &channel)
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++)
@@ -198,6 +167,13 @@ void Client::addOP(Channel &channel)
 {	
 	this->m_vOpChannels.push_back(&channel);
 	channel.getServ()->sendLog("Channel " + channel.getName() + " was added to " + this->getNickname() + "'s channels OP list");
+}
+
+void	Client::sendInviteList(Server * server)
+{
+	for (size_t i = 0; i < this->m_vChannels.size(); i++)
+		server->sendf(this, NULL, this->m_vChannels[i], RPL_INVITELIST);	
+	server->sendf(this, NULL, NULL, RPL_ENDOFINVITELIST);
 }
 
 void Client::leaveOP(Channel &channel)

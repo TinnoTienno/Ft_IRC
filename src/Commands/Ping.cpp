@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 15:59:44 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 15:46:30 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 16:16:39 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 void Ping::execute(Server &server, const Parsing &parse, Client &client)
 {
 	if (parse.getArguments().size() == 1)
-		sendf(&server, &client, ERR_NEEDMOREPARAMS, "PING");
+		server.sendf(&client, NULL, NULL, ERR_NEEDMOREPARAMS, "PING");
 	else if (parse.getArguments()[1].empty())		
-		sendf(&server, &client, ERR_NOORIGIN);
+		server.sendf(&client, NULL, NULL, ERR_NOORIGIN);
 	else
-		sendf(&server, &client, PONG, parse.getArguments()[1].c_str());
+		server.sendf(&client, NULL, NULL, PONG, parse.getArguments()[1].c_str());
 }
 

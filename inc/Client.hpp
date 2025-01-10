@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 15:40:24 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:51:58 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ class Client
 		//messages
 		// void 	sendMsg(const std::string &, Server &server) const;
 		void	sendQuitMsg(const std::string & msg);
-		void 	kill(const std::string &) const;
+		void 	kill(Server & server, const std::string &) const;
 		void	connect(Server &server);
 		void	sendInviteList(Server *server);
 		//vectors

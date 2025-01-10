@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:46:42 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 16:15:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 				client.setAuth(true);
 			else
 			{
-				client.kill(this, "password is wrong");
+				client.kill(*this, "password is wrong");
 				ClearClient(client);
 				return false;
 			}
@@ -56,7 +56,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		else if (parse.getCommand() == "CAP")
 			;
 		else
-			sendf(this, &client, ERR_NOTREGISTERED, parse.getCommand().c_str());
+			this->sendf(&client, NULL, NULL, ERR_NOTREGISTERED, parse.getCommand().c_str());
 	}
 	if (m_pass != "" && client.getAuth() == false && !client.getUsername().empty())
 		sendLog("Client <" + itoa(client.getFD()) + "> has not set a password");
