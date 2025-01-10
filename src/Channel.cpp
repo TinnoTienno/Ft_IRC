@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 17:32:09 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:21:07 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ Channel::Channel(Server &server, const std::string &name)
 
 Channel::Channel(Server &server, const std::string &name, const std::string &passwd)
 {
-	
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
@@ -288,12 +287,6 @@ bool	Channel::isInvited(Client &client)
 void	Channel::setProtectedTopicMode(bool status) 
 {
 	this->m_sModes.t = status;
-	if (status)
-		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "+t");
-	else
-		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "-t");
 	this->m_serv->sendLog(this->getName() + "'s protected topic mode was set to " + itoa(status));
 }
 

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:13:55 by noda              #+#    #+#             */
-/*   Updated: 2025/01/09 16:15:39 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:15:53 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ class Channel;
 class Mode
 {
 	private :
+		static void modeT(Channel channel, bool status);
 		static void modeI(Channel &channel, bool status);
 		static void channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse);
     public :

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/09 16:34:52 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:30:18 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ void Mode::modeI(Channel &channel, bool status)
 {
 	channel.setInviteMode(status);
 	channel.sendAllMode(status, "i");
+}
+
+void Mode::modeT(Channel channel, bool status)
+{
+	channel.setProtectedTopicMode(status);
+	channel.sendAllMode(status, "t");
 }
 	
 void Mode::channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse)
@@ -49,8 +55,8 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 		{
 			case 'i' :
 				return Mode::modeI(channel, status);
-			// case 't' :
-			// 	Mode::modeT(server, channel, source, status);
+			case 't' :
+				return Mode::modeT(channel, status);
 			// case 'k' :
 			// 	std::string password = "";
 			// 	if (arg.find(' ') != arg.npos)

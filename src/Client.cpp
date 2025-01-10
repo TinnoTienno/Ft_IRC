@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 17:38:34 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 18:00:45 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ Client::Client() {
 	
 Client::~Client()
 {
-	for (size_t i = 0; i < m_vChannels.size(); i++)
-		m_vChannels[i]->removeClient(*this);
 	for (size_t i = 0; i < m_vOpChannels.size(); i++)
 		m_vOpChannels[i]->removeOP(*this);
+	for (size_t i = 0; i < m_vChannels.size(); i++)
+		m_vChannels[i]->removeClient(*this);
 };
 
 //getters / setters
