@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 14:56:08 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:48:56 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:08:38 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,3 @@ void Quit::execute(Server &server, const Parsing &parse, Client &client)
 	client.sendQuitMsg(message);
 	server.ClearClient(client);
 }
-
