@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/06 20:02:51 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:06:31 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,42 +22,47 @@ class Client
 {
 	private :
 		int 		m_fd;
-		std::string m_ipAdd;
-		std::string	m_host;
 		bool		m_authentified;
-		std::string m_nick;
-		std::string m_user;
-		std::string m_realname;
-		std::string m_irssiPacket;
-		std::vector<Channel *>	m_vChannels;
-		std::vector<Channel *> 	m_OpChannels;
+		std::string 			m_ipAdd;
+		std::string				m_hostname;
+		std::string 			m_nickname;
+		std::string 			m_username;
+		std::string 			m_realname;
+		std::string 			m_irssiPacket;
+		std::vector<Channel *> 	m_vOpChannels;
 	public : 
-		std::string	getPrefix() const;
+		std::vector<Channel *>	m_vChannels;
 		Client();
-		const int& getFD() const;
+
+		//getters / setters
+		std::string	getPrefix() const;
 		void setFD(const int&);
+		const int&	getFD() const;
 		void setIPadd(const std::string&);
-		void setHost(struct sockaddr *addr, Server &server);
+		void setHostname(struct sockaddr *addr, Server &server);
 		void setAuth(const bool &);
-		const bool& getAuth() const;
-		const std::string& getUser() const;
-		void setUser(const std::string &user);
-		const std::string& getNick() const;
-		void setNick(const std::string &);
-		const std::string& getReal() const;
-		void setReal(const std::string &);
-		
+		bool getAuth() const;
+		void setUsername(const std::string &username);
+		const std::string& getUsername() const;
+		void setNickname(const std::string &);
+		const std::string& getNickname() const;
+		void setRealname(const std::string &);
+		const std::string& getRealname() const;
+		//packets
 		void 	addPacket(const std::string &);
 		std::string getPacket();
-		void 	sendMsg(const std::string &, Server &server) const;
-		void	sendQuitMsg(Server *server, const std::string & msg);
+		//messages
+		// void 	sendMsg(const std::string &, Server &server) const;
+		void	sendQuitMsg(const std::string & msg);
 		void 	kill(const std::string &) const;
 		void	connect(Server &server);
-
+		//vectors
 		void	addChannel(Channel &channel);
+		void	leaveChannel(Channel &channel);
 		void	addOP(Channel &channel);
+		void	leaveOP(Channel &channel);
 		size_t	getChannelsCount();
-		Client	*getClient(Client *client);
+		
 		~Client();
 }	;
 

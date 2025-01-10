@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   authentificationServer.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 15:55:50 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/09 14:20:19 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 bool Server::checkAuth(Client &client, const std::string &buffer)
 {
 	size_t j = 0;
-	if (client.getAuth() == 1 && !client.getUser().empty() )
+	if (client.getAuth() == 1 && !client.getUsername().empty() )
 		return true;
 	for (size_t i = 0; i < buffer.size() ; i = j + 1)
 	{
@@ -30,8 +30,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		Parsing parse(line);
 		if (parse.getCommand() == "NICK")
 		{
-			if (Nick::parseError(*this, parse, client))
-				client.setNick(getNextGuest());
+			Nick::parseError(*this, parse, client);
 		}
 		else if (parse.getCommand() == "PASS")
 		{
@@ -59,7 +58,7 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		else
 			sendMessage(client.getFD(), *this, "451 * " + parse.getCommand(), "You must finish connecting with another nickname first.");
 	}
-	if (m_pass != "" && client.getAuth() == false && !client.getUser().empty())
+	if (m_pass != "" && client.getAuth() == false && !client.getUsername().empty())
 		sendLog("Client <" + itoa(client.getFD()) + "> has not set a password");
 	return false;
 }

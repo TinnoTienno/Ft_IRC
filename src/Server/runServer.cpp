@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 15:16:03 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 17:24:30 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void Server::AcceptNewClient()
 	
 	client.setFD(incoFd);
 	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
-	client.setHost((struct sockaddr*)&clientAdd, *this);
+	client.setHostname((struct sockaddr*)&clientAdd, *this);
 	// m_mClients.insert({incoFd, client});
 	m_vClients.push_back(client);
 	m_vFds.push_back(newPoll);

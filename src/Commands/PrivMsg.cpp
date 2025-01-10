@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/07 15:10:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:14:29 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 					Channel	*chan = server.getChannel(targets[i]);
 					if (!chan)
 						throw serverExceptions(401);
-					else if (!chan->isJoinable(&client))
+					else if (!chan->isJoinable(client))
 						throw serverExceptions(404);
 					else
 						chan->sendAllMsg(&server, &client, parse.getArguments()[2], ePrivMsg);
@@ -85,7 +85,7 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 					if (!user)
 						throw serverExceptions(401);
 					else
-						sendf(&server, user, PRIVMSG, client.getPrefix().c_str(), parse.getArguments()[2].c_str());
+						server.sendf(user, &client, NULL, PRIVMSG, parse.getArguments()[2].c_str());
 				}
 			}
 	   		catch (const serverExceptions & e)

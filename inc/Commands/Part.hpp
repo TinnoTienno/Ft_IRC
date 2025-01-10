@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Part.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:17:03 by noda              #+#    #+#             */
-/*   Updated: 2024/12/21 14:50:00 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/08 18:48:05 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PART_HPP
 # define PART_HPP
+# define PART ":%P PART %C :%m"
 
 class Server;
 class Client;

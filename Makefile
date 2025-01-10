@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: noda <noda@student.42.fr>                  +#+  +:+       +#+         #
+#    By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/08 12:34:00 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/08 17:42:33 by eschussl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,21 +19,15 @@ CXXFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g3
 #CXXFLAGS		=	-Wall -Wextra -Werror -g3
 
 COMMAND_PATH	= Commands/
+SERVER_PATH		= Server/
 
 SRCS		=	main.cpp\
 				Client.cpp\
-				Server.cpp\
 				Channel.cpp\
-				initServer.cpp\
-				runServer.cpp\
-				utilServer.cpp\
 				utils.cpp\
-				authentificationServer.cpp\
 				Parsing.cpp\
-				signalServer.cpp\
-				getServer.cpp\
-				exitServer.cpp\
 				serverExceptions.cpp\
+				$(addprefix $(SERVER_PATH), Server.cpp initServer.cpp getServer.cpp signalServer.cpp authentificationServer.cpp runServer.cpp utilServer.cpp exitServer.cpp)\
 				$(addprefix $(COMMAND_PATH), Nick.cpp Kick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp Part.cpp Topic.cpp Mode.cpp Quit.cpp)
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))
@@ -53,6 +47,7 @@ $(NAME):	$(OBJS)
 
 .obj/%.o: src/%.cpp
 	@mkdir -p .obj
+	@mkdir -p .obj/$(SERVER_PATH)
 	@mkdir -p .obj/$(COMMAND_PATH)
 	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@ -Iinc -I inc/$(COMMAND_PATH)
 

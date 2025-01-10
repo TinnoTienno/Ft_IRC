@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 20:05:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:06:26 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,27 @@ typedef enum messageMode
 	eQuit
 }	messageMode;
 
-typedef enum clientMode
-{
-	Founder, 
-	Protected, 
-	Operator, 
-	Halfop, 
-	Voice,
-	Default
-}	clientMode;
-
-typedef enum channelMode
+typedef enum channelType
 {
 	Public,
 	Secret,
 	Private,
-	Default1
-}	channelMode;
+	Default
+}	channelType;
 
-typedef struct s_clientPair
+typedef struct s_channelMode
 {
-	Client *client;
-	clientMode mode;
-}	s_clientPair;
+	bool	i;
+	std::vector<std::string>	m_vInvitedHostNames;
+	bool	t;
+	std::string					topic;
+	bool	k;
+	std::string					password;
+	std::vector <Client *>		m_vOP;
+	bool	l;
+	size_t						limitedSize;
+	std::vector <Client *>		m_vBanned;
+}	s_channelMode;
 
 class	Server;
 class	Channel
@@ -56,67 +54,66 @@ class	Channel
 		Channel(Server &server, const std::string &name, Client &client);
 		~Channel(void);
 		
-		bool	isInvited(Client *client);
-		bool	isJoinable(Client *client);
-		void	addClient(Client &client, clientMode clientMode);
-		void	addClient(Client &client, const std::string &passwd, clientMode clientMode);
-		
+		void	addClient(Client &client, const std::string &passwd);
 		void	removeClient(const Client & client);
 		
-		void	addOP(Client &client);
+		bool	isJoinable(Client &client);
 		
-		void	removeOP(Client &client);
+		const	std::string getName() const;
+		bool	parseChannelName(const std::string &channelName);
 		
-		void sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
-		void sendJoin(Client *source);
-		void sendTopic(Client *client);
-		void sendPart(Client &client, const std::string &message);
-		void sendKick(Client &source, Client &target, const std::string &message);
-		void sendAllTopic();
-		
-		void 	setName(const std::string &);
-		void 	setTopic(Client *client, const std::string &);
-		
-		const std::string getName() const;
-		const std::string getTopic() const;
-		int		getID() const;
-		void	setInviteMode(bool);
-		bool	getInviteMode() const;
-		void	setProtectedTopicMode(bool);
-		bool	getProtectedTopicMode() const;
-		void	setIsSizeLimited(bool);
-		void	setSizeLimit(unsigned int);
-		
-
-		void setPassword(const std::string &passwd);
-		bool parseChannelName(const std::string &channelName);
-		
-		Client *getBanned(Client *client);
 		Client *getClient(Client *client);
 		Client *getClient(const std::string &nickname);
-		clientMode	getClientMode(Client *client);
 		Server *getServ();
 
-		void sendClientslist(Client &dest);
+		//Senders
 		std::string clientsList();
-		
 		std::string getSymbol();
+		void 	sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
+		void	sendAllJoin(Client &source);
+		void	sendAllQuit(Client &client, const std::string &message);
+		void	sendAllMode(bool status, const std::string &modeLetter);
+		void 	sendTopic(Client &dest);
+		void 	sendAllTopic();
+		void 	sendPart(Client &client, const std::string &message);
+		void 	sendKick(Client &source, Client &target, const std::string &message);
+		void 	sendClientslist(Client &dest);
+		//sModes
+		std::string modeToStr();
+		//Invite
+		void	setInviteMode(bool);
+		bool	getInviteMode() const;
+		void	setInvited(Client &client);
+		bool	isInvited(Client &client);
+		//Topic
+		void	setProtectedTopicMode(bool);
+		bool	getProtectedTopicMode() const;
+		void 	setTopic(Client &client, const std::string &); // * needed to set at channels creation
+		const	std::string getTopic() const;
+		//Password
+		void	setPasswordMode(bool);
+		bool	getPasswordMode();
+		void	setPassword(const std::string &passwd);
+		bool	isPasswordValid(const std::string str);
+		//Operator
+		void	addOP(Client &client);
+		void	removeOP(Client &client);
+		bool	isClientOP(Client &client);
+		//Size limit
+		void	setSizeLimitMode(bool);
+		bool	getSizeLimitMode();
+		void	setSizeLimit(unsigned int);
+		size_t	getSizeLimit();
+		//Bans
+		void	setBanned(Client &client);
+		bool	isBanned(Client &client);
 		
+		std::vector <Client *>		m_vClients;
 	private:
-		bool 					m_isInviteOnly;
-		bool					m_isProtectedTopic;
-		bool					m_isChannelSizeLimited;
-		size_t					m_sizelimit;
-		std::string 			m_topic;
-		std::string				m_name;
-		std::string				m_password;
-		std::vector <s_clientPair>	m_vClients;
-		std::vector <Client *>	m_vOP;
-		std::vector <Client *>	m_vBans;
-		std::vector<Client *>	m_vInvited;
-		Server 					*m_serv;
-		int						m_ID;
-		channelMode				m_channelMode;
+		s_channelMode				m_sModes;
+		std::string					m_name;
+		Server 						*m_serv;
+		channelType					m_channelType;
 };
 
 #endif

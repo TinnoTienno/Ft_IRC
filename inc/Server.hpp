@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/07 14:48:10 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/10 14:45:21 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,17 @@ class Parsing;
 
 class Server
 {
-
 	private :
 		int 								m_port;
 		int									m_serverSocketFd;
 		static bool 						m_signal;
 		const std::string					m_pass;
 		std::vector<struct pollfd>			m_vFds;
-		std::vector<Client> 				m_vClients;
-		std::vector<Channel>				m_vChannels;
 		std::string							m_hostname;
 		unsigned int						m_nextChannelID;
 		std::ofstream						m_logFd;
+		std::vector<Client> 				m_vClients;
+		std::vector<Channel>				m_vChannels;
 		
 	public :
 		Server(const std::string &name, const std::string &password);
@@ -102,6 +101,9 @@ class Server
 		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
 		void 	deleteChannel(Channel &channel);
 		Channel *findChannel(const std::string &channelName);
+
+		void	sendf(Client *dest, Client *source, Channel *channel, const std::string str, ...);
+
 }	;
 
 #endif

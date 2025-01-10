@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 12:40:32 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:35:23 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 			Channel *channel = server.findChannel(*iterChannels);
 			if (iterPasswords != passwords.end() && channel)
 			{
-				channel->addClient(client, *iterPasswords, Default);
+				channel->addClient(client, *iterPasswords);
 			}
 			else if (iterPasswords != passwords.end())
 			{
@@ -57,7 +57,7 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 			}
 			else if (channel)
 			{
-				channel->addClient(client, Default);
+				channel->addClient(client, "");
 			}
 			else
 			{

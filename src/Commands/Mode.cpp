@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/08 14:20:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/09 16:34:52 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,48 +19,63 @@
 #include <iostream>
 #include "utils.hpp"
 #include <cstdlib>
+#include "Rpl.hpp"
 
+void Mode::modeI(Channel &channel, bool status)
+{
+	channel.setInviteMode(status);
+	channel.sendAllMode(status, "i");
+}
+	
+void Mode::channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse)
+{
+	bool status;
+	(void) source;
+	if (parse.getArguments().size() == 2)
+		return server.sendf(&source, &source, &channel, RPL_CHANNELMODEIS, channel.modeToStr().c_str());
+	std::string arg = "";
+	for (size_t i = 2; i < parse.getArguments().size(); i++)
+		arg += parse.getArguments()[i] + ' ';
+	server.sendLog("Debug : arg :" + arg);
+	if (arg[0] == '+')
+		status = 1;
+	else if (arg[0] == '-')
+		status = 0;
+	else
+		return server.sendLog((std::string)"Error in channelmode, mode effect not recognized : " + arg[0]);
+	for (size_t i = 1; arg[i] != ' '; i++)
+	{
+		switch (arg[i])
+		{
+			case 'i' :
+				return Mode::modeI(channel, status);
+			// case 't' :
+			// 	Mode::modeT(server, channel, source, status);
+			// case 'k' :
+			// 	std::string password = "";
+			// 	if (arg.find(' ') != arg.npos)
+			// 		password = arg.substr(arg.find(' '), arg.find(' ', arg.find(' ') + 1) - arg.find(' '));
+			// 	Mode::modeK(server, channel, source, status, password);
+			// case 'o' :
+			// 	if (arg.find(' ') != arg.npos)
+			// case 'l' :
+
+			// default :
+			
+		}
+	}
+}
 void Mode::execute(Server &server, const Parsing &parse, Client &client)
 {
 	try
 	{
-		bool modifier;
-		Channel *chan = server.getChannel(parse.getArguments()[1]);
-		server.sendLog(itoa(parse.getArguments().size()) + " is size");
-		if (!chan)
-			throw serverExceptions(403);
-		if (parse.getArguments().size() == 2)
-			throw serverExceptions(324);
-		if (chan->getClientMode(&client) != Operator)
-			throw serverExceptions(482);
-		std::cout << parse.getArguments()[2] << std::endl;
-		if (parse.getArguments()[2][0] == '+')
-			modifier = true;
-		else if (parse.getArguments()[2][0] == '-')
-			modifier = false;
-		else
+		if (parse.getArguments().size() < 2)
 			throw serverExceptions(461);
-		if (parse.getArguments()[2].find('i') != parse.getArguments()[2].npos)
-			chan->setInviteMode(modifier);
-		else if (parse.getArguments()[2].find('t') != parse.getArguments()[2].npos)
-			chan->setProtectedTopicMode(modifier);
-		else if (parse.getArguments()[2].find('l') != parse.getArguments()[2].npos && !modifier)
-		{
-			sendf(&server, &client, ":%p MODE %C -l", chan->getName().c_str());
-			chan->setIsSizeLimited(modifier);
-		}
-		else if (parse.getArguments()[2].find('l') != parse.getArguments()[2].npos && parse.getArguments().size() > 3 && modifier && parse.getArguments()[3].find_first_not_of("0123456789") == parse.getArguments()[3].npos)
-		{
-			sendf(&server, &client, ":%p MODE %C +l %m", chan->getName().c_str(), parse.getArguments()[3].c_str());
-			chan->setIsSizeLimited(modifier);
-			chan->setSizeLimit(std::atoi(parse.getArguments()[3].c_str()));
-		}
-		else if (parse.getArguments()[2].find('k') != parse.getArguments()[2].npos && !modifier)
-		{	
-			chan->setPassword("");
-		}
-		else if (parse.getArguments()[2].find('k') != parse.getArguments()[2].npos && parse.getArguments().size() > 3)
-			chan->setPassword(parse.getArguments()[3]);
+		Channel *chan = server.getChannel(parse.getArguments()[1]);
+		if (chan)
+			Mode::channelMode(server, *chan, client, parse);
+		else
+			throw serverExceptions(403);
 	}
 	catch(const serverExceptions& e)
 	{
@@ -82,5 +97,4 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 			break;
 		}
 	}
-	
 }

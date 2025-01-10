@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/07 16:10:58 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/10 15:15:49 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@ Channel &Server::createChannel(const std::string &name, Client &client)
 	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
 	Channel &tmp = m_vChannels[m_vChannels.size() - 1];
 	sendLog("tmp " + tmp.getName());
-	client.addChannel(tmp);
-	client.addOP(tmp);
 	return tmp;
 }
 
@@ -53,26 +51,19 @@ Channel &Server::createChannel(const std::string &name, Client &client, const st
 
 void 	Server::deleteChannel(Channel &channel)
 {
-	// for (std::vector<Channel>::iterator iter = m_vChannels.begin(); iter != m_vChannels.end(); iter++)
-	// {
-	// 	if (iter->getName() == channel.getName())
-	// 	{
-	// 		std::cout << "Now deleting the " << channel.getName() << "channel" << std::endl;
-	// 		m_vChannels.erase(iter);
-	// 	}
-	// }
-	for (size_t i = 0; i < m_vChannels.size(); i++)
+	for (size_t i = 0; i < m_vChannels.size(); i++) {
 		if (&m_vChannels[i] == &channel)
 		{
-			std::cout << "Now deleting the " << m_vChannels[i].getName() << " channel" << std::endl;
+			sendLog("Now deleting the " + m_vChannels[i].getName() + " channel");
 			m_vChannels.erase(m_vChannels.begin() + i);
 		}
+	}
 }
 
 Client *Server::getClient(const std::string &nickname)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-		if (strCompareNoCase(m_vClients[i].getNick(), nickname))
+		if (strCompareNoCase(m_vClients[i].getNickname(), nickname))
 			return &m_vClients[i];
 	return NULL;
 }
