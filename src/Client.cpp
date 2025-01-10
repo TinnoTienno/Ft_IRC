@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/09 17:34:04 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:26:26 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,13 @@ Client::Client() {
 	m_vOpChannels.clear();
 }
 		
-Client::~Client() { };
+Client::~Client()
+{
+	for (size_t i = 0; i < m_vChannels.size(); i++)
+		m_vChannels[i]->removeClient(*this);
+	for (size_t i = 0; i < m_vOpChannels.size(); i++)
+		m_vOpChannels[i]->removeOP(*this);
+};
 
 //getters / setters
 std::string	Client::getPrefix() const

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/09 17:55:28 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 15:29:13 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ bool Channel::parseChannelName(const std::string &channelName)
 
 Channel::Channel(Server &server, const std::string &name, Client &client)
 {
-	this->m_vClients = std::vector<Client *>();
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 	this->m_serv = &server;
@@ -53,7 +52,7 @@ Channel::Channel(Server &server, const std::string &name, Client &client)
 
 Channel::Channel(Server &server, const std::string &name, Client &client, const std::string &passwd)
 {
-	this->m_vClients.clear();
+	
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
@@ -66,6 +65,11 @@ Channel::Channel(Server &server, const std::string &name, Client &client, const 
 
 Channel::~Channel	(void)
 {
+	m_serv->sendLog("DEBUG : Channl destructor called : " + this->getName());
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		m_vClients[i]->leaveChannel(*this);
+	for (size_t i = 0; i < m_sModes.m_vOP.size(); i++)
+		m_sModes.m_vOP[i]->leaveOP(*this);
 }
 
 bool	Channel::isJoinable(Client &client)
@@ -81,6 +85,7 @@ bool	Channel::isJoinable(Client &client)
 
 void	Channel::addClient(Client &client, const std::string &passwd)
 {
+	std::cout << "test " << &client << std::endl;
 	if (this->getClient(&client))
 		throw serverExceptions(405);
 	if (getPasswordMode() && !isPasswordValid(passwd))
@@ -94,11 +99,11 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 	if (this->getSizeLimitMode() && m_vClients.size() >= this->getSizeLimit())
 		throw serverExceptions(471);
 	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
-	this->m_vClients.push_back(&client);
 	client.addChannel(*this);
 	std::cout << client.m_vChannels[0]->getName() << std::endl;
 	if (!this->m_sModes.m_vOP.size())
 		addOP(client);
+	this->m_vClients.push_back(&client);
 	this->sendAllJoin(client);
 	this->sendTopic(client);
 	this->sendClientslist(client);

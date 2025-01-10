@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 18:37:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:45:21 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ class Server
 		static bool 						m_signal;
 		const std::string					m_pass;
 		std::vector<struct pollfd>			m_vFds;
-		std::vector<Client> 				m_vClients;
-		std::vector<Channel>				m_vChannels;
 		std::string							m_hostname;
 		unsigned int						m_nextChannelID;
 		std::ofstream						m_logFd;
+		std::vector<Client> 				m_vClients;
+		std::vector<Channel>				m_vChannels;
 		
 	public :
 		Server(const std::string &name, const std::string &password);
