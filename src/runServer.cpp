@@ -6,12 +6,11 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/08 14:44:24 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/10 14:26:43 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include <iostream>
 #include <fcntl.h>
 #include <arpa/inet.h>
 #include <string>
@@ -26,10 +25,10 @@
 #include "Nick.hpp"
 #include "Part.hpp"
 #include "Kick.hpp"
-#include "Quit.hpp"
-#include <map>
-#include "serverExceptions.hpp"
 #include "Mode.hpp"
+#include "Invite.hpp"
+#include "Quit.hpp"
+#include "serverExceptions.hpp"
 #include "utils.hpp"
 
 void Server::AcceptNewClient()
@@ -101,6 +100,7 @@ void Server::parseCommand(const std::string line, Client &client)
 	"TOPIC", 
 	"KICK", 
 	"MODE",
+	"INVITE",
 	"QUIT"};
 	void (*fCommands[])(Server &, const Parsing &, Client &) = { &Join::execute,
 		&Nick::execute,
@@ -112,6 +112,7 @@ void Server::parseCommand(const std::string line, Client &client)
 		&Topic::execute,
 		&Kick::execute,
 		&Mode::execute,
+		&Invite::execute,
 		&Quit::execute};
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
 	sendLog(itoa(client.getFD()) + " >> " + line);
