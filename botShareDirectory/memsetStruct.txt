@@ -1,0 +1,166 @@
+Okay, let's break down this error message and how to fix it.
+
+Understanding the Problem
+
+The compiler is flagging an error, not just a warning, because you've enabled the -Werror flag. This means any compiler warning is treated as a fatal error, stopping the compilation process.
+
+The specific error message -Werror=class-memaccess points to an incorrect usage of memset on a non-trivial structure. Here's the breakdown:
+
+    memset Purpose: memset(void* ptr, int value, size_t num) is a low-level C function designed to set a block of memory to a specific byte value (often 0).
+
+    struct s_channelMode: This is a structure (likely defined in inc/Channel.hpp) that holds channel mode information. Importantly, the compiler is telling us that this struct has "no trivial copy-assignment". This implies that it might contain members that should not be zeroed out directly with a simple byte assignment. This can be things like:
+
+        Strings (std::string)
+
+        Pointers
+
+        Other custom objects.
+
+    The Error: When you use memset to zero out the memory of s_channelMode directly, you're potentially destroying the internal integrity of the structure if it holds these sorts of objects because they do not expect to have their binary contents replaced with zeroes like that. For instance, a std::string stores a pointer to the actual string buffer; using memset to zero out the std::string object would cause memory corruption. The compiler is protecting you from such potential errors.
+
+Why is it happening in the constructor AND why is it happening twice?
+
+    First instance: The first error message (line 46) is in the default member initializer within the Channel class definition (or in a similar place that initializes m_sModes). This means that your code (somewhere in your class definition) is doing something like s_channelMode m_sModes = {};. This is effectively value initializing it and hence, it might be doing the equivalent of a memset, which is what the compiler is warning about.
+    * Second Instance: The second error message (line 55) is in your Channel constructor where you are explicitly calling memset again to reset that variable (after it has been initialized).
+
+Solutions
+
+Here are the recommended solutions, ordered from most preferred to least preferred:
+
+    Value Initialization (Most Preferred)
+
+        Instead of using memset, rely on the default value initialization or the constructor of s_channelMode. If your structure members are default constructible (strings, integers, booleans, etc.) and you simply need to zero out the values, use this approach:
+
+
+    // In the class definition
+    s_channelMode m_sModes {}; // Value initialize
+
+    // Inside the constructor
+    this->m_sModes = {};  // Reset to default value (if needed)
+
+
+
+Use code with caution.C++
+
+By using {}, you let C++ take care of initialization by default constructing all members.
+
+Proper Initialization in s_channelMode's Constructor (Good)
+
+    Define an appropriate constructor for your s_channelMode struct that correctly initializes all of its members. This is especially important if you have members that need specific setup, rather than just being zeroed out:
+
+
+// inc/Channel.hpp
+typedef struct s_channelMode {
+   bool hasModeA;
+   int modeB;
+   std::string modeC;
+   s_channelMode() : hasModeA(false), modeB(0), modeC("") {} // Initialize correctly
+} s_channelMode;
+
+//In your class:
+ s_channelMode m_sModes; // This now properly initializes the member on creation
+ ...
+ this->m_sModes = {}; // if you need to reset it later, this is correct
+
+
+
+Use code with caution.C++
+
+Copy Assignment (If you need specific non-zero values)
+
+    If you need to reset the mode struct to specific values (instead of default constructed), then it's better to use a correctly constructed object instead of using memset.
+
+
+s_channelMode defaultModes; // Assume this is configured as needed
+ ...
+ this->m_sModes = defaultModes; // If you need to reset it later, this is correct
+
+
+
+    Use code with caution.C++
+
+    std::fill (Less Preferred)
+
+    As an alternative to memset, for POD types (plain old data i.e. simple members without constructors) you can use std::fill with a proper range:
+    c++ // Assumes a POD structure std::fill(reinterpret_cast<char*>(&this->m_sModes), reinterpret_cast<char*>(&this->m_sModes) + sizeof(s_channelMode), 0);
+
+        This is only recommended if you are certain that you're dealing with a POD type where setting the memory to zero using byte value is valid. It is less readable than the above options and also more brittle.
+        * Avoid this if your structure has non-trivial types
+
+Important Considerations:
+
+    Identify s_channelMode Members: The key is to understand exactly what data members your s_channelMode holds. If it contains classes or types that manage their own memory, you absolutely must not use memset directly on that struct.
+
+    Clarity: The solutions using value initialization or a dedicated constructor are more readable and less error-prone than trying to manually manage memory with memset.
+
+How to Fix Your Code
+
+    Go to inc/Channel.hpp: Find the definition of struct s_channelMode.
+
+    Decide on an approach:
+
+        If all the members should default to zero-like values, use the value initialization technique when creating the member.
+
+        If the members require specific default values, then implement a constructor for s_channelMode and use default construction for your member instead of the memset.
+
+        If you need to reset the s_channelMode later in your constructor with some specific values, either assign a default constructed version of the object or some specific version as described above.
+
+    Remove the memset call: Delete the lines where memset is used on m_sModes in the constructor and in member initialization.
+
+    Recompile: Run make again, and the error should be resolved.
+
+Example (Assuming a simple struct):
+
+Let's say s_channelMode is:
+
+
+typedef struct s_channelMode {
+    bool isOp;
+    int userLimit;
+    std::string topic;
+} s_channelMode;
+
+
+
+Use code with caution.C++
+
+Then the corrected code in Channel.cpp would look like this:
+
+
+// Correct initialization during member declaration
+class Channel {
+public:
+    s_channelMode m_sModes; // Initialized by default constructor
+    ...
+    Channel(Server& server, const std::string& name, const std::string& password);
+};
+
+Channel::Channel(Server& server, const std::string& name, const std::string& password)
+    : m_server(server), m_name(name), m_password(password) {
+    // m_sModes is already default initialized by the member initializer
+    // No memset needed here.
+    this->m_sModes = {}; // If needed this is the proper way to reset all the values
+    // ... other constructor logic
+}
+
+
+
+Use code with caution.C++
+
+And in Channel.hpp:
+
+
+typedef struct s_channelMode {
+    bool isOp;
+    int userLimit;
+    std::string topic;
+    s_channelMode() : isOp(false), userLimit(0), topic("") {} // Add the constructor
+} s_channelMode;
+
+
+
+Use code with caution.C++
+
+By implementing the constructor for your struct, and letting the language initialize your members, you avoid using the incorrect and potentially unsafe memset call.
+
+By taking the steps outlined above, you'll eliminate the -Werror=class-memaccess error and make your code more robust. If you have additional questions, feel free to ask!

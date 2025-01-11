@@ -6,20 +6,19 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/09 13:31:15 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/11 17:09:46 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Parsing.hpp"
-#include <map>
 #include <string>
+#include <cstdarg>
 #include "Channel.hpp"
 #include "utils.hpp"
-#include <iomanip>
-#include <sstream>
 #include "serverExceptions.hpp"
 #include <iostream>
+#include <unistd.h>
 
 bool Server::userErrorCode(Client &client, const Parsing &parse)
 {
@@ -53,7 +52,7 @@ void	Server::sendLog(const std::string &message)
 	%N -> source Client nickname
 	%C -> Channel name
 	%T -> Channel topic
-*/
+
 static std::string addVar(Server &server, Client* dest, Client *source, Channel *channel, char identifier, va_list args)
 {
 	switch (identifier)
@@ -94,12 +93,48 @@ static std::string addVar(Server &server, Client* dest, Client *source, Channel 
 				break;
 		default :
 			server.sendLog((std::string)"Bug : char " + identifier);
-			const char * i = (const char*) va_arg(args, const char *);
+			const char * i = static_cast<const char*>(va_arg(args, const char *));
 			if (!i)
 				break;
 			return i;
 	}
 	return "-";
+}
+*/
+
+static std::string addVar(Server &server, Client* dest, Client *source, Channel *channel, char identifier, va_list args)
+{
+	switch (identifier)
+	{
+		case '%' :
+			return "%";
+		case 'h' :
+			return server.getHostname();
+		case 'p' :
+				return dest ? dest->getPrefix() : "-";
+		case 'n' :
+				return dest ? dest->getNickname() : "-";
+		case 'P' :
+				return source ? source->getPrefix() : "-";
+		case 'N' :
+				return source ? source->getNickname() : "-";
+		case 'C' :
+				return channel ? channel->getName() : "-";
+		case 'T' :
+				return channel ? channel->getTopic(): "-";
+		default :
+			server.sendLog((std::string)"Bug : char " + identifier);
+			const char * i = static_cast<const char*>(va_arg(args, const char *));
+			if (!i)
+				return "-";
+			return i;
+//			server.sendLog((std::string)"Bug : char " + identifier);
+//			if (const char * i = static_cast<const char*>(va_arg(args, const char *)))
+//			const char * i = static_cast<const char*>(va_arg(args, const char *));
+//			return i ? i : "-";
+//				return i;
+//			return "-";
+	}
 }
 
 void Server::sendf(Client *dest, Client *source, Channel *channel, const std::string str, ...)
@@ -117,6 +152,6 @@ void Server::sendf(Client *dest, Client *source, Channel *channel, const std::st
 	this->sendLog(itoa(dest->getFD()) + " << " + message);
 	message += "\r\n";
 	va_end(args);
-	if (send (dest->getFD(), message.c_str(), message.size(), 0) != (ssize_t)message.length())
+	if (send (dest->getFD(), message.c_str(), message.size(), 0) != static_cast<ssize_t>(message.length()))
 		throw std::runtime_error("Failed to send the message: " + message);
 }

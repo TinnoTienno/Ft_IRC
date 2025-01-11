@@ -81,6 +81,7 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 				e.sendError(server, &client, iterChannels->c_str());
 				break;
 			case 473 :
+				std::cout << iterChannels->c_str() << std::endl;
 				e.sendError(server, &client, iterChannels->c_str());
 				break;
 			case 474 :

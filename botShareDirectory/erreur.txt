@@ -1,29 +1,8 @@
-iterchannel #tutututu
-Channel 's topic set to
-==21714== Conditional jump or move depends on uninitialised value(s)
-==21714==    at 0x1168D6: Channel::addClient(Client&, clientMode) (Channel.cpp:80)
-==21714==    by 0x116124: Channel::Channel(Server&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, Client&) (Channel.cpp:44)
-==21714==    by 0x11015F: Server::createChannel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, Client&) (Server.cpp:39)
-==21714==    by 0x125051: Join::execChannels(Server&, Parsing const&, Client&) (Join.cpp:67)
-==21714==    by 0x124C86: Join::execute(Server&, Parsing const&, Client&) (Join.cpp:28)
-==21714==    by 0x11BF2E: Server::parseCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Client&) (runServer.cpp:120)
-==21714==    by 0x11BA57: Server::ReceiveNewData(Client&) (runServer.cpp:84)
-==21714==    by 0x11A212: Server::ServerInit(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (initServer.cpp:47)
-==21714==    by 0x10BE23: main (main.cpp:34)
-==21714==  Uninitialised value was created by a stack allocation
-==21714==    at 0x110111: Server::createChannel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, Client&) (Server.cpp:38)
-==21714==
-==21714== Conditional jump or move depends on uninitialised value(s)
-==21714==    at 0x1168F6: Channel::addClient(Client&, clientMode) (Channel.cpp:80)
-==21714==    by 0x116124: Channel::Channel(Server&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, Client&) (Channel.cpp:44)
-==21714==    by 0x11015F: Server::createChannel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, Client&) (Server.cpp:39)
-==21714==    by 0x125051: Join::execChannels(Server&, Parsing const&, Client&) (Join.cpp:67)
-==21714==    by 0x124C86: Join::execute(Server&, Parsing const&, Client&) (Join.cpp:28)
-==21714==    by 0x11BF2E: Server::parseCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Client&) (runServer.cpp:120)
-==21714==    by 0x11BA57: Server::ReceiveNewData(Client&) (runServer.cpp:84)
-==21714==    by 0x11A212: Server::ServerInit(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) (initServer.cpp:47)
-==21714==    by 0x10BE23: main (main.cpp:34)
-==21714==  Uninitialised value was created by a stack allocation
-==21714==    at 0x110111: Server::createChannel(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, Client&) (Server.cpp:38)
-==21714==
-4 << :thue!c0rvax@127.0.0.1 JOIN :#tutututu
+erreur avec /part dans irssi :
+!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
+16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
+16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
+16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
+16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
+16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
+16:12 -!- #ici No topic is set

@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 18:43:13 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/11 16:42:25 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,25 +38,17 @@ bool Channel::parseChannelName(const std::string &channelName)
 	return true;
 }
 
-Channel::Channel(Server &server, const std::string &name)
+Channel::Channel(Server &server, const std::string &name) : m_sModes(),m_name(name), m_serv(&server), m_channelType(Public)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
-	this->m_serv = &server;
-	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
-	this->m_channelType = Public;
-	this->m_name = name;
 }
 
-Channel::Channel(Server &server, const std::string &name, const std::string &passwd)
+Channel::Channel(Server &server, const std::string &name, const std::string &passwd) : m_sModes(),m_name(name), m_serv(&server), m_channelType(Public)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
-	std::memset(&this->m_sModes, 0, sizeof(s_channelMode));
 	this->setPassword(passwd);
-	this->m_serv = &server;
-	this->m_name = name;
-	this->m_channelType = Public;
 }
 
 Channel::~Channel	(void)
@@ -82,13 +74,13 @@ bool	Channel::isJoinable(Client &client)
 void	Channel::addClient(Client &client, const std::string &passwd)
 {
 	std::cout << "test " << &client << std::endl;
-	if (this->getClient(&client))
+	if (this->getClient(&client)) // client already in channel
 		throw serverExceptions(405);
-	if (getPasswordMode() && !isPasswordValid(passwd))
+	if (getPasswordMode() && !isPasswordValid(passwd)) //passwordMode on and passwd is not valid
 		throw serverExceptions(475);
 	if (client.getChannelsCount() == MAX_CHANNEL_JOINED - 1)
 		throw serverExceptions(405);
-	if (this->getInviteMode() && this->isInvited(client))
+	if (this->getInviteMode() && !this->isInvited(client))
 		throw serverExceptions(473);
 	if (this->isBanned(client))
 		throw serverExceptions(474);
@@ -131,7 +123,6 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 			{
 				case ePrivMsg:
 					server->sendf(m_vClients[i], client, NULL, PRIVMSG, msg.c_str());
-//					sendf(server, m_vClients[i], PRIVMSG, client->getPrefix().c_str(), this->getName().c_str(), msg.c_str());
 					break;
 				case eNotice:
 					server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());

@@ -6,12 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 17:32:20 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/11 16:12:22 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
+# define DEFAULTSIZELIMIT 8
 
 #include <string>
 #include <vector>
@@ -44,6 +45,8 @@ typedef struct s_channelMode
 	bool	l;
 	size_t						limitedSize;
 	std::vector <Client *>		m_vBanned;
+
+	s_channelMode() : i(false), t(false), k(false), l(false), limitedSize(DEFAULTSIZELIMIT) {}
 }	s_channelMode;
 
 class	Server;

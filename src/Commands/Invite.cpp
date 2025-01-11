@@ -39,7 +39,7 @@ void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 			throw serverExceptions(442);
 		if (chan->getInviteMode() && !chan->isClientOP(client)) // chan in invite-only and client is not OP
 			throw serverExceptions(482);
-		if (!chan->getClient(guest)) // guest already in chan
+		if (chan->getClient(guest)) // guest already in chan
 			throw serverExceptions(443);
 		server.sendf(&client, guest, chan, RPL_INVITING);
 		server.sendf(guest, &client, chan, INVITE);
