@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:57:02 by noda              #+#    #+#             */
-/*   Updated: 2025/01/08 16:34:57 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:38:02 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 		Client *op = chan->getClient(&client);
 		if (!op)
 			throw serverExceptions(442);
-		if (chan->isClientOP(*op))
+		if (chan->getMode()->isOP(op))
 			throw serverExceptions(482);
 		std::vector <std::string> names = vsplit(parse.getArguments()[2], ',');
 		std::vector <std::string>::iterator iter;

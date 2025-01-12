@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/10 18:30:18 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:40:49 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,21 @@
 #include "Parsing.hpp"
 #include "serverExceptions.hpp"
 #include "Channel.hpp"
-#include <iostream>
 #include "utils.hpp"
 #include <cstdlib>
 #include "Rpl.hpp"
 
 void Mode::modeI(Channel &channel, bool status)
 {
-	channel.setInviteMode(status);
+	channel.getMode()->setInviteOnly(status);
+//	channel.m_serv->sendLog(clientgetName() + "'s invite mode was set to " + itoa(status));
 	channel.sendAllMode(status, "i");
 }
 
 void Mode::modeT(Channel channel, bool status)
 {
-	channel.setProtectedTopicMode(status);
+	channel.getMode()->setTopicProtected(status);
+	// message dans le log ?????
 	channel.sendAllMode(status, "t");
 }
 	

@@ -6,11 +6,12 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/11 16:42:25 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:55:31 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
+#include "ChanMode.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 #include "Channel.hpp"
@@ -38,17 +39,16 @@ bool Channel::parseChannelName(const std::string &channelName)
 	return true;
 }
 
-Channel::Channel(Server &server, const std::string &name) : m_sModes(),m_name(name), m_serv(&server), m_channelType(Public)
+Channel::Channel(Server &server, const std::string &name) : m_cMode(), m_name(name), m_serv(&server), m_channelType(Public)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 }
 
-Channel::Channel(Server &server, const std::string &name, const std::string &passwd) : m_sModes(),m_name(name), m_serv(&server), m_channelType(Public)
+Channel::Channel(Server &server, const std::string &name, const std::string &passwd) : m_cMode(passwd), m_name(name), m_serv(&server), m_channelType(Public)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
-	this->setPassword(passwd);
 }
 
 Channel::~Channel	(void)
@@ -56,17 +56,17 @@ Channel::~Channel	(void)
 	m_serv->sendLog("DEBUG : Channl destructor called : " + this->getName());
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		m_vClients[i]->leaveChannel(*this);
-	for (size_t i = 0; i < m_sModes.m_vOP.size(); i++)
-		m_sModes.m_vOP[i]->leaveOP(*this);
+	for (size_t i = 0; i < m_cMode.getOpClient().size(); i++)
+		m_cMode.getOpClient()[i]->leaveOP(*this);
 }
 
 bool	Channel::isJoinable(Client &client)
 {
-	if (this->isBanned(client))
+	if (this->m_cMode.isBanned(&client))
 		return false;
 	else if (this->getClient(&client))
 		return true;
-	else if ((!this->getPasswordMode() || this->isPasswordValid("")) && (!this->getInviteMode() || this->isInvited(client)))
+	else if ((!this->m_cMode.isPasswordProtected() || this->m_cMode.isPasswordValid("")) && (!this->m_cMode.isInviteOnly() || this->m_cMode.isInvited(client)))
 		return true;
 	return false;
 }
@@ -76,20 +76,20 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 	std::cout << "test " << &client << std::endl;
 	if (this->getClient(&client)) // client already in channel
 		throw serverExceptions(405);
-	if (getPasswordMode() && !isPasswordValid(passwd)) //passwordMode on and passwd is not valid
+	if (m_cMode.isPasswordProtected() && !m_cMode.isPasswordValid(passwd)) //passwordMode on and passwd is not valid
 		throw serverExceptions(475);
 	if (client.getChannelsCount() == MAX_CHANNEL_JOINED - 1)
 		throw serverExceptions(405);
-	if (this->getInviteMode() && !this->isInvited(client))
+	if (this->m_cMode.isInviteOnly() && !this->m_cMode.isInvited(client))
 		throw serverExceptions(473);
-	if (this->isBanned(client))
+	if (this->m_cMode.isBanned(&client))
 		throw serverExceptions(474);
-	if (this->getSizeLimitMode() && m_vClients.size() >= this->getSizeLimit())
+	if (this->m_cMode.isSizeLimited() && m_vClients.size() >= this->m_cMode.getLimitSize())
 		throw serverExceptions(471);
 	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
 	client.addChannel(*this);
 	std::cout << client.m_vChannels[0]->getName() << std::endl;
-	if (!this->m_sModes.m_vOP.size())
+	if (!this->m_cMode.getOpClient().size())
 		addOP(client);
 	this->m_vClients.push_back(&client);
 	this->sendAllJoin(client);
@@ -187,7 +187,7 @@ std::string Channel::clientsList()
 	std::string res = "";
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		if (this->isClientOP(*m_vClients[i]))
+		if (this->m_cMode.isOP(m_vClients[i]))
 			res += '@' + m_vClients[i]->getNickname() + " ";
 		else
 			res += m_vClients[i]->getNickname() + " ";
@@ -234,70 +234,25 @@ Server *Channel::getServ() { return m_serv; }
 
 std::string Channel::modeToStr()
 {
-	if (!(this->m_sModes.i || this->m_sModes.t || this->m_sModes.k || this->m_sModes.l))
+	if (!(this->m_cMode.isInviteOnly() || this->m_cMode.isTopicProtected() || this->m_cMode.isPasswordProtected() || this->m_cMode.isSizeLimited()))
 		return "";
 	std::string res = "+";
-	if (this->m_sModes.i)
+	if (this->m_cMode.isInviteOnly())
 		res += "i";
-	if (this->m_sModes.t)
+	if (this->m_cMode.isTopicProtected())
 		res += "t";
-	if (this->m_sModes.k)
+	if (this->m_cMode.isPasswordProtected())
 		res += "k";
-	if (this->m_sModes.l)
-		res += "l" + itoa(this->getSizeLimit());
+	if (this->m_cMode.isSizeLimited())
+		res += "l" + itoa(this->m_cMode.getLimitSize());
 	return res;
 }	
 
-
-//Invite
-void	Channel::setInviteMode(bool status)
-{
-	this->m_sModes.i = status;
-	this->m_serv->sendLog(this->getName() + "'s invite mode was set to " + itoa(status));
-}
-
-bool	Channel::getInviteMode() const { return this->m_sModes.i; }
-
-void	Channel::setInvited(Client &client)
-{
-	this->m_serv->sendLog("Client : " + client.getNickname() + " was invited to " + this->getName() + " channel");
-	// ADD invite sending("%p INVITE %n :%C", client->getNickname(), this->getName())
-	this->m_sModes.m_vInvitedHostNames.push_back(client.getPrefix());
-}
-
-bool	Channel::isInvited(Client &client)
-{
-	for (size_t i = 0; i < this->m_sModes.m_vInvitedHostNames.size(); i++)
-		if (client.getPrefix() == this->m_sModes.m_vInvitedHostNames[i])
-			return true;
-	return false;
-}
-
-//Topic
-
-void	Channel::setProtectedTopicMode(bool status) 
-{
-	this->m_sModes.t = status;
-	this->m_serv->sendLog(this->getName() + "'s protected topic mode was set to " + itoa(status));
-}
-
-bool	Channel::getProtectedTopicMode() const { return this->m_sModes.t; }
-
-void	Channel::setTopic(Client &client, const std::string &topic)
-{
-	if (this->getProtectedTopicMode() && !this->isClientOP(client))
-			throw serverExceptions(482);
-	if (topic == "\"\"")
-		this->m_sModes.topic = "";
-	else
-		this->m_sModes.topic = topic;
-	m_serv->sendLog("Channel " + this->getName() + "'s topic was set to " + this->m_sModes.topic);
-	sendAllTopic();
-}
+ChanMode*	Channel::getMode() { return &m_cMode; }
 
 void Channel::sendTopic(Client &dest)
 {
-	if (this->getTopic() != "")
+	if (this->m_cMode.getTopic() != "")
 		this->m_serv->sendf(&dest, NULL, this, RPL_TOPIC);
 	else
 		this->m_serv->sendf(&dest, NULL, this, RPL_NOTOPIC);
@@ -309,94 +264,11 @@ void Channel::sendAllTopic()
 		this->m_serv->sendf(m_vClients[i], NULL, this, TOPIC);
 }
 
-const std::string	Channel::getTopic(void) const {	return this->m_sModes.topic; }
-
-//Password
-
-void	Channel::setPasswordMode(bool status)
-{
-	this->m_sModes.k = status;
-	if (status)
-		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "+k");
-	else
-		for (size_t i = 0; i < this->m_vClients.size(); i++)
-			this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + (std::string) "-k");
-	this->m_serv->sendLog(this->getName() + "'s password mode was set to " + itoa(status));
-}
-
-bool	Channel::getPasswordMode() { return this->m_sModes.k; }
-
-void	Channel::setPassword(const std::string &passwd)
-{
-	this->m_sModes.password = passwd;
-	// sendMode()
-	this->m_serv->sendLog(this->getName() + "'s password was set to " + passwd);
-}
-
-bool	Channel::isPasswordValid(const std::string str)
-{
-	if (str == this->m_sModes.password)
-		return true;
-	return false;
-}
-
-//Operator
-
 void Channel::addOP(Client &client) 
 {
-	if (!isClientOP(client))
+	if (!m_cMode.isOP(&client))
 	{
-		this->m_sModes.m_vOP.push_back(&client);
+		this->m_cMode.addOP(&client);
 		client.addOP(*this);
 	}
-}
-
-void Channel::removeOP(Client &client)
-{
-	for (size_t i = 0; i < this->m_sModes.m_vOP.size(); i++)
-		if (this->m_sModes.m_vOP[i] == &client)
-		{
-			this->getServ()->sendLog("Removing OP " + client.getNickname() + " from " + this->getName() + " channel");
-			this->m_sModes.m_vOP.erase(this->m_sModes.m_vOP.begin() + i);
-		}
-	// Message ??
-}
-
-bool	Channel::isClientOP(Client &client)	//No more channel founder and such, only OP & normals
-{
-	for (size_t i = 0; i < this->m_sModes.m_vOP.size(); i++)
-		if (this->m_sModes.m_vOP[i] == &client)
-			return true;
-	return false;
-}
-
-//Size limit
-void	Channel::setSizeLimitMode(bool status)
-{
-	this->m_sModes.l = status;
-	this->m_serv->sendLog(this->getName() + "'s size limit mode was set to " + itoa(status));
-}
-
-bool	Channel::getSizeLimitMode() { return this->m_sModes.l; }
-
-void	Channel::setSizeLimit(unsigned int value) 
-{
-	if (value == 0)
-		return  ;
-	this->m_sModes.limitedSize = value;
-	this->m_serv->sendLog(this->getName() + "'s size limit was set to " + itoa(value));
-}
-
-size_t	Channel::getSizeLimit() { return this->m_sModes.limitedSize; }
-
-//Bans
-void	Channel::setBanned(Client &client) { this->m_sModes.m_vBanned.push_back(&client); }
-
-bool	Channel::isBanned(Client &client)
-{
-	for (size_t i = 0; i < this->m_sModes.m_vBanned.size(); i++)
-		if (this->m_sModes.m_vBanned[i] == &client)
-			return true;
-	return false;
 }

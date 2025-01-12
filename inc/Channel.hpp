@@ -6,17 +6,17 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/11 16:12:22 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:21:37 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
-# define DEFAULTSIZELIMIT 8
 
 #include <string>
 #include <vector>
 #include "Client.hpp"
+#include "ChanMode.hpp"
 
 typedef enum messageMode
 {
@@ -32,22 +32,6 @@ typedef enum channelType
 	Private,
 	Default
 }	channelType;
-
-typedef struct s_channelMode
-{
-	bool	i;
-	std::vector<std::string>	m_vInvitedHostNames;
-	bool	t;
-	std::string					topic;
-	bool	k;
-	std::string					password;
-	std::vector <Client *>		m_vOP;
-	bool	l;
-	size_t						limitedSize;
-	std::vector <Client *>		m_vBanned;
-
-	s_channelMode() : i(false), t(false), k(false), l(false), limitedSize(DEFAULTSIZELIMIT) {}
-}	s_channelMode;
 
 class	Server;
 class	Channel
@@ -69,6 +53,7 @@ class	Channel
 		Client *getClient(Client *client);
 		Client *getClient(const std::string &nickname);
 		Server *getServ();
+		ChanMode*	getMode();
 
 		//Senders
 		std::string clientsList();
@@ -82,39 +67,12 @@ class	Channel
 		void 	sendPart(Client &client, const std::string &message);
 		void 	sendKick(Client &source, Client &target, const std::string &message);
 		void 	sendClientslist(Client &dest);
-		//sModes
-		std::string modeToStr();
-		//Invite
-		void	setInviteMode(bool);
-		bool	getInviteMode() const;
-		void	setInvited(Client &client);
-		bool	isInvited(Client &client);
-		//Topic
-		void	setProtectedTopicMode(bool);
-		bool	getProtectedTopicMode() const;
-		void 	setTopic(Client &client, const std::string &); // * needed to set at channels creation
-		const	std::string getTopic() const;
-		//Password
-		void	setPasswordMode(bool);
-		bool	getPasswordMode();
-		void	setPassword(const std::string &passwd);
-		bool	isPasswordValid(const std::string str);
-		//Operator
 		void	addOP(Client &client);
-		void	removeOP(Client &client);
-		bool	isClientOP(Client &client);
-		//Size limit
-		void	setSizeLimitMode(bool);
-		bool	getSizeLimitMode();
-		void	setSizeLimit(unsigned int);
-		size_t	getSizeLimit();
-		//Bans
-		void	setBanned(Client &client);
-		bool	isBanned(Client &client);
-		
+		std::string	modeToStr();
+
 		std::vector <Client *>		m_vClients;
 	private:
-		s_channelMode				m_sModes;
+		ChanMode					m_cMode;
 		std::string					m_name;
 		Server 						*m_serv;
 		channelType					m_channelType;

@@ -6,12 +6,11 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:46:12 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:36:59 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include <stdexcept>
 #include <string>
 #include <unistd.h>
 #include <vector>
@@ -19,10 +18,6 @@
 #include <netdb.h>
 #include <vector>
 #include <sstream>
-#include <stdarg.h>
-#include "Server.hpp"
-#include "serverExceptions.hpp"
-#include "Channel.hpp"
 #include <stdio.h>
 
 std::string itoa(int nb)

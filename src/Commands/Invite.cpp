@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:05:36 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:29:43 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:42:39 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,14 @@ void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 			throw serverExceptions(403);
 		if (!chan->getClient(&client)) // client not member of chan
 			throw serverExceptions(442);
-		if (chan->getInviteMode() && !chan->isClientOP(client)) // chan in invite-only and client is not OP
+		if (chan->getMode()->isInviteOnly() && !chan->getMode()->isOP(&client)) // chan in invite-only and client is not OP
 			throw serverExceptions(482);
 		if (chan->getClient(guest)) // guest already in chan
 			throw serverExceptions(443);
 		server.sendf(&client, guest, chan, RPL_INVITING);
 		server.sendf(guest, &client, chan, INVITE);
-		chan->setInvited(*guest);
+		chan->getMode()->setInvited(guest);
+		// server.sendLog("Client : " + guest->getNickname() + "was invited to " + chan->getName() + " channel");
 	}
 	catch (const serverExceptions & e)
 	{

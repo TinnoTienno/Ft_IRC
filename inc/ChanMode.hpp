@@ -6,19 +6,19 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 17:28:50 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/11 19:13:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:52:34 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANMODE_HPP
 # define CHANMODE_HPP
-#include "Channel.hpp"
 #include "Client.hpp"
 #include <cstddef>
 #include <string>
 #include <vector>
 # define DEFAULTSIZELIMIT 8
 
+class Channel;
 class ChanMode
 {
 	private:
@@ -30,10 +30,11 @@ class ChanMode
 		std::string					m_password;
 		bool						m_sizeLimited;
 		size_t						m_limitedSize;
-		std::vector<Client*>		m_m_vOP;
-		std::vector<Client*>		m_m_vBanned;
+		std::vector<Client*>		m_vOP;
+		std::vector<Client*>		m_vBanned;
 	public:
 		ChanMode();
+		ChanMode(const std::string & pass);
 		~ChanMode();
 		
 		//Getters
@@ -47,12 +48,13 @@ class ChanMode
 		size_t	getLimitSize() const;
 		bool	isOP(Client * client) const;
 		bool	isBanned(Client * client) const;
+		std::vector<Client*>	getOpClient() const;
 		
 		//Setters
 		void	setInviteOnly(bool value);
-		void	setInvited(Client & client);
+		void	setInvited(Client * client);
 		void	setTopicProtected(bool value);
-		void	setTopic(Client & client, const std::string & topic);
+		void	setTopic(const std::string & topic);
 		void	setPasswordProtected(bool value);
 		void	setPassword(const std::string & passwd);
 		void	addOP(Client * client);

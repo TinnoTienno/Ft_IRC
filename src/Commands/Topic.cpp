@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:32:50 by noda              #+#    #+#             */
-/*   Updated: 2025/01/10 18:18:02 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:39:22 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Parsing.hpp"
-#include <iostream>
 
 void Topic::execute(Server &server, const Parsing &parse, Client &client)
 {
@@ -32,9 +31,10 @@ void Topic::execute(Server &server, const Parsing &parse, Client &client)
 			throw serverExceptions(442);
 		if (parse.getArguments().size() >= 3)
 		{
-			if (chan->getProtectedTopicMode() && !chan->isClientOP(client))
+			if (chan->getMode()->isTopicProtected() && !chan->getMode()->isOP(&client))
 				throw serverExceptions(482);
-			chan->setTopic(client, parse.getArguments()[2]);
+			chan->getMode()->setTopic(parse.getArguments()[2]);
+			//message dans le log ?????
 		}
 		else
 			chan->sendTopic(client);

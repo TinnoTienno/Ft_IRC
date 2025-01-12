@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/11 17:09:46 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:37:26 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ static std::string addVar(Server &server, Client* dest, Client *source, Channel 
 		case 'C' :
 				return channel ? channel->getName() : "-";
 		case 'T' :
-				return channel ? channel->getTopic(): "-";
+				return channel ? channel->getMode()->getTopic(): "-";
 		default :
 			server.sendLog((std::string)"Bug : char " + identifier);
 			const char * i = static_cast<const char*>(va_arg(args, const char *));

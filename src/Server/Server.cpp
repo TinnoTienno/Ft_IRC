@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 17:35:36 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/12 13:36:25 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ Channel &Server::createChannel(const std::string &name, Client &client)
 Channel &Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
 {
 	Channel &channel = createChannel(name, client);
-	channel.setPassword(passwd);
+	channel.getMode()->setPassword(passwd);
 	return channel;
 }
 
