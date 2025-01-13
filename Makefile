@@ -77,4 +77,4 @@ clear :
 -include $(OBJS:.o=.d)
 -include $(BOT_OBJS:.o=.d)
 
-.PHONY	: all clean fclean re bot
+.PHONY	: all clean fclean re bot clear
