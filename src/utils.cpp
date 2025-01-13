@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 11:51:19 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 14:36:25 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,13 @@ unsigned short	strtous(const std::string & str)
 	unsigned short	result = 0;
 	unsigned long	longVal;
 
+	if (str.empty())
+		throw std::invalid_argument("Error: Empty string");
 	if (str.find_first_not_of("0123456789") != std::string::npos)
-		throw std::invalid_argument("error: invalid argument: port: " + str);
+		throw std::invalid_argument("Error: Invalid argument: Only digit accepted: " + str);
 	longVal = strtoul(str.c_str(), NULL, 10);
 	if (longVal > USHRT_MAX)
-		throw std::invalid_argument("Error: Too long");
+		throw std::invalid_argument("Error: Invalid argument: Too long; " + str);
 	result = static_cast<unsigned short>(longVal);
 	return result;
 }

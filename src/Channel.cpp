@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:55:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 14:29:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 		throw serverExceptions(471);
 	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
 	client.addChannel(*this);
-	std::cout << client.m_vChannels[0]->getName() << std::endl;
+	std::cout << client.getChannel()[0]->getName() << std::endl;
 	if (!this->m_cMode.getOpClient().size())
 		addOP(client);
 	this->m_vClients.push_back(&client);
