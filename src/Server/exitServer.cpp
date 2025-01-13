@@ -38,8 +38,10 @@ void	Server::CloseFds()
 	}
 }
 
+#include <iostream>
 void Server::ClearClient(Client &client)
 {
+	client.cleanChannels();
 	close (client.getFD());
 	for (size_t i = 0; i < m_vFds.size(); i++)
 	{
@@ -58,6 +60,6 @@ void Server::ClearClient(Client &client)
 			break;
 		}
 	}
-	client.cleanChannels();
+	std::cout << "supprimed " << std::endl;
 	sendLog("Bug checking : vclient size : " + itoa(m_vClients.size()));
 }

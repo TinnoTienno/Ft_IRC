@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 18:47:56 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 22:35:45 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ class	Channel
 	public:
 		Channel(Server &server, const std::string &name, const std::string &passwd);
 		Channel(Server &server, const std::string &name);
+		Channel(const Channel & copy);
 		~Channel(void);
-		
+		Channel&	operator=(const Channel & rhs);
+
 		bool	isJoinable(Client &client);
 		void	addClient(Client &client);
 		void	addClient(Client &client, const std::string &passwd);

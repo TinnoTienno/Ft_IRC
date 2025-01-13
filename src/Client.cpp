@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 19:17:47 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:49:55 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,10 +220,11 @@ std::string	motd[] = {
 }
 
 //vectors
-void Client::addChannel(Channel *channel)
+void Client::addChannel(Channel &channel)
 {
-	this->m_vChannels.push_back(channel);
-	channel->getServ()->sendLog("Channel " + channel->getName() + " was added to " + this->getNickname() + "'s channels list");
+	this->m_vChannels.push_back(&channel);
+	channel.getServ()->sendLog("Channel " + channel.getName() + " was added to " + this->getNickname() + "'s channels list");
+//	channel->getServ()->sendLog("Channel " + channel->getName() + " was added to " + this->getNickname() + "'s channels list");
 }
 
 #include <iostream>

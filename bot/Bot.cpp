@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 16:43:52 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 20:15:20 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,18 +110,23 @@ void	Bot::m_helloWorld()
 int	Bot::m_run()
 {
 	char	buffer[513];
-	struct	pollfd pfd;
-	pfd.fd = this->m_serSocket;
-	pfd.events = POLLIN;
+//	struct	pollfd pfd;
+//	pfd.fd = this->m_serSocket;
+//	pfd.events = POLLIN;
 
 	while(this->m_signal == false)
 	{
-		if ((poll(&pfd, 1, -1) == -1) || this->m_signal == true)
-			return quit();
-		else if (pfd.revents & POLLIN)
+//		if ((poll(&pfd, 1, -1) == -1) || this->m_signal == true)
+//			return quit();
+//		else if (pfd.revents & POLLIN)
 		memset(buffer, 0, sizeof(buffer));
-		int	bytes = recv(this->m_serSocket, buffer, sizeof(buffer), 0);
-		if (bytes <= 0)
+		int	bytes = recv(this->m_serSocket, buffer, sizeof(buffer) - 1, 0);
+		if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
+		{
+			usleep(100000);
+			continue;
+		}
+		if (bytes == 0 || bytes < -1)
 			return quit();
 		buffer[bytes] = '\0';
 		std::string message(buffer);

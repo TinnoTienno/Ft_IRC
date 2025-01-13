@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 19:31:41 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 22:19:56 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ class Server
 		Client 	*getClient(const std::string &nickname);
 		Channel *getChannel(const std::string &channelName);
 
-		Channel &createChannel(const std::string &name, Client &client);
-		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
+		void	createChannel(const std::string &name, Client &client);
+		void	createChannel(const std::string &name, Client &client, const std::string &passwd);
 		void 	deleteChannel(Channel &channel);
 		Channel *findChannel(const std::string &channelName);
 

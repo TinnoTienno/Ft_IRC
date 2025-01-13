@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/12 13:36:25 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 22:28:27 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,25 @@ Server::Server(const std::string &name, const std::string &pass) : m_pass(pass),
 	sendLog("Server created");
 }
 
+void	Server::createChannel(const std::string &name, Client &client)
+{
+	Channel newChannel(*this, name);
+	newChannel.addClient(client, "");
+	newChannel.addOP(client);
+	m_vChannels.push_back(newChannel);
+	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
+}
+
+void	Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
+{
+	Channel newChannel(*this, name);
+	newChannel.addClient(client, passwd);
+	newChannel.addOP(client);
+	m_vChannels.push_back(newChannel);
+	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
+}
+
+/*
 Channel &Server::createChannel(const std::string &name, Client &client)
 {
 	Channel newChannel(*this, name);
@@ -50,7 +69,7 @@ Channel &Server::createChannel(const std::string &name, Client &client, const st
 	channel.getMode()->setPassword(passwd);
 	return channel;
 }
-
+*/
 void 	Server::deleteChannel(Channel &channel)
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++) {

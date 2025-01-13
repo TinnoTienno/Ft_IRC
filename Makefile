@@ -6,7 +6,7 @@
 #    By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/12 13:19:58 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/13 23:13:30 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,8 @@ NAME		=	ircserv
 CXX 			=	c++ 
 #CXX 			=	clang++ 
 
-CXXFLAGS		=	-std=c++98 -Wall -Wextra -Werror -g3
-#CXXFLAGS		=	-Wall -Wextra -Werror -g3
+#CXXFLAGS		=	-fsanitize=address -std=c++98 -Wall -Wextra -Werror -g3
+CXXFLAGS		=	-fsanitize=address -Wall -Wextra -Werror -g3
 
 COMMAND_PATH	= Commands/
 SERVER_PATH		= Server/

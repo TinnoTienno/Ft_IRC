@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 18:47:29 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 23:00:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "Notice.hpp"
 #include "Quit.hpp"
 #include <stdio.h>
+#include <vector>
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
@@ -53,6 +54,22 @@ Channel::Channel(Server &server, const std::string &name, const std::string &pas
 
 Channel::~Channel	(void)
 {
+}
+
+Channel::Channel(const Channel & copy) : m_vClients(copy.m_vClients), m_cMode(copy.m_cMode), m_name(copy.m_name), m_serv(copy.m_serv), m_channelType(copy.m_channelType)
+{
+}
+
+Channel&	Channel::operator=(const Channel & rhs)
+{
+	if (this == &rhs)
+		return *this;
+	m_cMode = rhs.m_cMode;
+	m_name = rhs.m_name;
+	m_serv = rhs.m_serv;
+	m_channelType = rhs.m_channelType;
+	m_vClients = rhs.m_vClients;
+	return *this;
 }
 
 void	Channel::m_cleanClient()
@@ -91,7 +108,7 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 	if (this->m_cMode.isSizeLimited() && m_vClients.size() >= this->m_cMode.getLimitSize())
 		throw serverExceptions(471);
 	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
-	client.addChannel(this);
+	client.addChannel(*this);
 	std::cout << client.getChannel()[0]->getName() << std::endl;
 	if (this->m_cMode.getOpClient().empty())
 		this->addOP(client);
@@ -219,18 +236,30 @@ std::string Channel::getSymbol()
 void Channel::sendAllJoin(Client &source)
 {
 	std::cout << "avant alljoin" << std::endl;
-	for (size_t i = 0; i < this->m_vClients.size(); i++)
+	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
 	{
-		std::cout << "dans all join i = " << i << std::endl;
-		this->m_serv->sendf(this->m_vClients[i], &source, this, JOIN);
+//	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		std::cout << "source prefix : " << source.getPrefix() << std::endl;
+		std::cout << "source fd : " << source.getFD() << std::endl;
+		Client*	currentClientPtr = *it;
+		if (currentClientPtr == NULL)
+			std::cout << "WTFucking Fuck" << std::endl;
+		else
+			std::cout << "dest fd : " << currentClientPtr->getFD() << std::endl;
+		this->m_serv->sendf(*it, &source, this, JOIN);
 	}
 	std::cout << "après alljoin" << std::endl;
 }
 
 void Channel::sendPart(Client &source, const std::string &message)
 {
-	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		this->m_serv->sendf(this->m_vClients[i], &source, this, PART, message.c_str());
+	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
+		this->m_serv->sendf(*it, &source, this, PART, message.c_str());
+	{
+		
+	}
+//	for (size_t i = 0; i < this->m_vClients.size(); i++)
+//		this->m_serv->sendf(this->m_vClients[i], &source, this, PART, message.c_str());
 }
 
 void Channel::sendKick(Client &source, Client &target, const std::string &message)
