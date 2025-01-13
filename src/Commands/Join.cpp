@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 16:35:23 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:54:38 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@ void Join::execute(Server &server, const Parsing &parse, Client &client)
 
 void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 {
+	// if (parse.getArguments().size() < 2)
+	// throw ....
 	std::vector<std::string> channels = vsplit(parse.getArguments()[1], ',');
 	std::vector<std::string> passwords;
-	if (parse.getArguments().size() == 3)
+	if (parse.getArguments().size() > 3)
 		passwords = vsplit(parse.getArguments()[2], ',');
 	std::vector<std::string>::iterator iterPasswords = passwords.begin();
 	std::vector<std::string>::iterator iterChannels = channels.begin();
@@ -48,21 +50,13 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 		{
 			Channel *channel = server.findChannel(*iterChannels);
 			if (iterPasswords != passwords.end() && channel)
-			{
 				channel->addClient(client, *iterPasswords);
-			}
 			else if (iterPasswords != passwords.end())
-			{
 				server.createChannel(*iterChannels, client, *iterPasswords);
-			}
 			else if (channel)
-			{
 				channel->addClient(client, "");
-			}
 			else
-			{
 				server.createChannel(*iterChannels, client);
-			}
 		}
 		catch(const serverExceptions& e)
 		{

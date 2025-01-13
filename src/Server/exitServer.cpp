@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:46:49 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:44:01 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,6 @@ void Server::ClearClient(Client &client)
 			break;
 		}
 	}
+	client.cleanChannels();
 	sendLog("Bug checking : vclient size : " + itoa(m_vClients.size()));
 }

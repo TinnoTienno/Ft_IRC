@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 14:28:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:17:47 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void Client::kill(Server &server, const std::string &str)
 {
 	this->sendQuitMsg(str);
 	server.sendLog(static_cast<std::string>("Client <" + itoa(this->getFD()) + "> Disconnected"));
+	cleanChannels();
+
 }
 
 Client::Client()
@@ -38,14 +40,50 @@ Client::Client()
 	m_vChannels.clear();
 	m_vOpChannels.clear();
 }
-	
+
 Client::~Client()
+{
+}
+
+Client::Client(const Client & copy)
+{
+	m_fd =copy.m_fd;
+	m_authentified = copy.m_authentified;
+	m_ipAdd = copy.m_ipAdd;
+	m_hostname = copy.m_hostname;
+	m_nickname = copy.m_nickname;
+	m_username = copy.m_username;
+	m_realname = copy.m_realname;
+	m_irssiPacket = copy.m_irssiPacket;
+	m_vOpChannels = copy.m_vOpChannels;
+	m_vChannels = copy.m_vChannels;
+}
+
+
+Client&	Client::operator=(const Client & rhs)
+{
+	if (this != & rhs)
+	{
+		m_fd =rhs.m_fd;
+		m_authentified = rhs.m_authentified;
+		m_ipAdd = rhs.m_ipAdd;
+		m_hostname = rhs.m_hostname;
+		m_nickname = rhs.m_nickname;
+		m_username = rhs.m_username;
+		m_realname = rhs.m_realname;
+		m_irssiPacket = rhs.m_irssiPacket;
+		m_vOpChannels = rhs.m_vOpChannels;
+		m_vChannels = rhs.m_vChannels;
+	}
+	return *this;
+}
+void	Client::cleanChannels()
 {
 	for (size_t i = 0; i < m_vOpChannels.size(); i++)
 		m_vOpChannels[i]->getMode()->removeOP(this);
 	for (size_t i = 0; i < m_vChannels.size(); i++)
 		m_vChannels[i]->removeClient(*this);
-};
+}
 
 //getters / setters
 std::string	Client::getPrefix() const
@@ -63,7 +101,7 @@ void Client::setIPadd(const std::string &ipadd) { m_ipAdd = ipadd; }
 void	Client::setHostname(struct sockaddr *addr, Server &server)
 {
 	char	host[NI_MAXHOST];
-	int		res = getnameinfo(addr, sizeof(&addr), host, sizeof(host), NULL, 0, 0);
+	int		res = getnameinfo(addr, sizeof(struct sockaddr), host, sizeof(host), NULL, 0, 0);
 	try
 	{
 		server.sendf(this, NULL, NULL, AUTH_IDENT);
@@ -182,14 +220,16 @@ std::string	motd[] = {
 }
 
 //vectors
-void Client::addChannel(Channel &channel)
+void Client::addChannel(Channel *channel)
 {
-	this->m_vChannels.push_back(&channel);
-	channel.getServ()->sendLog("Channel " + channel.getName() + " was added to " + this->getNickname() + "'s channels list");
+	this->m_vChannels.push_back(channel);
+	channel->getServ()->sendLog("Channel " + channel->getName() + " was added to " + this->getNickname() + "'s channels list");
 }
 
+#include <iostream>
 void	Client::sendQuitMsg(const std::string & message)
 {
+	std::cout << "size de m_vChannels : "<< m_vChannels.size() << std::endl;
 	for (size_t i = 0; i < this->m_vChannels.size(); i++)
 		this->m_vChannels[i]->sendAllMsg(this->m_vChannels[i]->getServ(), this, message, eQuit);
 }

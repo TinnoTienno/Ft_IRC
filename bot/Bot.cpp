@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 18:32:37 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:43:52 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,13 @@ int	Bot::init()
 	}
 }
 
+void	Bot::m_helloWorld()
+{
+	speak("PRIVMSG " + this->m_channel + " :Hi everyone i'm an IRC File Transfer Bot\r\n");
+	speak("PRIVMSG " + this->m_channel + " :You can ask me the list of transferable files with the command 'PRIVMSG FileHandlerBot !list'\r\n");
+	speak("PRIVMSG " + this->m_channel + " :I can transfer you the file you want with the command 'PRIVMSG FileHandlerBot !send [filename]'\r\n");
+}
+
 int	Bot::m_run()
 {
 	char	buffer[513];
@@ -120,12 +127,9 @@ int	Bot::m_run()
 		std::string message(buffer);
 		std::cout << ">> " << message << std::endl;
 		if (message.find("376") != std::string::npos)
-		{
 			speak("JOIN " + this->m_channel + "\r\n" );
-			speak("PRIVMSG " + this->m_channel + " :Hi everyone i'm an IRC File Transfer Bot\r\n");
-			speak("PRIVMSG " + this->m_channel + " :You can ask me the list of transferable files with the command 'PRIVMSG FileHandlerBot !list'\r\n");
-			speak("PRIVMSG " + this->m_channel + " :I can transfer you the file you want with the command 'PRIVMSG FileHandlerBot !send [filename]'\r\n");
-		}
+		if (message.find("JOIN") != std::string::npos)
+			m_helloWorld();
 		if (message.find("PRIVMSG") != std::string::npos)
 			m_handlePrivMsg(message);
 	}

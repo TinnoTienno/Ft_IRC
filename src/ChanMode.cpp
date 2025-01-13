@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 18:00:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:57:21 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:42:51 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ bool	ChanMode::isOP(Client * client) const { return std::find(m_vOP.begin(), m_v
 
 bool	ChanMode::isBanned(Client * client) const { return std::find(m_vBanned.begin(), m_vBanned.end(), client) != m_vBanned.end(); }
 
+//std::vector<Client*>&	ChanMode::getOpClient() { return m_vOP; }
 std::vector<Client*>	ChanMode::getOpClient() const { return m_vOP; }
 
 void	ChanMode::setInviteOnly(bool value) { m_inviteOnly = value; }

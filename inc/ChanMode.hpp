@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 17:28:50 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 12:54:04 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:43:19 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class ChanMode
 		size_t	getLimitSize() const;
 		bool	isOP(Client * client) const;
 		bool	isBanned(Client * client) const;
+		std::vector<Client*>&	getOpClient();
 		std::vector<Client*>	getOpClient() const;
 		
 		//Setters

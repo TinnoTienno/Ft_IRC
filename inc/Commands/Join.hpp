@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/09 14:36:22 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:15:59 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include <string>
 # include <exception>
 # include <vector>
-# define JOIN ":%N JOIN :%C"
+# define JOIN ":%P JOIN :%C"
 class Server;
 class Client;
 class Parsing;

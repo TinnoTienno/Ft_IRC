@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 14:30:14 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:41:40 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,15 @@ class Client
 		std::string 			m_username;
 		std::string 			m_realname;
 		std::string 			m_irssiPacket;
-		std::vector<Channel *> 	m_vOpChannels;
-		std::vector<Channel *>	m_vChannels;
+		std::vector<Channel*> 	m_vOpChannels;
+		std::vector<Channel*>	m_vChannels;
 
 	public : 
 		Client();
 		~Client();
+		Client(const Client & copy);
+		Client&	operator=(const Client & rhsy);
+		void	cleanChannels();
 
 		//getters
 		std::string	getPrefix() const;
@@ -63,6 +66,7 @@ class Client
 		void	sendInviteList(Server *server);
 
 		//Channels
+//		void	addChannel(Channel *channel);
 		void	addChannel(Channel &channel);
 		void	leaveChannel(Channel &channel);
 		void	addOP(Channel &channel);

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:37:26 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:00:50 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ static std::string addVar(Server &server, Client* dest, Client *source, Channel 
 	}
 }
 
+#include <iostream>
 void Server::sendf(Client *dest, Client *source, Channel *channel, const std::string str, ...)
 {
 	va_list args;
@@ -149,9 +150,11 @@ void Server::sendf(Client *dest, Client *source, Channel *channel, const std::st
 		else
 			message += str[i];
 	}
+	std::cout << "fd dans sendf : " << dest->getFD() << std::endl;
 	this->sendLog(itoa(dest->getFD()) + " << " + message);
 	message += "\r\n";
 	va_end(args);
+	std::cout << "avant ou après la merde ??" << std::endl;
 	if (send (dest->getFD(), message.c_str(), message.size(), 0) != static_cast<ssize_t>(message.length()))
 		throw std::runtime_error("Failed to send the message: " + message);
 }

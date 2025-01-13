@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 14:29:35 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 18:47:29 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ Channel::Channel(Server &server, const std::string &name, const std::string &pas
 
 Channel::~Channel	(void)
 {
+}
+
+void	Channel::m_cleanClient()
+{
 	m_serv->sendLog("DEBUG : Channl destructor called : " + this->getName());
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		m_vClients[i]->leaveChannel(*this);
@@ -87,11 +91,13 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 	if (this->m_cMode.isSizeLimited() && m_vClients.size() >= this->m_cMode.getLimitSize())
 		throw serverExceptions(471);
 	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
-	client.addChannel(*this);
+	client.addChannel(this);
 	std::cout << client.getChannel()[0]->getName() << std::endl;
-	if (!this->m_cMode.getOpClient().size())
-		addOP(client);
+	if (this->m_cMode.getOpClient().empty())
+		this->addOP(client);
+	std::cout << "all good" << std::endl;
 	this->m_vClients.push_back(&client);
+	std::cout << "not good" << std::endl;
 	this->sendAllJoin(client);
 	this->sendTopic(client);
 	this->sendClientslist(client);
@@ -122,7 +128,7 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 			switch (mode)
 			{
 				case ePrivMsg:
-					server->sendf(m_vClients[i], client, NULL, PRIVMSG, msg.c_str());
+					server->sendf(m_vClients[i], client, this, PRIVMSGALL, msg.c_str());
 					break;
 				case eNotice:
 					server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
@@ -212,8 +218,13 @@ std::string Channel::getSymbol()
 
 void Channel::sendAllJoin(Client &source)
 {
+	std::cout << "avant alljoin" << std::endl;
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
+	{
+		std::cout << "dans all join i = " << i << std::endl;
 		this->m_serv->sendf(this->m_vClients[i], &source, this, JOIN);
+	}
+	std::cout << "après alljoin" << std::endl;
 }
 
 void Channel::sendPart(Client &source, const std::string &message)

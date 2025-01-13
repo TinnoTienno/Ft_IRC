@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:21:37 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 18:47:56 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class	Channel
 		bool	isJoinable(Client &client);
 		void	addClient(Client &client);
 		void	addClient(Client &client, const std::string &passwd);
+		void	m_cleanClient();
 		
 		void	removeClient(const Client & client);
 		

@@ -32,6 +32,7 @@ private:
 	void		m_authenticate();
 	void		m_connectToServer();
 	void		m_createList();
+	void		m_helloWorld();
     int			m_run();
 	void		m_handlePrivMsg(const std::string & message);
 	uint32_t	m_getLocalIpInt() const;
