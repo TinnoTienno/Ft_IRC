@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:47:11 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 00:15:26 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 
 void Server::AcceptNewClient()
 {
-	Client client;
+	Client *client = new Client();
 	struct sockaddr_in clientAdd;
 	struct pollfd newPoll;
 	socklen_t len = sizeof(clientAdd);
@@ -53,9 +53,9 @@ void Server::AcceptNewClient()
 	newPoll.events = POLLIN;
 	newPoll.revents = 0;
 	
-	client.setFD(incoFd);
-	client.setIPadd(inet_ntoa((clientAdd.sin_addr)));
-	client.setHostname(reinterpret_cast<struct sockaddr*>(&clientAdd), *this);
+	client->setFD(incoFd);
+	client->setIPadd(inet_ntoa((clientAdd.sin_addr)));
+	client->setHostname(reinterpret_cast<struct sockaddr*>(&clientAdd), *this);
 	// m_mClients.insert({incoFd, client});
 	m_vClients.push_back(client);
 	m_vFds.push_back(newPoll);

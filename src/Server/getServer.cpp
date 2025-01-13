@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:05:05 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/06 17:57:16 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/14 00:17:11 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ const std::string	Server::getChannelNumber() const
 Client *Server::getClient(int clientFd) 
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
-	if (clientFd == m_vClients[i].getFD())
-		return (&m_vClients[i]);
+		if (clientFd == m_vClients[i]->getFD())
+			return (m_vClients[i]);
 	return NULL;
 }
 
@@ -59,7 +59,7 @@ const std::string	Server::getPort() const
 Channel *Server::getChannel(const std::string &channelName)
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++)
-		if (m_vChannels[i].getName() == channelName)
-			return &m_vChannels[i];
+		if (m_vChannels[i]->getName() == channelName)
+			return m_vChannels[i];
 	return NULL;
 }

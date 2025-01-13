@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 22:19:56 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 00:13:12 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ class Server
 		std::string							m_hostname;
 		unsigned int						m_nextChannelID;
 		std::ofstream						m_logFd;
-		std::vector<Client> 				m_vClients;
-		std::vector<Channel>				m_vChannels;
+		std::vector<Client*> 				m_vClients;
+		std::vector<Channel*>				m_vChannels;
 		
 	public :
 		Server(const std::string &name, const std::string &password);

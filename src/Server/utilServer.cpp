@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 19:00:50 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 00:17:44 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ bool Server::userErrorCode(Client &client, const Parsing &parse)
 Channel *Server::findChannel(const std::string &channelName)
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++)
-		if (strCompareNoCase(m_vChannels[i].getName(), channelName))
-			return &m_vChannels[i];
+		if (strCompareNoCase(m_vChannels[i]->getName(), channelName))
+			return m_vChannels[i];
 	return NULL;
 }
 
