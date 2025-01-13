@@ -1,8 +1,4 @@
 		TODO
-kill
-kick
-invite
-join
 mode
 	i - invite mode
 	>> :eschussl1!~eschussl@a63b-ad80-963c-f258-ef9a.210.62.ip MODE #cou +i 
@@ -29,3 +25,7 @@ privmsg
 notice
 quit
 topic
+kill
+kick
+invite
+join

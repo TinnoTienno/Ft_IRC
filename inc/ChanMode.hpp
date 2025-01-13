@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 17:28:50 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:52:34 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 12:54:04 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ class ChanMode
 		bool						m_passwordProtected;
 		std::string					m_password;
 		bool						m_sizeLimited;
-		size_t						m_clientMax;
+		unsigned short				m_clientMax;
+//		size_t						m_clientMax;
 		std::vector<Client*>		m_vOP;
 		std::vector<Client*>		m_vBanned;
 	public:
