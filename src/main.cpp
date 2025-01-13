@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 		gethostname(hostname, sizeof(hostname));
 		Server server(hostname , argv[2]);
 		server.ServerInit(argv[1]);
+		// verif si argv[2] et 1 ne sont pas vides
 	}
 	catch(const std::exception& e)
 	{

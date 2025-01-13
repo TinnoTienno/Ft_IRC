@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:13:55 by noda              #+#    #+#             */
-/*   Updated: 2025/01/12 15:35:55 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:31:32 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ class Mode
 	private :
 		static void modeT(Channel & channel, bool status);
 		static void modeI(Channel &channel, bool status);
-		static void modeL(Channel & channel, bool status);
-		static void modeK(Channel & channel, bool status, const std::string & modeArg);
+		static void modeL(Channel & channel, bool status, const Parsing & parse);
+		static void modeK(Channel & channel, bool status, const Parsing & parse);
 		static void modeO(Channel & channel, bool status, const std::string & modeArg);
 		static void channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse);
     public :

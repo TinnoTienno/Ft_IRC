@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/12 23:19:25 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:01:46 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,19 @@ void Mode::modeT(Channel & channel, bool status)
 	channel.sendAllMode(status, "t");
 }
 	
-void	Mode::modeL(Channel & channel, bool status)
+void	Mode::modeL(Channel & channel, bool status, const Parsing & parse)
 {
-	channel.getMode()->setSizeLimited(status);
-	channel.sendAllMode(status, "l");
+	if (status && parse.getArguments().size() > 3)
+	{
+		channel.getMode()->setSizeLimited(status);
+		channel.getMode()->setLimitSize(std::atoi(parse.getArguments()[3].c_str())); // verif unsigned int
+		channel.sendAllMode(status, "l");
+	}
+	else if (!status)
+	{
+		channel.getMode()->setSizeLimited(status);
+		channel.sendAllMode(status, "l");
+	}
 }
 
 void	Mode::modeO(Channel & channel, bool status, const std::string & modeArg)
@@ -61,11 +70,19 @@ void	Mode::modeO(Channel & channel, bool status, const std::string & modeArg)
 	}
 }
 
-void	Mode::modeK(Channel & channel, bool status, const std::string & modeArg)
+void	Mode::modeK(Channel & channel, bool status, const Parsing & parse)
 {
-	(void)channel;
-	(void)status;
-	(void)modeArg;
+	if (status && parse.getArguments().size() > 3)
+	{
+		channel.getMode()->setPasswordProtected(status);
+		channel.getMode()->setPassword(parse.getArguments()[3]);
+		channel.sendAllMode(status, "k");
+	}
+	else if (!status)
+	{
+		channel.getMode()->setPasswordProtected(status);
+		channel.sendAllMode(status, "k");
+	}
 }
 
 void Mode::channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse)
@@ -77,7 +94,7 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 //	for (size_t i = 2; i < parse.getArguments().size(); i++)
 //		arg += parse.getArguments()[i] + ' ';
 	std::string arg = parse.getArguments()[2];
-	server.sendLog("Debug : arg :" + arg);
+//	server.sendLog("Debug : arg :" + arg);
 	if (arg[0] == '+')
 		status = 1;
 	else if (arg[0] == '-')
@@ -101,25 +118,21 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 				Mode::modeT(channel, status);
 				break;
 			 case 'k' :
-				if (parse.getArguments().size() > 3)
-					Mode::modeK(channel, status, parse.getArguments()[3]);
+				Mode::modeK(channel, status, parse.getArguments()[3]);
 				break;
-			// 	std::string password = "";
-			// 	if (arg.find(' ') != arg.npos)
-			// 		password = arg.substr(arg.find(' '), arg.find(' ', arg.find(' ') + 1) - arg.find(' '));
-			// 	Mode::modeK(server, channel, source, status, password);
 			 case 'o' :
 				if (parse.getArguments().size() > 3)
 					Mode::modeO(channel, status, parse.getArguments()[3]);
 				break;
 			case 'l' :
-				Mode::modeL(channel, status);
+				Mode::modeL(channel, status, parse.getArguments()[3]);
 				break;
-			// default :
-			
+			 default :
+				break;
 		}
 	}
 }
+
 void Mode::execute(Server &server, const Parsing &parse, Client &client)
 {
 	try
