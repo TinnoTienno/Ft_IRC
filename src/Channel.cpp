@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:55:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 18:42:31 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,8 +254,6 @@ void Channel::sendTopic(Client &dest)
 {
 	if (this->m_cMode.getTopic() != "")
 		this->m_serv->sendf(&dest, NULL, this, RPL_TOPIC);
-	else
-		this->m_serv->sendf(&dest, NULL, this, RPL_NOTOPIC);
 }
 
 void Channel::sendAllTopic()

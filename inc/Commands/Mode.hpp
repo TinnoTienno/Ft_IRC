@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:13:55 by noda              #+#    #+#             */
-/*   Updated: 2025/01/13 15:55:39 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:02:11 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ class Mode
 		static void modeT(Channel & channel, bool status);
 		static void modeI(Channel &channel, bool status);
 		static void modeL(Channel & channel, bool status, const Parsing & parse);
-		static void modeK(Channel & channel, bool status, const Parsing & parse);
-		static void modeO(Channel & channel, bool status, const std::string & modeArg);
-		static void	modeD(Channel &channel, Client &source);
-		static void	modeD(Channel &channel, bool status, const std::string bannedPrefix);
+		static void modeK(Channel & channel, bool status, const std::string & modeArg);
+		static void modeO(Server &server, Channel & channel, Client &source, bool status, const std::string & modeArg);
+		static void	modeB(Channel &channel, Client &source);
+		static void	modeB(Channel &channel, bool status, const std::string bannedPrefix);
 		static void channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse);
     public :
 		static void execute(Server &server, const Parsing &parse, Client &client);

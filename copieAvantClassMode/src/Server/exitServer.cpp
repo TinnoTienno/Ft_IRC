@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exitServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:46:49 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 18:01:03 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ Server::~Server()
 
 void	Server::CloseFds()
 {
-	for(size_t i = 0; i < m_vClients.size(); i++){ //-> close all the clients
+	for(size_t i = 0; i < m_vClients.size(); i++)
+	{
 		sendLog("Client <" + itoa(m_vClients[i].getFD()) + "> Disconnected");
+		m_vClients[i].kill(*this, "Server disconnected");
 		close(m_vClients[i].getFD());
 	}
 	if (m_serverSocketFd != -1){ //-> close the server socket
