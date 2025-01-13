@@ -6,11 +6,13 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:36:59 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:51:19 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <unistd.h>
 #include <vector>
@@ -19,6 +21,7 @@
 #include <vector>
 #include <sstream>
 #include <stdio.h>
+#include <limits.h>
 
 std::string itoa(int nb)
 {
@@ -38,12 +41,28 @@ const std::string	getTime()
 
 std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 {
-	std::stringstream			strStream(str);
 	std::vector<std::string>	result;
 	std::string					token;
+	if (str.empty())
+		return result;
+	std::stringstream			strStream(str);
 
 	while (std::getline(strStream, token, delimiter))
 		result.push_back(token);
+	return result;
+}
+
+unsigned short	strtous(const std::string & str)
+{
+	unsigned short	result = 0;
+	unsigned long	longVal;
+
+	if (str.find_first_not_of("0123456789") != std::string::npos)
+		throw std::invalid_argument("error: invalid argument: port: " + str);
+	longVal = strtoul(str.c_str(), NULL, 10);
+	if (longVal > USHRT_MAX)
+		throw std::invalid_argument("Error: Too long");
+	result = static_cast<unsigned short>(longVal);
 	return result;
 }
 

@@ -29,7 +29,7 @@ class ChanMode
 		bool						m_passwordProtected;
 		std::string					m_password;
 		bool						m_sizeLimited;
-		size_t						m_limitedSize;
+		size_t						m_clientMax;
 		std::vector<Client*>		m_vOP;
 		std::vector<Client*>		m_vBanned;
 	public:

@@ -17,9 +17,9 @@
 #include <string>
 #include <vector>
 
-ChanMode::ChanMode() : m_inviteOnly(false), m_topicProtected(false), m_passwordProtected(false), m_sizeLimited(false), m_limitedSize(DEFAULTSIZELIMIT) {}
+ChanMode::ChanMode() : m_inviteOnly(false), m_topicProtected(false), m_passwordProtected(false), m_sizeLimited(false), m_clientMax(DEFAULTSIZELIMIT) {}
 
-ChanMode::ChanMode(const std::string & passwd) : m_inviteOnly(false), m_topicProtected(false), m_passwordProtected(false), m_password(passwd), m_sizeLimited(false), m_limitedSize(DEFAULTSIZELIMIT) {}
+ChanMode::ChanMode(const std::string & passwd) : m_inviteOnly(false), m_topicProtected(false), m_passwordProtected(false), m_password(passwd), m_sizeLimited(false), m_clientMax(DEFAULTSIZELIMIT) {}
 
 ChanMode::~ChanMode() {}
 
@@ -37,7 +37,7 @@ bool	ChanMode::isPasswordValid(const std::string & pass) const { return pass == 
 
 bool	ChanMode::isSizeLimited() const { return m_sizeLimited; }
 
-size_t	ChanMode::getLimitSize() const { return m_limitedSize; }
+size_t	ChanMode::getLimitSize() const { return m_clientMax; }
 
 bool	ChanMode::isOP(Client * client) const { return std::find(m_vOP.begin(), m_vOP.end(), client) != m_vOP.end(); }
 
@@ -74,7 +74,7 @@ void	ChanMode::removeOP(Client * client)
 
 void	ChanMode::setSizeLimited(bool value) { m_sizeLimited = value; }
 
-void	ChanMode::setLimitSize(unsigned int size) { m_limitedSize = size; }
+void	ChanMode::setLimitSize(unsigned int size) { m_clientMax = size; }
 
 void	ChanMode::setBanned(Client * client) { m_vBanned.push_back(client); }
 

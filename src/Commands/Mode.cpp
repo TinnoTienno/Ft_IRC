@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/13 11:01:46 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:55:52 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,6 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 	bool status;
 	if (parse.getArguments().size() == 2)
 		return server.sendf(&source, &source, &channel, RPL_CHANNELMODEIS, channel.modeToStr().c_str());
-//	std::string arg = "";
-//	for (size_t i = 2; i < parse.getArguments().size(); i++)
-//		arg += parse.getArguments()[i] + ' ';
 	std::string arg = parse.getArguments()[2];
 //	server.sendLog("Debug : arg :" + arg);
 	if (arg[0] == '+')

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 14:45:21 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:51:02 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ class Parsing;
 class Server
 {
 	private :
-		int 								m_port;
+		unsigned short						m_port;
+//		int 								m_port;
 		int									m_serverSocketFd;
 		static bool 						m_signal;
 		const std::string					m_pass;
