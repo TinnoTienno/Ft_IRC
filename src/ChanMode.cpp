@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChanMode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 18:00:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:57:21 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:55:00 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <cstddef>
 #include <string>
 #include <vector>
+#include "Server.hpp"
+#include "Rpl.hpp"
 
 ChanMode::ChanMode() : m_inviteOnly(false), m_topicProtected(false), m_passwordProtected(false), m_sizeLimited(false), m_clientMax(DEFAULTSIZELIMIT) {}
 
@@ -41,7 +43,7 @@ size_t	ChanMode::getLimitSize() const { return m_clientMax; }
 
 bool	ChanMode::isOP(Client * client) const { return std::find(m_vOP.begin(), m_vOP.end(), client) != m_vOP.end(); }
 
-bool	ChanMode::isBanned(Client * client) const { return std::find(m_vBanned.begin(), m_vBanned.end(), client) != m_vBanned.end(); }
+bool	ChanMode::isBanned(Client * client) const { return std::find(m_vBanned.begin(), m_vBanned.end(), client->getPrefix()) != m_vBanned.end(); }
 
 std::vector<Client*>	ChanMode::getOpClient() const { return m_vOP; }
 
@@ -67,23 +69,38 @@ void	ChanMode::addOP(Client * client) { m_vOP.push_back(client); }
 
 void	ChanMode::removeOP(Client * client)
 {
-	std::vector<Client*>::iterator itter = std::remove(m_vOP.begin(), m_vOP.end(), client);
-	if (itter != m_vOP.end())
-		m_vOP.erase(itter, m_vOP.end());
+	std::vector<Client*>::iterator iter = std::remove(m_vOP.begin(), m_vOP.end(), client);
+	if (iter != m_vOP.end())
+		m_vOP.erase(iter, m_vOP.end());
 }
 
 void	ChanMode::setSizeLimited(bool value) { m_sizeLimited = value; }
 
 void	ChanMode::setLimitSize(unsigned int size) { m_clientMax = size; }
 
-void	ChanMode::setBanned(Client * client) { m_vBanned.push_back(client); }
+void	ChanMode::setBanned(Client * client) { m_vBanned.push_back(client->getPrefix()); }
+
+void	ChanMode::setBanned(const std::string &bannedPrefix) { m_vBanned.push_back(bannedPrefix); }
 
 void	ChanMode::unsetBanned(Client * client)
 {
-	std::vector<Client*>::iterator itter = std::remove(m_vBanned.begin(), m_vBanned.end(), client);
-	if (itter != m_vBanned.end())
-		m_vBanned.erase(itter, m_vBanned.end());
+	std::vector<std::string>::iterator iter = std::remove(m_vBanned.begin(), m_vBanned.end(), client->getPrefix());
+	if (iter != m_vBanned.end())
+		m_vBanned.erase(iter, m_vBanned.end());
 }
 
+void	ChanMode::unsetBanned(const std::string &bannedPrefix)
+{
+	std::vector<std::string>::iterator iter = std::remove(m_vBanned.begin(), m_vBanned.end(), bannedPrefix);
+	if (iter != m_vBanned.end())
+		m_vBanned.erase(iter, m_vBanned.end());
+}
 
+//senders
 
+void	ChanMode::sendBanList(Server &server, Channel &channel, Client &dest)
+{
+	for (std::vector<std::string>::iterator iter = m_vBanned.begin(); iter != m_vBanned.end(); iter++)
+		server.sendf(&dest, NULL, &channel, RPL_BANLIST, (*iter).c_str());
+	server.sendf(&dest, NULL, &channel, RPL_ENDOFBANLIST);
+}

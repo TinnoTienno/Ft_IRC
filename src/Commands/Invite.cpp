@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:05:36 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:42:39 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:14:39 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 
 void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 {
+	Channel	*chan = NULL;
 	try
 	{
 		Client	*guest;
-		Channel	*chan;
 		if (parse.getArguments().size() == 1)
 			client.sendInviteList(&server);
 		else if (parse.getArguments().size() < 3)
@@ -51,22 +51,22 @@ void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 		switch (e.getErrorCode())
 		{
 			case 401 :
-				e.sendError(server, &client, parse.getArguments()[1].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[1].c_str());
 				break;
 			case 403 :
-				e.sendError(server, &client, parse.getArguments()[2].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[2].c_str());
 				break;
 			case 442 :
-				e.sendError(server, &client, parse.getArguments()[2].c_str());
+				e.sendError(server, &client, chan);
 				break;
 			case 443 :
-				e.sendError(server, &client, parse.getArguments()[1].c_str(), parse.getArguments()[2].c_str());
+				e.sendError(server, &client, chan, parse.getArguments()[1].c_str());
 				break;
 			case 461 :
-				e.sendError(server, &client, parse.getCommand().c_str());
+				e.sendError(server, &client, NULL, parse.getCommand().c_str());
 				break;
 			case 482 :
-				e.sendError(server, &client, parse.getArguments()[2].c_str());
+				e.sendError(server, &client, chan);
 		}
 	}
 }

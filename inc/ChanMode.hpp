@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChanMode.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 17:28:50 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 12:54:04 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:54:10 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class ChanMode
 		unsigned short				m_clientMax;
 //		size_t						m_clientMax;
 		std::vector<Client*>		m_vOP;
-		std::vector<Client*>		m_vBanned;
+		std::vector<std::string>		m_vBanned;
 	public:
 		ChanMode();
 		ChanMode(const std::string & pass);
@@ -63,7 +63,11 @@ class ChanMode
 		void	setSizeLimited(bool value);
 		void	setLimitSize(unsigned int size);
 		void	setBanned(Client * client);
+		void	setBanned(const std::string &bannedPrefix);
 		void	unsetBanned(Client * client);
+		void	unsetBanned(const std::string &bannedPrefix);
+		// senders
+		void	sendBanList(Server &server, Channel &channel, Client &dest);
 };
 
 #endif

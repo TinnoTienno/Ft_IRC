@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 16:06:42 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 19:09:14 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:05:47 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,14 @@ int serverExceptions::getErrorCode() const { return m_errorCode; }
 
 serverExceptions::serverExceptions(const int errorCode) : m_errorCode(errorCode) { }
 
-void serverExceptions::sendError(Server &server, Client *dest,...) const
+void serverExceptions::sendError(Server &server, Client *dest, Channel *channel,...) const
 {
 	va_list args;
-	va_start(args, dest);
+	va_start(args, channel);
 	
 	char *str1 = va_arg(args, char *);
 	char *str2 = va_arg(args, char *);
 	char *str3 = va_arg(args, char *);
-	char *str4 = va_arg(args, char *);
 	switch(m_errorCode)
 	{
 		case 401 :
@@ -40,21 +39,20 @@ void serverExceptions::sendError(Server &server, Client *dest,...) const
 			break ;
 		case 403 :
 			if (!str1)
-				std::cout << m_errorCode << " no channel was given" << std::endl;
+				std::cout << m_errorCode << " no channelname was given" << std::endl;
 			else
 				server.sendf(dest, NULL, NULL,  ERR_NOSUCHCHANNEL, str1);
 			break ;
 		case 404 :
-			if (!str1)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
-			else
-				server.sendf(dest, NULL, NULL,  ERR_CANNOTSENDTOCHAN, str1);
+			server.sendf(dest, NULL, channel,  ERR_CANNOTSENDTOCHAN);
 			break ;
 		case 405 :
-			if (!str1)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_TOOMANYCHANNELS, str1);
+				server.sendf(dest, NULL, channel, ERR_TOOMANYCHANNELS, str1);
 			break ;
 		case 406 :
 			if (!str1)
@@ -93,7 +91,7 @@ void serverExceptions::sendError(Server &server, Client *dest,...) const
 			if (!str1)
 				std::cout << m_errorCode << " no nickname was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_ERRONEUSNICKNAME, str1);
+				server.sendf(dest, NULL, NULL,  ERR_ERRONEUSNICKNAME);
 			break ;	
 		case 433 :
 			if (!str1)
@@ -108,22 +106,22 @@ void serverExceptions::sendError(Server &server, Client *dest,...) const
 				server.sendf(dest, NULL, NULL,  ERR_NICKCOLLISION, str1, str2, str3);
 			break ;	
 		case 441 :
-			if (!str1 || !str2)
+			if (!str1 || !channel)
 				std::cout << m_errorCode << " not enough args were given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_USERNOTINCHANNEL, str1, str2);
+				server.sendf(dest, NULL, channel,  ERR_USERNOTINCHANNEL, str1);
 			break ;
 		case 442 :
-			if (!str1)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_NOTONCHANNEL, str1);
+				server.sendf(dest, NULL, channel,  ERR_NOTONCHANNEL);
 			break ;
 		case 443 :
-			if (!str1 || !str2)
+			if (!str1 || !channel)
 				std::cout << m_errorCode << " not enough args were given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_USERONCHANNEL, str1, str2);
+				server.sendf(dest, NULL, channel,  ERR_USERONCHANNEL, str1);
 			break ;
 		case 451 :
 			server.sendf(dest, NULL, NULL,  ERR_NOTREGISTERED);
@@ -144,10 +142,10 @@ void serverExceptions::sendError(Server &server, Client *dest,...) const
 			server.sendf(dest, NULL, NULL,  ERR_YOUREBANNEDCREEP);
 			break ;
 		case 471 :
-			if (!str1)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_CHANNELISFULL, str1);
+				server.sendf(dest, NULL, channel,  ERR_CHANNELISFULL);
 			break ;
 		case 472 :
 			if (!str1)
@@ -156,22 +154,22 @@ void serverExceptions::sendError(Server &server, Client *dest,...) const
 				server.sendf(dest, NULL, NULL,  ERR_UNKNOWNMODE, str1);
 			break ;
 		case 473 :
-			if (!str1 || !str2)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL, ERR_INVITEONLYCHAN, str1, str2);
+				server.sendf(dest, NULL, channel, ERR_INVITEONLYCHAN);
 			break ;
 		case 474 :
-			if (!str1)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL, ERR_BANNEDFROMCHAN, str1);
+				server.sendf(dest, NULL, channel, ERR_BANNEDFROMCHAN);
 			break ;
 		case 475 :
-			if (!str1)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_BADCHANNELKEY, str1);
+				server.sendf(dest, NULL, channel,  ERR_BADCHANNELKEY);
 			break ;
 		case 476 :
 			if (!str1)
@@ -183,10 +181,10 @@ void serverExceptions::sendError(Server &server, Client *dest,...) const
 			server.sendf(dest, NULL, NULL,  ERR_NOPRIVILEGES);
 			break ;
 		case 482 :
-			if (!str1)
+			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_CHANOPRIVSNEEDED, str1);
+				server.sendf(dest, NULL, channel,  ERR_CHANOPRIVSNEEDED);
 			break ;
 		case 483 :
 			server.sendf(dest, NULL, NULL,  ERR_CANTKILLSERVER);
@@ -212,35 +210,11 @@ void serverExceptions::sendError(Server &server, Client *dest,...) const
 			else
 				server.sendf(dest, NULL, NULL,  ERR_INVALIDKEY, str1);
 			break ;
-		case 691 :
-			server.sendf(dest, NULL, NULL,  ERR_STARTTLS);
-			break ;
 		case 696 :
-			if (!str1 || !str2 || !str3 || !str4)
+			if (!str1 || !str2 || !str3 || channel)
 				std::cout << m_errorCode << " not enough args were given" << std::endl;
 			else
-				server.sendf(dest, NULL, NULL,  ERR_INVALIDMODEPARAM, str1, str2, str3, str4);
-			break ;
-		case 723 :
-			if (!str1)
-				std::cout << m_errorCode << " no private command was given" << std::endl;
-			else
-				server.sendf(dest, NULL, NULL,  ERR_NOPRIVS, str1);
-			break ;
-		case 902 :
-			server.sendf(dest, NULL, NULL,  ERR_NICKLOCKED);
-			break ;
-		case 904 :
-			server.sendf(dest, NULL, NULL,  ERR_SASLFAIL);
-			break ;
-		case 905 :
-			server.sendf(dest, NULL, NULL,  ERR_SASLTOOLONG);
-			break ;
-		case 906 :
-			server.sendf(dest, NULL, NULL,  ERR_SASLABORTED);
-			break ;
-		case 907 :
-			server.sendf(dest, NULL, NULL,  ERR_SASALREADY);
+				server.sendf(dest, NULL, channel,  ERR_INVALIDMODEPARAM, str1, str2, str3);
 			break ;
 		default :
 			break;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Rpl.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:46:21 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 16:25:23 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:38:22 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # define RPL_INVITELIST ":%h 336 %n %C" // channel
 # define RPL_ENDOFINVITELIST ":%h 337 %n :End of /INVITE list"
 # define RPL_INVITING ":%h 341 %n %N %C" // guest channel
+# define RPL_BANLIST ":%h 367 %n %C %m" // bannedPrefix
+# define RPL_ENDOFBANLIST ":%h 368 %n %C :End of channel ban list"
 # define RPL_MOTDSTART ":%h 375 %n :- %h Message of the Day -"
 # define RPL_MOTD ":%h 372 %n :%m" // message
 # define RPL_ENDOFMOTD ":%h 376 %n :%h End of /MOTD command."

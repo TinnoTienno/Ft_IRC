@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:28:06 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 19:08:33 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:05:55 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <exception>
 # include <string>
 
+class Channel;
 class Server;
 class Client;
 class serverExceptions : public std::exception
@@ -24,7 +25,7 @@ class serverExceptions : public std::exception
 	public :
 		int getErrorCode() const;
 		serverExceptions(const int errorCode); 
-		void sendError(Server &server, Client *dest,...) const;
+		void sendError(Server &server, Client *dest, Channel *channel, ...) const;
 }	;
 
 #endif

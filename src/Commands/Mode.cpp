@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/13 11:55:52 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:10:02 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,12 @@ void	Mode::modeO(Channel & channel, bool status, const std::string & modeArg)
 		if (client && status && !channel.getMode()->isOP(client))
 		{
 			channel.getMode()->addOP(client);
-			channel.sendAllMode(status, "o"); // a voir si c'est bien ?
+			channel.sendAllMode(status, "o " + modeArg); // a voir si c'est bien ?
 		}
 		if (client && !status && channel.getMode()->isOP(client))
 		{
 			channel.getMode()->removeOP(client);
-			channel.sendAllMode(status, "o");
+			channel.sendAllMode(status, "o " + modeArg);
 		}
 	}
 }
@@ -85,46 +85,66 @@ void	Mode::modeK(Channel & channel, bool status, const Parsing & parse)
 	}
 }
 
+void	Mode::modeD(Channel &channel, Client &source)
+{
+	channel.getMode()->sendBanList(*channel.getServ(), channel, source);
+}
+
+void	Mode::modeD(Channel &channel, bool status, const std::string bannedPrefix)
+{
+	if (status)
+		channel.getMode()->setBanned(bannedPrefix);
+	else
+		channel.getMode()->unsetBanned(bannedPrefix);
+	channel.sendAllMode(true, "b " + bannedPrefix);
+}
 void Mode::channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse)
 {
 	bool status;
+	bool statusUpdated = 0;
 	if (parse.getArguments().size() == 2)
 		return server.sendf(&source, &source, &channel, RPL_CHANNELMODEIS, channel.modeToStr().c_str());
 	std::string arg = parse.getArguments()[2];
 //	server.sendLog("Debug : arg :" + arg);
-	if (arg[0] == '+')
-		status = 1;
-	else if (arg[0] == '-')
-		status = 0;
-	else
-		return server.sendLog((std::string)"Error in channelmode, mode effect not recognized : " + arg[0]);
 	for (size_t i = 1; i < arg.size(); i++)
 	{
 		switch (arg[i])
 		{
 			case '+' :
+				statusUpdated = 1;
 				status = 1;
 				break;
 			case '-' :
+				statusUpdated = 1;
 				status = 0;
 				break;
 			case 'i' :
-				Mode::modeI(channel, status);
+				if (statusUpdated)
+					Mode::modeI(channel, status);
 				break;
 			case 't' :
-				Mode::modeT(channel, status);
+				if (statusUpdated)
+					Mode::modeT(channel, status);
 				break;
 			 case 'k' :
-				Mode::modeK(channel, status, parse.getArguments()[3]);
+				if (statusUpdated)
+					Mode::modeK(channel, status, parse.getArguments()[3]);
 				break;
 			 case 'o' :
-				if (parse.getArguments().size() > 3)
+				if (statusUpdated && parse.getArguments().size() > 3)
 					Mode::modeO(channel, status, parse.getArguments()[3]);
 				break;
 			case 'l' :
-				Mode::modeL(channel, status, parse.getArguments()[3]);
+				if (statusUpdated && parse.getArguments().size() > 3)
+					Mode::modeL(channel, status, parse.getArguments()[3]);
 				break;
-			 default :
+			case 'd' :
+				if (!statusUpdated || !(parse.getArguments().size() > 3))
+					Mode::modeD(channel, source);
+				else
+					Mode::modeD(channel, status, parse.getArguments()[3]);
+				break;
+			default :
 				break;
 		}
 	}
@@ -149,13 +169,7 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 		switch (e.getErrorCode())
 		{
 		case 403 :
-			/* code */
-			break;
-		case 324 :
-			/* code */
-			break;
-		case 329 :
-			/* code */
+			e.sendError(server, &client, NULL, parse.getArguments()[2].c_str());
 			break;
 		case 482 :
 			/* code */

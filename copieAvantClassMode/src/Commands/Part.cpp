@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:19:25 by noda              #+#    #+#             */
-/*   Updated: 2025/01/08 17:09:34 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
         switch (e.getErrorCode())
         {
             case 461 :
-				e.sendError(server, &client, parse.getCommand().c_str());
+				e.sendError(server, &client, NULL, parse.getCommand().c_str());
 				break;
         }
     }
@@ -57,10 +57,10 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
             switch (e.getErrorCode())
             {
                 case 403 :
-			    	e.sendError(server, &client, *iter->c_str());
+			    	e.sendError(server, &client, NULL, *iter->c_str());
 			    	break;
                 case 442 :
-                    e.sendError(server, &client, chan->getName().c_str());
+                    e.sendError(server, &client, NULL, chan->getName().c_str());
                     break;
             }
 			

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/12 13:21:37 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:05:50 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ class	Channel
 		void 	sendPart(Client &client, const std::string &message);
 		void 	sendKick(Client &source, Client &target, const std::string &message);
 		void 	sendClientslist(Client &dest);
+		
 		void	addOP(Client &client);
 		std::string	modeToStr();
 

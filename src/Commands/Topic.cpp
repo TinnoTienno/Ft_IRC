@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:32:50 by noda              #+#    #+#             */
-/*   Updated: 2025/01/12 13:39:22 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,16 +44,16 @@ void Topic::execute(Server &server, const Parsing &parse, Client &client)
 		switch (e.getErrorCode())
 		{
 			case 403 :
-				e.sendError(server, &client);
+				e.sendError(server, &client, NULL);
 				break;
 			case 442 :
-				e.sendError(server, &client);
+				e.sendError(server, &client, NULL);
 				break ;
 			case 461 :
-				e.sendError(server, &client);
+				e.sendError(server, &client, NULL);
 				break;
 			case 482 :
-				e.sendError(server, &client);
+				e.sendError(server, &client, NULL);
 				break ;
 		}
 	}

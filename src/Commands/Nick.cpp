@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/09 14:33:43 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 	catch(const serverExceptions& e)
 	{
 		if (e.getErrorCode() == 431)
-			e.sendError(server, &client);
+			e.sendError(server, &client, NULL);
 		else if (e.getErrorCode() == 432)
-			e.sendError(server, &client, parse.getArguments()[1].c_str());
+			e.sendError(server, &client, NULL, parse.getArguments()[1].c_str());
 		else if (e.getErrorCode() == 433)
 		{
 			if (client.getNickname() != "")
-				e.sendError(server, &client, parse.getArguments()[1].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[1].c_str());
 			else
 			{
 				std::string newNick = server.getNextGuest();
@@ -58,7 +58,7 @@ int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 			}
 		}
 		else if (e.getErrorCode() == 436)
-			e.sendError(server, &client, parse.getArguments()[1].c_str());
+			e.sendError(server, &client, NULL, parse.getArguments()[1].c_str());
 		return 1;
 	}
 	return 0;

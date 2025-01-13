@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:46:37 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 			}
 	   		catch (const serverExceptions & e)
 			{
-				e.sendError(server, &client, targets[i].c_str());
+				e.sendError(server, &client, NULL, targets[i].c_str());
 			}
 		}
 	}
@@ -64,10 +64,10 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 		switch (e.getErrorCode())
 		{
 			case 411 :
-	   			e.sendError(server, &client, parse.getCommand().c_str());
+	   			e.sendError(server, &client, NULL, parse.getCommand().c_str());
 				break;
 			case 412 :
-	   			e.sendError(server, &client);
+	   			e.sendError(server, &client, NULL);
 		}
 	}
 }

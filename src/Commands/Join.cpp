@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/08 16:35:23 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:16:17 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Join::execute(Server &server, const Parsing &parse, Client &client)
 	catch(const serverExceptions& e)
 	{
 		if (e.getErrorCode() == 461)
-			e.sendError(server, &client, parse.getCommand().c_str());
+			e.sendError(server, &client, NULL, parse.getCommand().c_str());
 	}
 }
 
@@ -44,9 +44,10 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 	std::vector<std::string>::iterator iterChannels = channels.begin();
 	while (iterChannels != channels.end())
 	{
+		Channel *channel = NULL;
 		try
 		{
-			Channel *channel = server.findChannel(*iterChannels);
+			channel = server.findChannel(*iterChannels);
 			if (iterPasswords != passwords.end() && channel)
 			{
 				channel->addClient(client, *iterPasswords);
@@ -69,29 +70,28 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 			switch (e.getErrorCode())
 			{
 			case 403 :
-				e.sendError(server, &client, iterChannels->c_str());
+				e.sendError(server, &client, NULL, iterChannels->c_str());
 				break;
 			case 405 :
-				e.sendError(server, &client, iterChannels->c_str());
+				e.sendError(server, &client, channel);
 				break;
 			case 461 :
-				e.sendError(server, &client, parse.getCommand().c_str());
+				e.sendError(server, &client, NULL, parse.getCommand().c_str());
 				break;
 			case 471 :
-				e.sendError(server, &client, iterChannels->c_str());
+				e.sendError(server, &client, channel);
 				break;
 			case 473 :
-				std::cout << iterChannels->c_str() << std::endl;
-				e.sendError(server, &client, iterChannels->c_str());
+				e.sendError(server, &client, channel);
 				break;
 			case 474 :
-				e.sendError(server, &client, iterChannels->c_str());
+				e.sendError(server, &client, channel);
 				break;
 			case 475 :
-				e.sendError(server, &client, iterChannels->c_str());
+				e.sendError(server, &client, channel);
 				break;
 			case 476 :
-				e.sendError(server, &client, iterChannels->c_str());
+				e.sendError(server, &client, NULL, parse.getCommand().c_str());
 				break;
 			default:
 				break;

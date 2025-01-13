@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:57:02 by noda              #+#    #+#             */
-/*   Updated: 2025/01/12 13:38:02 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:17:54 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 			switch (e.getErrorCode())
 			{
 			case 441 :
-            	e.sendError(server, &client, iter->c_str(), chan->getName().c_str());
+            	e.sendError(server, &client, chan, iter->c_str());
            		break;
 			}
 		}
@@ -66,16 +66,16 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 		switch (e.getErrorCode())
 		{
 			case 403 :
-				e.sendError(server, &client, chan->getName().c_str());
+				e.sendError(server, &client, NULL, chan->getName().c_str());
 				break;
 			case 442 :
-            	e.sendError(server, &client, chan->getName().c_str());
+            	e.sendError(server, &client, NULL, chan->getName().c_str());
             	break;
 			case 461 :
-            	e.sendError(server, &client, parse.getCommand().c_str());
+            	e.sendError(server, &client, NULL, parse.getCommand().c_str());
             	break;
 			case 482 :
-            	e.sendError(server, &client, chan->getName().c_str());
+            	e.sendError(server, &client, NULL, chan->getName().c_str());
             	break;
 		}
 	}

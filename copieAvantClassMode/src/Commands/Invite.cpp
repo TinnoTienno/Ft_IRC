@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:05:36 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:29:43 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,22 +50,22 @@ void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 		switch (e.getErrorCode())
 		{
 			case 401 :
-				e.sendError(server, &client, parse.getArguments()[1].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[1].c_str());
 				break;
 			case 403 :
-				e.sendError(server, &client, parse.getArguments()[2].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[2].c_str());
 				break;
 			case 442 :
-				e.sendError(server, &client, parse.getArguments()[2].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[2].c_str());
 				break;
 			case 443 :
-				e.sendError(server, &client, parse.getArguments()[1].c_str(), parse.getArguments()[2].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[1].c_str(), parse.getArguments()[2].c_str());
 				break;
 			case 461 :
-				e.sendError(server, &client, parse.getCommand().c_str());
+				e.sendError(server, &client, NULL, parse.getCommand().c_str());
 				break;
 			case 482 :
-				e.sendError(server, &client, parse.getArguments()[2].c_str());
+				e.sendError(server, &client, NULL, parse.getArguments()[2].c_str());
 		}
 	}
 }
