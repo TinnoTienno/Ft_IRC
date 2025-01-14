@@ -6,13 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 16:06:42 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 12:28:38 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:45:51 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "serverExceptions.hpp"
 #include "utils.hpp"
-#include "Err.hpp"
+#include "Numerics.hpp"
 #include <iostream>
 #include <stdarg.h>
 #include "Server.hpp"

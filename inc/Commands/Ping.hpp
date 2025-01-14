@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Ping.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 15:55:52 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 12:19:14 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:42:47 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PING_HPP
 # define PING_HPP
-# define PONG ":%h PONG %c :%n" // getArguments()[1]
 
 class Server;
 class Client;

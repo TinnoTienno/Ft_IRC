@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   authentificationServer.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:15:35 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:45:55 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "utils.hpp"
 #include "Nick.hpp"
 #include "Parsing.hpp"
-#include "Err.hpp"
+#include "Numerics.hpp"
 #include "serverExceptions.hpp"
 
 bool Server::checkAuth(Client &client, const std::string &buffer)

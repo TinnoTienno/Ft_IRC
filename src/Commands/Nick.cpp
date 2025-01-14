@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:47:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "Server.hpp"
 #include "Parsing.hpp"
 #include "serverExceptions.hpp"
+#include "Numerics.hpp"
 #include <iostream>
 
 void Nick::execute(Server &server, const Parsing &parse, Client &client)

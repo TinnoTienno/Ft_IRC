@@ -6,13 +6,12 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:17:03 by noda              #+#    #+#             */
-/*   Updated: 2025/01/08 18:48:05 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:42:41 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PART_HPP
 # define PART_HPP
-# define PART ":%P PART %C :%m"
 
 class Server;
 class Client;

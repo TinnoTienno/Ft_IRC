@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 12:20:40 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:46:04 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include "Quit.hpp"
 #include "serverExceptions.hpp"
 #include "utils.hpp"
+#include "Numerics.hpp"
 
 void Server::AcceptNewClient()
 {
@@ -121,6 +122,8 @@ void Server::parseCommand(const std::string line, Client &client)
 	{
 		if (parse.getCommand() == Commands[i])
 			fCommands[i](*this, parse, client);
+		else
+			this->sendf(&client, NULL, NULL, ERR_UNKNOWNCOMMAND, parse.getCommand().c_str());
 	}
 }
 

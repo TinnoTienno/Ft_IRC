@@ -6,16 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:10:50 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/09 14:14:43 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:38:44 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NICK_HPP
 # define NICK_HPP
 # include <string>
-# define NICK ":%p NICK :%m"
-# define NICK2 ":%m%p NICK :%m"
-
 
 class Server;
 class Client;

@@ -1,27 +1,11 @@
 		TODO
-
-WHO
-mode
-	i - invite mode
-	>> :eschussl1!~eschussl@a63b-ad80-963c-f258-ef9a.210.62.ip MODE #cou +i 
-	>> :eschussl1!~eschussl@a63b-ad80-963c-f258-ef9a.210.62.ip MODE #cou +i 
+WHO		Aduvilla
+sendAll Aduvilla
+tests 
+Invite list Aduvlla (Partie Mode ?)
+visuel
+	Logo Eschussl
 	
->> :lair.nl.eu.dal.net 341 eschussl1 eschussl_ #cou
->> :eschussl1!~eschussl@a63b-ad80-963c-f258-ef9a.210.62.ip INVITE eschussl_ :#cou
->> :bitcoin.uk.eu.dal.net NOTICE @#cou :eschussl1 invited eschussl_ into channel #cou
-	t - topic
-	<< MODE #cou +tcoucou
-	>> :lair.nl.eu.dal.net 472 eschussl1 u :is unknown mode char to me
-	>> :lair.nl.eu.dal.net 472 eschussl1 u :is unknown mode char to me
-	>> :bitcoin.uk.eu.dal.net 482 eschussl_ #cou :You're not channel operator
-	k - password
-	o - operator
-	<< MODE #cou +o eschussl
-	>> :eschussl1!~eschussl@a63b-ad80-963c-f258-ef9a.210.62.ip MODE #cou +o eschussl
-	>> :eschussl1!~eschussl@a63b-ad80-963c-f258-ef9a.210.62.ip MODE #cou +o eschussl
-	>> :eschussl1!~eschussl@a63b-ad80-963c-f258-ef9a.210.62.ip MODE #cou +o eschussl
-	l - size limit
-(list)
 		DONE
 privmsg
 notice
@@ -31,3 +15,4 @@ kill
 kick
 invite
 join
+mode

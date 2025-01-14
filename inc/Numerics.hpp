@@ -1,17 +1,67 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Err.hpp                                            :+:      :+:    :+:   */
+/*   Numerics.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 14:08:00 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 17:11:03 by eschussl         ###   ########.fr       */
+/*   Created: 2025/01/14 13:41:39 by eschussl          #+#    #+#             */
+/*   Updated: 2025/01/14 13:44:29 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ERR_HPP
-# define ERR_HPP
+#ifndef NUMERICS_HPP
+# define NUMERICS_HPP
+
+// AUTHENTIFICATION
+
+# define AUTH_IDENT ":%h NOTICE AUTH :*** No Identd"
+# define AUTH_LOOKHOST ":%h NOTICE AUTH :*** Looking up your hostname"
+# define AUTH_HOSTFOUND ":%h NOTICE AUTH :*** Found your hostname"
+# define AUTH_HOSTNOTFOUND ":%h NOTICE AUTH :*** Hostname not found, IP instead"
+
+//COMMANDS
+
+# define INVITE ":%P INVITE %n %C" // guest chan
+# define JOIN ":%P JOIN :%C"
+# define KICK ":%P KICK %C %T :%m"
+# define MODE ":%p MODE %C "
+# define NICK ":%p NICK :%m"
+# define NICK2 ":%m%p NICK :%m"
+# define NOTICE ":%s NOTICE %n :%m" // source, nickname, message
+# define PART ":%P PART %C :%m"
+# define PONG ":%h PONG %c :%n" // getArguments()[1]
+# define PRIVMSG ":%P PRIVMSG %n :%m" // source, nickname, message
+# define PRIVMSGALL ":%P PRIVMSG %C :%m" // source, nickname, message
+# define QUITMSG ":%P QUIT :Quit: %m"
+# define TOPIC ":%p TOPIC %C :%T"
+
+//RPL
+
+# define RPL_WELCOME ":%h 001 %n :Welcome to the ft_IRC NETWORK %p"
+# define RPL_YOURHOST ":%h 002 %n :Your host is %h, running version 1.2.3"
+# define RPL_CREATED ":%h 003 %n :This server was created %T" // getTime
+# define RPL_MYINFO ":%h 004 %n :%h 1.2.3 itkOl"
+# define RPL_ISUPPORT ":%h 005 %n :CHANMODES=i, t, k, o, l : are supported by this server"
+# define RPL_LUSERCLIENT ":%h 251 %n :There are %u users on 1 server" // getUserNumber
+// # define RPL_LUSEROP ":%h 252 %n :0 :IRC Operators online"
+# define RPL_LUSEROP ":%h 252 %n :Operators are disabled on this server"
+# define RPL_LUSERCHANNELS ":%h 254 %n :%m :channels formed" // getChannelNumber
+# define RPL_INVITELIST ":%h 336 %n %C"
+# define RPL_ENDOFINVITELIST ":%h 337 %n :End of /INVITE list"
+# define RPL_INVITING ":%h 341 %n %N %C" // guest channel
+# define RPL_BANLIST ":%h 367 %n %C %m" // bannedPrefix
+# define RPL_ENDOFBANLIST ":%h 368 %n %C :End of channel ban list"
+# define RPL_MOTDSTART ":%h 375 %n :- %h Message of the Day -"
+# define RPL_MOTD ":%h 372 %n :%m" // message
+# define RPL_ENDOFMOTD ":%h 376 %n :%h End of /MOTD command."
+#define RPL_TOPIC "%h 332 %p %C :%t" // channel topic
+#define RPL_NOTOPIC ":%h 331 %n %C :No topic is set" // channel
+#define RPL_NAMREPLY ":%h 353 %n%s %C :%l" //symbol channel list of clients
+#define RPL_ENDOFNAMES ":%h 366 %n %C :End of /NAMES list." // nick channel
+#define RPL_CHANNELMODEIS ":%h 324 %n %C %m" //
+
+// Errors
 
 #define ERR_NOSUCHNICK ":%h 401 %n %m :No such nick" // wrongnick
 #define ERR_NOSUCHCHANNEL ":%h 403 %n %m :No such channel" // wrongchannel

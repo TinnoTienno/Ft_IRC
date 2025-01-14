@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:03:21 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 16:28:29 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:38:09 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INVITE_HPP
 # define INVITE_HPP
-# define INVITE ":%P INVITE %n %C" // guest chan
 # include "Parsing.hpp"
 
 class Server;

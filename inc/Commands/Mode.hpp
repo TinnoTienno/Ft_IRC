@@ -6,14 +6,13 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:13:55 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 10:54:47 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:43:37 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MODE_HPP
 # define MODE_HPP
-#include <string>
-#define MODE ":%p MODE %C "
+# include <string>
 
 class Server;
 class Client;

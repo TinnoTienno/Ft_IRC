@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:47:49 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "Parsing.hpp"
 #include "utils.hpp"
 #include "serverExceptions.hpp"
+#include "Numerics.hpp"
 
 void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 {

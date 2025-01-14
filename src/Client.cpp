@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 12:17:53 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:45:27 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include "Server.hpp"
 #include "utils.hpp"
 #include "Channel.hpp"
-#include "Rpl.hpp"
+#include "Numerics.hpp"
 #include "serverExceptions.hpp"
 
 void Client::kill(Server &server, const std::string &str)

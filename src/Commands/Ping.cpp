@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Ping.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 15:59:44 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 16:16:39 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:46:12 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "Client.hpp"
 #include "utils.hpp"
 #include "Parsing.hpp"
-#include "Err.hpp"
+#include "Numerics.hpp"
 #include "serverExceptions.hpp"
 
 void Ping::execute(Server &server, const Parsing &parse, Client &client)

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 11:57:43 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:45:32 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
-#include "Rpl.hpp"
+#include "Numerics.hpp"
 
 void Mode::modeI(Channel &channel, bool status)
 {
