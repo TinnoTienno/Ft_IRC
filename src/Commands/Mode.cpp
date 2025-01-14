@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/13 19:14:47 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 10:56:47 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@ void Mode::modeT(Channel & channel, bool status)
 	channel.sendAllMode(status, "t");
 }
 	
-void	Mode::modeL(Channel & channel, bool status, const Parsing & parse)
+void	Mode::modeL(Channel & channel, bool status, const std::string &modeArg)
 {
-	if (status && parse.getArguments().size() > 3)
+	if (status)
 	{
 		channel.getMode()->setSizeLimited(status);
-		channel.getMode()->setLimitSize(std::atoi(parse.getArguments()[3].c_str())); // verif unsigned int
-		channel.sendAllMode(status, "l");
+		channel.getMode()->setLimitSize(std::atoi(modeArg.c_str())); // verif unsigned int
+		channel.sendAllMode(status, "l " + modeArg);
 	}
-	else if (!status)
+	else
 	{
 		channel.getMode()->setSizeLimited(status);
 		channel.sendAllMode(status, "l");
@@ -77,8 +77,6 @@ void	Mode::modeO(Server &server, Channel & channel, Client &source, bool status,
 				case 401 :
 				e.sendError(server, &source, NULL, tokens[i].c_str());
 			}
-			
-			
 		}
 		
 		
@@ -113,6 +111,7 @@ void	Mode::modeB(Channel &channel, bool status, const std::string bannedPrefix)
 		channel.getMode()->unsetBanned(bannedPrefix);
 	channel.sendAllMode(true, "b " + bannedPrefix);
 }
+#include <iostream>
 void Mode::channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse)
 {
 	bool status = 0;
