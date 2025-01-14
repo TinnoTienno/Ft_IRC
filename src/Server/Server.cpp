@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 00:15:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 10:09:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void 	Server::deleteChannel(Channel &channel)
 		{
 			sendLog("Now deleting the " + m_vChannels[i]->getName() + " channel");
 			m_vChannels.erase(m_vChannels.begin() + i);
+			delete &channel;
 		}
 	}
 }

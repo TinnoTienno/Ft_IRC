@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 00:37:11 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 10:22:07 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ Server::~Server()
 	for (size_t i = 0; i < m_vChannels.size(); i++)
 		if(m_vChannels[i])
 			delete m_vChannels[i];
+	for (size_t i = 0; i < m_vClients.size(); i++)
+		if(m_vClients[i])
+			delete m_vClients[i];
 	m_vChannels.clear();
 	m_vFds.clear();
 	sendLog("closing");
@@ -65,7 +68,5 @@ void Server::ClearClient(Client &client)
 	}
 	CloseFds();
 	sendLog("Bug checking : vclient size : " + itoa(m_vClients.size()));
-	for (size_t i = 0; i < m_vClients.size(); i++)
-		if(m_vClients[i] == &client)
-			delete m_vClients[i];
+	delete &client;
 }
