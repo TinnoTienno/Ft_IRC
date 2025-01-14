@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 12:18:54 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:38:32 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ void Server::ClearClient(Client &client)
 			break;
 		}
 	}
-	CloseFds();
+	checkEmptyChan();
 	delete &client;
 }

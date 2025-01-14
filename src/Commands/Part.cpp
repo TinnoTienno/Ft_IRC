@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:19:25 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 17:36:12 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:38:27 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
                 chan->sendAllMsg(&server, &client, "", ePart);
 //                chan->sendPart(client, "");
             chan->removeClient(*cli);
+			server.checkEmptyChan();
         }
         catch(const serverExceptions& e)
         {

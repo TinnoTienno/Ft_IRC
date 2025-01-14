@@ -1,6 +1,5 @@
 		TODO
-WHO		Aduvilla
-priv en double
+erreur si avec irssi -> join #ici -> part -> quit -> leaks
 tests 
 Invite list Aduvlla (Partie Mode ?)
 visuel
@@ -17,3 +16,5 @@ invite
 join
 mode
 sendAll Aduvilla
+priv en double
+WHO		Aduvilla

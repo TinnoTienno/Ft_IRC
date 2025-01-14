@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 17:21:45 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:45:29 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class	Channel
 		~Channel(void);
 		Channel&	operator=(const Channel & rhs);
 
+		bool	isEmpty() const;
 		bool	isJoinable(Client &client);
 		void	addClient(Client &client);
 		void	addClient(Client &client, const std::string &passwd);

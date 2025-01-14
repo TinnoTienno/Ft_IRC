@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 18:50:07 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:35:56 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void Client::kill(Server &server, const std::string &str)
 {
 	this->sendQuitMsg(str);
 	server.sendLog(static_cast<std::string>("Client <" + itoa(this->getFD()) + "> Disconnected"));
-	cleanChannels();
 }
 
 Client::Client()

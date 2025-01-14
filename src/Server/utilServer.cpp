@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 12:01:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:48:10 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,3 +101,16 @@ void Server::sendf(Client *dest, Client *source, Channel *channel, const std::st
 	if (send (dest->getFD(), message.c_str(), message.size(), 0) != static_cast<ssize_t>(message.length()))
 		throw std::runtime_error("Failed to send the message: " + message);
 }
+
+void	Server::checkEmptyChan()
+{
+	for (size_t i = 0; i < m_vChannels.size(); i++)
+	{
+		if (m_vChannels[i]->isEmpty())
+		{
+			deleteChannel(*m_vChannels[i]);
+			m_vChannels.erase(m_vChannels.begin() + i);
+		}
+	}
+}
+

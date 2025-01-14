@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:57:02 by noda              #+#    #+#             */
-/*   Updated: 2025/01/13 17:17:54 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:38:25 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 				else
 					chan->sendKick(*op, *target, KICK_DEFAULT_MESSAGE);
 				chan->removeClient(*target);
+				server.checkEmptyChan();
 			}
 		}
 		catch(const serverExceptions& e)

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 18:43:54 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:57:24 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ bool Server::m_signal = false;
 
 Server::Server(const std::string &name, const std::string &pass) : m_pass(pass), m_hostname(name)
 { 
-	m_isNetCat = false;
 	m_serverSocketFd = -1;
 	m_nextChannelID = 0;
 	std::string logName = name + ".log";

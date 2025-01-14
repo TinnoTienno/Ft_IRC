@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 18:18:11 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:45:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void	Channel::m_cleanClient()
 		m_cMode.getOpClient()[i]->leaveOP(*this);
 }
 
+bool	Channel::isEmpty() const { return m_vClients.size() ? true : false; }
+
 bool	Channel::isJoinable(Client &client)
 {
 	if (this->m_cMode.isBanned(&client))
@@ -121,8 +123,8 @@ void	Channel::removeClient(const Client & client)
 		if (m_vClients[i] == &client)
 		{
 			m_vClients.erase(m_vClients.begin() + i);
-			if (!m_vClients.size())
-				m_serv->deleteChannel(*this);
+//			if (!m_vClients.size())
+//				m_serv->deleteChannel(*this);
 			return;
 		}
 	}
@@ -175,7 +177,8 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 		switch (mode)
 		{
 			case ePrivMsg:
-				server->sendf(*iter, client, this, PRIVMSGALL, msg.c_str());
+				if (*iter != client || client->isNetCat())
+					server->sendf(*iter, client, this, PRIVMSGALL, msg.c_str());
 				break;
 			case eNotice:
 				server->sendf(*iter, client, NULL, NOTICE, msg.c_str());
