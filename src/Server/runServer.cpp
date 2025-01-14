@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 15:39:27 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:50:18 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "Mode.hpp"
 #include "Invite.hpp"
 #include "Quit.hpp"
+#include "Who.hpp"
 #include "serverExceptions.hpp"
 #include "utils.hpp"
 #include "Numerics.hpp"
@@ -108,7 +109,7 @@ void Server::parseCommand(const std::string line, Client &client)
 	commandMap["MODE"] = &Mode::execute;
 	commandMap["INVITE"] = &Invite::execute;
 	commandMap["QUIT"] = &Quit::execute;
-//	commandMap["WHO"] = &Who::execute;
+	commandMap["WHO"] = &Who::execute;
 	sendLog(itoa(client.getFD()) + " >> " + line);
 	Parsing parse(line);
 	std::map<std::string, CommandFunction>::iterator it = commandMap.find(parse.getCommand());
@@ -130,6 +131,7 @@ std::string Server::parseBuffer(Client &client, std::string buffer)
 	{
 		if (pos == 0 || buffer[pos - 1] != '\r')
 		{
+			client.setNetCat(true);
 			buffer.insert(pos, 1, '\r');
 			pos++;
 		}

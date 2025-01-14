@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 19:41:40 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:47:02 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class Client
 	private :
 		int 					m_fd;
 		bool					m_authentified;
+		bool					m_isNetCat;
 		std::string 			m_ipAdd;
 		std::string				m_hostname;
 		std::string 			m_nickname;
@@ -41,15 +42,18 @@ class Client
 
 		//getters
 		std::string	getPrefix() const;
-		const std::string& getUsername() const;
-		const int&	getFD() const;
-		bool getAuth() const;
-		const std::string& getNickname() const;
-		const std::string& getRealname() const;
+		const	std::string& getUsername() const;
+		const	std::string& getNickname() const;
+		const	std::string& getRealname() const;
+		const	std::string& getHostName() const;
+		const	int&	getFD() const;
+		bool	getAuth() const;
+		bool	isNetCat() const;
 		std::string getPacket();
 		std::vector<Channel *>	getChannel() const;
 	
 	 	// setters
+		void	setNetCat(bool value);
 		void	setFD(const int&);
 		void	setUsername(const std::string &username);
 		void	setIPadd(const std::string&);

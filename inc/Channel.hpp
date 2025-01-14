@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 11:05:11 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 17:21:45 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ typedef enum messageMode
 {
 	ePrivMsg,
 	eNotice,
-	eQuit
+	eQuit,
+	eWho,
+	eJoin,
+	ePart,
+	eKick
 }	messageMode;
 
 typedef enum channelType
@@ -63,10 +67,9 @@ class	Channel
 		std::string getSymbol();
 		void 	sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode);
 		void	sendAllJoin(Client &source);
-		void	sendAllQuit(Client &client, const std::string &message);
 		void	sendAllMode(bool status, const std::string &modeLetter);
-		void 	sendTopic(Client &dest);
 		void 	sendAllTopic();
+		void 	sendTopic(Client &dest);
 		void 	sendPart(Client &client, const std::string &message);
 		void 	sendKick(Client &source, Client &target, const std::string &message);
 		void 	sendClientslist(Client &dest);

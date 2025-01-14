@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 13:45:27 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:50:07 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void Client::kill(Server &server, const std::string &str)
 
 Client::Client()
 {
+	m_isNetCat = false;
 	m_authentified = false;
 	m_irssiPacket = "";
 	m_vChannels.clear();
@@ -46,7 +47,8 @@ Client::~Client()
 
 Client::Client(const Client & copy)
 {
-	m_fd =copy.m_fd;
+	m_isNetCat = copy.m_isNetCat;
+	m_fd = copy.m_fd;
 	m_authentified = copy.m_authentified;
 	m_ipAdd = copy.m_ipAdd;
 	m_hostname = copy.m_hostname;
@@ -63,7 +65,8 @@ Client&	Client::operator=(const Client & rhs)
 {
 	if (this != & rhs)
 	{
-		m_fd =rhs.m_fd;
+		m_isNetCat = rhs.m_isNetCat;
+		m_fd = rhs.m_fd;
 		m_authentified = rhs.m_authentified;
 		m_ipAdd = rhs.m_ipAdd;
 		m_hostname = rhs.m_hostname;
@@ -90,6 +93,9 @@ std::string	Client::getPrefix() const
 	std::string prefix = this->getNickname() + "!" + this->getUsername() + "@" + this->m_hostname;
 	return prefix;
 }
+bool	Client::isNetCat() const { return m_isNetCat; }
+
+void	Client::setNetCat(bool value) { m_isNetCat = value; }
 
 void Client::setFD(const int &fd) {	m_fd = fd; }
 
@@ -121,6 +127,8 @@ void	Client::setHostname(struct sockaddr *addr, Server &server)
 		server.sendLog("Error: set host: " + static_cast<std::string>(e.what()));
 	}
 }
+
+const std::string& Client::getHostName() const { return m_hostname; }
 
 void Client::setAuth(const bool &is) { this->m_authentified = is; }
 
