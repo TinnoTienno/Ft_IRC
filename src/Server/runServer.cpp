@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   runServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 00:15:26 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:20:40 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void Server::AcceptNewClient()
 	int incoFd = accept(m_serverSocketFd, reinterpret_cast<struct sockaddr*>(&clientAdd), &len);
 	if (incoFd == -1)
 	{
-		sendLog("accept() has failed");
+		sendLog("Error: accept failed");
 		return;
 	}
 	if (fcntl(incoFd, F_SETFL, O_NONBLOCK) == -1)
 	{
-		sendLog("fcntl() has failed");
+		sendLog("Error: fcntl failed");
 		return;
 	}
 	newPoll.fd = incoFd;
@@ -146,15 +146,4 @@ std::string Server::parseBuffer(Client &client, std::string buffer)
 	client.addPacket(result.substr(lastN + 1));
 	return result.substr(0, lastN + 1);
 }
-/*
-std::string Server::parseBuffer(Client &client, std::string buffer)
-{
-	if (buffer.find("\r\n") == buffer.npos)
-	{
-		client.addPacket(buffer);
-		return "";
-	}
-	std::string line = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
-	return line;
-}
-*/
+

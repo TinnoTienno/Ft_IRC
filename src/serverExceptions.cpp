@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 16:06:42 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 17:05:47 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:28:38 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,11 @@ void serverExceptions::sendError(Server &server, Client *dest, Channel *channel,
 	switch(m_errorCode)
 	{
 		case 401 :
-			if (!str1)
-				std::cout << m_errorCode << " no nickname was given" << std::endl;
-			else
-				server.sendf(dest, NULL, NULL, ERR_NOSUCHNICK, str1);
-			break ;
+			return str1 ? server.sendf(dest, NULL, NULL, ERR_NOSUCHNICK, str1) : va_end(args);
 		case 403 :
-			if (!str1)
-				std::cout << m_errorCode << " no channelname was given" << std::endl;
-			else
-				server.sendf(dest, NULL, NULL,  ERR_NOSUCHCHANNEL, str1);
-			break ;
+			return str1 ? server.sendf(dest, NULL, NULL, ERR_NOSUCHCHANNEL, str1) : va_end(args);
 		case 404 :
-			if (!channel)
-				std::cout << m_errorCode << " no channel was given" << std::endl;
-			server.sendf(dest, NULL, channel,  ERR_CANNOTSENDTOCHAN);
-			break ;
+			return channel ? server.sendf(dest, NULL, channel, ERR_NOSUCHCHANNEL, str1) : va_end(args);
 		case 405 :
 			if (!channel)
 				std::cout << m_errorCode << " no channel was given" << std::endl;

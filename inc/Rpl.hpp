@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:46:21 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 15:38:22 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:42:23 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define RPL_LUSERCLIENT ":%h 251 %n :There are %u users on 1 server" // getUserNumber
 //# define RPL_LUSEROP ":%h 252 %n :0 :IRC Operators online"
 # define RPL_LUSEROP ":%h 252 %n :Operators are disabled on this server"
-# define RPL_LUSERCHANNELS ":%h 254 %n :%C :channels formed" // getChannelNumber
+# define RPL_LUSERCHANNELS ":%h 254 %n :%m :channels formed" // getChannelNumber
 # define RPL_INVITELIST ":%h 336 %n %C" // channel
 # define RPL_ENDOFINVITELIST ":%h 337 %n :End of /INVITE list"
 # define RPL_INVITING ":%h 341 %n %N %C" // guest channel

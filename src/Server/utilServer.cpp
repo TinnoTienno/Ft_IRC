@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 11:05:40 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:01:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,54 +52,6 @@ void	Server::sendLog(const std::string &message)
 	%N -> source Client nickname
 	%C -> Channel name
 	%T -> Channel topic
-
-static std::string addVar(Server &server, Client* dest, Client *source, Channel *channel, char identifier, va_list args)
-{
-	switch (identifier)
-	{
-		case '%' :
-			return "%";
-		case 'h' :
-			return server.getHostname();
-		case 'p' :
-			if (dest)
-				return dest->getPrefix();
-			else
-				break;
-		case 'n' :
-			if (dest)
-				return dest->getNickname();
-			else
-				break;
-		case 'P' :
-			if (source)
-				return source->getPrefix();
-			else
-				break;
-		case 'N' :
-			if (source)
-				return source->getNickname();
-			else
-				break;
-		case 'C' :
-			if (channel)
-				return channel->getName();
-			else
-				break;
-		case 'T' :
-			if (channel)
-				return channel->getTopic();
-			else
-				break;
-		default :
-			server.sendLog((std::string)"Bug : char " + identifier);
-			const char * i = static_cast<const char*>(va_arg(args, const char *));
-			if (!i)
-				break;
-			return i;
-	}
-	return "-";
-}
 */
 
 static std::string addVar(Server &server, Client* dest, Client *source, Channel *channel, char identifier, va_list args)
@@ -127,12 +79,6 @@ static std::string addVar(Server &server, Client* dest, Client *source, Channel 
 			if (!i)
 				return "-";
 			return i;
-//			server.sendLog((std::string)"Bug : char " + identifier);
-//			if (const char * i = static_cast<const char*>(va_arg(args, const char *)))
-//			const char * i = static_cast<const char*>(va_arg(args, const char *));
-//			return i ? i : "-";
-//				return i;
-//			return "-";
 	}
 }
 
@@ -149,11 +95,9 @@ void Server::sendf(Client *dest, Client *source, Channel *channel, const std::st
 		else
 			message += str[i];
 	}
-	std::cout << "fd dans sendf : " << dest->getFD() << std::endl;
 	this->sendLog(itoa(dest->getFD()) + " << " + message);
 	message += "\r\n";
 	va_end(args);
-	std::cout << "avant ou après la merde ??" << std::endl;
 	if (send (dest->getFD(), message.c_str(), message.size(), 0) != static_cast<ssize_t>(message.length()))
 		throw std::runtime_error("Failed to send the message: " + message);
 }

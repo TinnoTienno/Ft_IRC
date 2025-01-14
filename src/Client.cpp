@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 10:23:08 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:17:53 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,17 +219,10 @@ std::string	motd[] = {
 }
 
 //vectors
-void Client::addChannel(Channel &channel)
-{
-	this->m_vChannels.push_back(&channel);
-	channel.getServ()->sendLog("Channel " + channel.getName() + " was added to " + this->getNickname() + "'s channels list");
-//	channel->getServ()->sendLog("Channel " + channel->getName() + " was added to " + this->getNickname() + "'s channels list");
-}
+void Client::addChannel(Channel &channel) { this->m_vChannels.push_back(&channel); }
 
-#include <iostream>
 void	Client::sendQuitMsg(const std::string & message)
 {
-	std::cout << "size de m_vChannels : "<< m_vChannels.size() << std::endl;
 	for (size_t i = 0; i < this->m_vChannels.size(); i++)
 		this->m_vChannels[i]->sendAllMsg(this->m_vChannels[i]->getServ(), this, message, eQuit);
 }
@@ -241,11 +234,7 @@ void Client::leaveChannel(Channel &channel)
 			m_vChannels.erase(m_vChannels.begin() + i);
 }
 
-void Client::addOP(Channel &channel)
-{	
-	this->m_vOpChannels.push_back(&channel);
-	channel.getServ()->sendLog("Channel " + channel.getName() + " was added to " + this->getNickname() + "'s channels OP list");
-}
+void Client::addOP(Channel &channel) { this->m_vOpChannels.push_back(&channel); }
 
 void	Client::sendInviteList(Server * server)
 {
@@ -258,10 +247,7 @@ void Client::leaveOP(Channel &channel)
 {
 	for (size_t i = 0; i < m_vOpChannels.size(); i++)
 		if (&channel == m_vOpChannels[i])
-		{
-			channel.getServ()->sendLog("Removing " + this->getNickname() + " from " + channel.getName() + " channel's OP's list");
 			m_vOpChannels.erase(m_vOpChannels.begin() + i);
-		}
 }
 
 size_t Client::getChannelsCount() { return m_vChannels.size(); }

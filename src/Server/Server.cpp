@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 10:09:35 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:22:05 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ Server::Server(const std::string &name, const std::string &pass) : m_pass(pass),
 	m_logFd.open (logName.c_str(), std::fstream::in | std::fstream::out | std::fstream::app);
 	if (!m_logFd.is_open())
 		std::cerr << "Error : Couldn't open log file" << std::endl;
-	sendLog("Server created");
 }
 
 void	Server::createChannel(const std::string &name, Client &client)
@@ -38,7 +37,6 @@ void	Server::createChannel(const std::string &name, Client &client)
 	newChannel->addClient(client, "");
 	newChannel->addOP(client);
 	m_vChannels.push_back(newChannel);
-	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
 }
 
 void	Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
@@ -47,35 +45,14 @@ void	Server::createChannel(const std::string &name, Client &client, const std::s
 	newChannel->addClient(client, passwd);
 	newChannel->addOP(client);
 	m_vChannels.push_back(newChannel);
-	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
 }
 
-/*
-Channel &Server::createChannel(const std::string &name, Client &client)
-{
-	Channel newChannel(*this, name);
-	m_vChannels.push_back(newChannel);
-	sendLog("New channel " + name + " was added " + itoa(client.getFD()) + " is OP");
-	Channel &tmp = m_vChannels[m_vChannels.size() - 1];
-	sendLog("tmp " + tmp.getName());
-	m_vChannels[m_vChannels.size() - 1].addClient(client, "");
-	m_vChannels[m_vChannels.size() - 1].addOP(client);
-	return tmp;
-}
 
-Channel &Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
-{
-	Channel &channel = createChannel(name, client);
-	channel.getMode()->setPassword(passwd);
-	return channel;
-}
-*/
 void 	Server::deleteChannel(Channel &channel)
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++) {
 		if (m_vChannels[i] == &channel)
 		{
-			sendLog("Now deleting the " + m_vChannels[i]->getName() + " channel");
 			m_vChannels.erase(m_vChannels.begin() + i);
 			delete &channel;
 		}

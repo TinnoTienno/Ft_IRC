@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:05:36 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 17:14:39 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:18:11 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 		server.sendf(&client, guest, chan, RPL_INVITING);
 		server.sendf(guest, &client, chan, INVITE);
 		chan->getMode()->setInvited(guest);
-		// server.sendLog("Client : " + guest->getNickname() + "was invited to " + chan->getName() + " channel");
 	}
 	catch (const serverExceptions & e)
 	{

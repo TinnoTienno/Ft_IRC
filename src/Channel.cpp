@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 11:05:21 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:14:10 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ Channel&	Channel::operator=(const Channel & rhs)
 
 void	Channel::m_cleanClient()
 {
-	m_serv->sendLog("DEBUG : Channl destructor called : " + this->getName());
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		m_vClients[i]->leaveChannel(*this);
 	for (size_t i = 0; i < m_cMode.getOpClient().size(); i++)
@@ -94,7 +93,6 @@ bool	Channel::isJoinable(Client &client)
 
 void	Channel::addClient(Client &client, const std::string &passwd)
 {
-	std::cout << "test " << &client << std::endl;
 	if (this->getClient(&client)) // client already in channel
 		throw serverExceptions(405);
 	if (m_cMode.isPasswordProtected() && !m_cMode.isPasswordValid(passwd)) //passwordMode on and passwd is not valid
@@ -107,14 +105,10 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 		throw serverExceptions(474);
 	if (this->m_cMode.isSizeLimited() && m_vClients.size() >= this->m_cMode.getLimitSize())
 		throw serverExceptions(471);
-	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
 	client.addChannel(*this);
-	std::cout << client.getChannel()[0]->getName() << std::endl;
 	if (this->m_cMode.getOpClient().empty())
 		this->addOP(client);
-	std::cout << "all good" << std::endl;
 	this->m_vClients.push_back(&client);
-	std::cout << "not good" << std::endl;
 	this->sendAllJoin(client);
 	this->sendTopic(client);
 	this->sendClientslist(client);
@@ -122,12 +116,10 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 
 void	Channel::removeClient(const Client & client)
 {
-	this->getServ()->sendLog("Bug : RemoveClient");
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
 		if (m_vClients[i] == &client)
 		{
-			this->m_serv->sendLog("removing client " + client.getNickname() + " from " + this->getName() + " channel");
 			m_vClients.erase(m_vClients.begin() + i);
 			if (!m_vClients.size())
 				m_serv->deleteChannel(*this);
@@ -173,9 +165,6 @@ void	Channel::sendAllMode(bool status, const std::string &modeLetter)
 
 void	Channel::sendAllQuit(Client &client, const std::string &message)
 {
-	if (this->m_vClients.empty())
-		std::cout << "client vide" << std::endl;
-	printf("%p \n", &this->m_vClients);
 	for (std::vector<Client *>::iterator iter = this->m_vClients.begin(); iter != this->m_vClients.end(); iter++)
 		this->m_serv->sendf(*iter, &client, this, QUITMSG, message.c_str());
 }
@@ -235,31 +224,14 @@ std::string Channel::getSymbol()
 
 void Channel::sendAllJoin(Client &source)
 {
-	std::cout << "avant alljoin" << std::endl;
 	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
-	{
-//	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		std::cout << "source prefix : " << source.getPrefix() << std::endl;
-		std::cout << "source fd : " << source.getFD() << std::endl;
-		Client*	currentClientPtr = *it;
-		if (currentClientPtr == NULL)
-			std::cout << "WTFucking Fuck" << std::endl;
-		else
-			std::cout << "dest fd : " << currentClientPtr->getFD() << std::endl;
 		this->m_serv->sendf(*it, &source, this, JOIN);
-	}
-	std::cout << "après alljoin" << std::endl;
 }
 
 void Channel::sendPart(Client &source, const std::string &message)
 {
 	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
 		this->m_serv->sendf(*it, &source, this, PART, message.c_str());
-	{
-		
-	}
-//	for (size_t i = 0; i < this->m_vClients.size(); i++)
-//		this->m_serv->sendf(this->m_vClients[i], &source, this, PART, message.c_str());
 }
 
 void Channel::sendKick(Client &source, Client &target, const std::string &message)

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 10:56:47 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:57:43 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,15 @@ void	Mode::modeL(Channel & channel, bool status, const std::string &modeArg)
 	if (status)
 	{
 		channel.getMode()->setSizeLimited(status);
-		channel.getMode()->setLimitSize(std::atoi(modeArg.c_str())); // verif unsigned int
+		try
+		{
+			channel.getMode()->setLimitSize(strtous(modeArg)); // verif unsigned int
+		}
+		catch(const std::exception& e)
+		{
+			(void) e;
+		}
+		
 		channel.sendAllMode(status, "l " + modeArg);
 	}
 	else
@@ -174,11 +182,15 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 void Mode::execute(Server &server, const Parsing &parse, Client &client)
 {
 	Channel *chan = NULL;
+	Client *user = NULL;
 	try
 	{
 		if (parse.getArguments().size() < 2)
 			throw serverExceptions(461);
-		chan = server.getChannel(parse.getArguments()[1]);
+		user = server.getClient(parse.getArguments()[1]);
+		if (user)
+			return ;
+		chan = server.getChannel(parse.getArguments()[1]);		\
 		if (!chan)
 			throw serverExceptions(403);
 		if (parse.getArguments().size() == 2)
