@@ -1,7 +1,5 @@
 		TODO
-erreur si avec irssi -> join #ici -> part -> quit -> leaks
 tests 
-Invite list Aduvlla (Partie Mode ?)
 visuel
 	Logo Eschussl
 	
@@ -18,3 +16,5 @@ mode
 sendAll Aduvilla
 priv en double
 WHO		Aduvilla
+erreur si avec irssi -> join #ici -> part -> quit -> leaks
+Invite list Aduvlla (Partie Mode ?)
