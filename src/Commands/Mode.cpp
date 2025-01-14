@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 13:45:32 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:01:59 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 					Mode::modeL(channel, status, parse.getArguments()[argIndex++]);
 				else
 					throw serverExceptions(461);
+				break;
 			case 'b' :
 				if (!statusUpdated)
 					Mode::modeB(channel, source);
@@ -208,6 +209,7 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 			break;
 		case 461 :
 			e.sendError(server, &client, NULL, parse.getArguments()[0].c_str());
+			break;
 		case 482 :
 			e.sendError(server, &client, chan);
 			break;
