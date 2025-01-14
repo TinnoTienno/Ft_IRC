@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 19:45:35 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 00:31:34 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	Channel::m_cleanClient()
 		m_cMode.getOpClient()[i]->leaveOP(*this);
 }
 
-bool	Channel::isEmpty() const { return m_vClients.size() ? true : false; }
+bool	Channel::isEmpty() const { return m_vClients.empty(); }
 
 bool	Channel::isJoinable(Client &client)
 {
