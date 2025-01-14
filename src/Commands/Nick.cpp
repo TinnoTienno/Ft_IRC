@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 14:21:44 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 13:47:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:30:30 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void Nick::execute(Server &server, const Parsing &parse, Client &client)
 
 int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 {
-	
 	try
 	{
 		if (!parse.getArguments()[1].size())

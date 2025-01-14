@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 11:05:11 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 17:02:12 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ class	Channel
 		Channel&	operator=(const Channel & rhs);
 
 		bool	isJoinable(Client &client);
-		void	addClient(Client &client);
 		void	addClient(Client &client, const std::string &passwd);
 		void	m_cleanClient();
 		
@@ -72,7 +71,6 @@ class	Channel
 		void 	sendClientslist(Client &dest);
 		
 		void	addOP(Client &client);
-		std::string	modeToStr();
 
 		std::vector <Client *>		m_vClients;
 	private:

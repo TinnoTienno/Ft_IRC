@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 13:47:49 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:32:03 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,12 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 		std::vector<std::string>	targets = vsplit(parse.getArguments()[1], ',');
 		for (size_t i = 0; i < targets.size(); i++)
 		{
+			Channel	*chan = NULL;
 			try
 			{
 				if (targets[i].find('#') == 0)
 				{
-					Channel	*chan = server.getChannel(targets[i]);
+					chan = server.getChannel(targets[i]);
 					if (!chan)
 						throw serverExceptions(401);
 					else if (!chan->isJoinable(client))
@@ -56,7 +57,13 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 			}
 	   		catch (const serverExceptions & e)
 			{
-				e.sendError(server, &client, NULL, targets[i].c_str());
+				switch (e.getErrorCode())
+				{
+					case 401 :
+						e.sendError(server, &client, NULL, targets[i].c_str());
+					case 404 :
+						e.sendError(server, &client, chan);
+				}
 			}
 		}
 	}

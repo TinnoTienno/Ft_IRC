@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChanMode.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 17:28:50 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 11:05:06 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:18:32 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ class ChanMode
 		void	unsetBanned(const std::string &bannedPrefix);
 		// senders
 		void	sendBanList(Server &server, Channel &channel, Client &dest);
+		std::string modeToStr();
 };
 
 #endif

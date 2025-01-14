@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:32:50 by noda              #+#    #+#             */
-/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:32:35 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@
 
 void Topic::execute(Server &server, const Parsing &parse, Client &client)
 {
+	Channel *chan;
 	try
 	{
 		if (parse.getArguments().size() < 2)
 			throw serverExceptions(461);
-		Channel *chan = server.getChannel(parse.getArguments()[1]);
+		chan = server.getChannel(parse.getArguments()[1]);
 		if (!chan)
 			throw serverExceptions(403);
 		Client *cli = chan->getClient(&client);
@@ -34,7 +35,7 @@ void Topic::execute(Server &server, const Parsing &parse, Client &client)
 			if (chan->getMode()->isTopicProtected() && !chan->getMode()->isOP(&client))
 				throw serverExceptions(482);
 			chan->getMode()->setTopic(parse.getArguments()[2]);
-			//message dans le log ?????
+			chan->sendAllTopic();
 		}
 		else
 			chan->sendTopic(client);
@@ -44,16 +45,16 @@ void Topic::execute(Server &server, const Parsing &parse, Client &client)
 		switch (e.getErrorCode())
 		{
 			case 403 :
-				e.sendError(server, &client, NULL);
+				e.sendError(server, &client, chan);
 				break;
 			case 442 :
-				e.sendError(server, &client, NULL);
+				e.sendError(server, &client, chan);
 				break ;
 			case 461 :
 				e.sendError(server, &client, NULL);
 				break;
 			case 482 :
-				e.sendError(server, &client, NULL);
+				e.sendError(server, &client, chan);
 				break ;
 		}
 	}

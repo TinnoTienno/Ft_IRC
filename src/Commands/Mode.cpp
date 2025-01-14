@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 13:45:32 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:28:01 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,19 +182,17 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 void Mode::execute(Server &server, const Parsing &parse, Client &client)
 {
 	Channel *chan = NULL;
-	Client *user = NULL;
 	try
 	{
 		if (parse.getArguments().size() < 2)
 			throw serverExceptions(461);
-		user = server.getClient(parse.getArguments()[1]);
-		if (user)
+		if (parse.getArguments()[1].find_first_of("#&") == parse.getArguments()[1].npos )
 			return ;
 		chan = server.getChannel(parse.getArguments()[1]);		\
 		if (!chan)
 			throw serverExceptions(403);
 		if (parse.getArguments().size() == 2)
-			return server.sendf(&client, NULL, chan, RPL_CHANNELMODEIS, chan->modeToStr().c_str());
+			return server.sendf(&client, NULL, chan, RPL_CHANNELMODEIS, chan->getMode()->modeToStr().c_str());
 		if (!chan->getMode()->isOP(&client))
 			throw serverExceptions(482);
 		Mode::channelMode(server, *chan, client, parse);

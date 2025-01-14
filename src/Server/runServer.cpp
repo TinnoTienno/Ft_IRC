@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 13:46:04 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:52:46 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,13 +118,17 @@ void Server::parseCommand(const std::string line, Client &client)
 	size_t size = sizeof(Commands) / sizeof(Commands[0]);
 	sendLog(itoa(client.getFD()) + " >> " + line);
 	Parsing parse(line);
+	bool commandFound = false;
 	for (size_t i = 0; i < size; i++)
 	{
 		if (parse.getCommand() == Commands[i])
+		{
 			fCommands[i](*this, parse, client);
-		else
-			this->sendf(&client, NULL, NULL, ERR_UNKNOWNCOMMAND, parse.getCommand().c_str());
+			commandFound = true;
+		}
 	}
+	if (!commandFound)
+		this->sendf(&client, NULL, NULL, ERR_UNKNOWNCOMMAND, parse.getCommand().c_str());
 }
 
 std::string Server::parseBuffer(Client &client, std::string buffer)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 11:05:27 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:44:03 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,9 @@ void Join::execute(Server &server, const Parsing &parse, Client &client)
 
 void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 {
-	// if (parse.getArguments().size() < 2)
-	// throw ....
 	std::vector<std::string> channels = vsplit(parse.getArguments()[1], ',');
 	std::vector<std::string> passwords;
-	if (parse.getArguments().size() > 3)
+	if (parse.getArguments().size() > 2)
 		passwords = vsplit(parse.getArguments()[2], ',');
 	std::vector<std::string>::iterator iterPasswords = passwords.begin();
 	std::vector<std::string>::iterator iterChannels = channels.begin();

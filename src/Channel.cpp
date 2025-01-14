@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 13:45:43 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:36:21 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,12 @@ Channel::Channel(Server &server, const std::string &name) : m_cMode(), m_name(na
 		throw serverExceptions(476);
 }
 
-Channel::Channel(Server &server, const std::string &name, const std::string &passwd) : m_cMode(passwd), m_name(name), m_serv(&server), m_channelType(Public)
+Channel::Channel(Server &server, const std::string &name, const std::string &passwd) : m_name(name), m_serv(&server), m_channelType(Public)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
+	this->getMode()->setPasswordProtected(true);
+	this->getMode()->setPassword(passwd);
 }
 
 Channel::~Channel	(void)
@@ -74,6 +76,7 @@ Channel&	Channel::operator=(const Channel & rhs)
 
 void	Channel::m_cleanClient()
 {
+	std::cout << "Bug cleanclient" << std::endl;
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		m_vClients[i]->leaveChannel(*this);
 	for (size_t i = 0; i < m_cMode.getOpClient().size(); i++)
@@ -120,9 +123,10 @@ void	Channel::removeClient(const Client & client)
 	{
 		if (m_vClients[i] == &client)
 		{
-			m_vClients.erase(m_vClients.begin() + i);
-			if (!m_vClients.size())
+			if (m_vClients.size() == 1)
 				m_serv->deleteChannel(*this);
+			else
+				m_vClients.erase(m_vClients.begin() + i);
 			return;
 		}
 	}
@@ -140,7 +144,7 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 					server->sendf(m_vClients[i], client, this, PRIVMSGALL, msg.c_str());
 					break;
 				case eNotice:
-					server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
+					server->sendf(m_vClients[i], client, this, NOTICEALL, msg.c_str());
 					break;
 				case eQuit:
 					server->sendf( m_vClients[i], client, this, QUITMSG, msg.c_str());
@@ -237,28 +241,12 @@ void Channel::sendPart(Client &source, const std::string &message)
 void Channel::sendKick(Client &source, Client &target, const std::string &message)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		this->m_serv->sendf(this->m_vClients[i], &source, this, KICK, target.getNickname().c_str(), message.c_str());
+		this->m_serv->sendf(this->m_vClients[i], &source, this, KICK, target.getNickname().c_str(),message.c_str());
 }
 
 Server *Channel::getServ() { return m_serv; }
 
-//sMODES
-
-std::string Channel::modeToStr()
-{
-	if (!(this->m_cMode.isInviteOnly() || this->m_cMode.isTopicProtected() || this->m_cMode.isPasswordProtected() || this->m_cMode.isSizeLimited()))
-		return "";
-	std::string res = "+";
-	if (this->m_cMode.isInviteOnly())
-		res += "i";
-	if (this->m_cMode.isTopicProtected())
-		res += "t";
-	if (this->m_cMode.isPasswordProtected())
-		res += "k";
-	if (this->m_cMode.isSizeLimited())
-		res += "l" + itoa(this->m_cMode.getLimitSize());
-	return res;
-}	
+//MODES
 
 ChanMode*	Channel::getMode() { return &m_cMode; }
 

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 12:18:54 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:28:46 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,11 @@ void	Server::CloseFds()
 
 void Server::ClearClient(Client &client)
 {
-	client.cleanChannels();
-	close (client.getFD());
 	for (size_t i = 0; i < m_vFds.size(); i++)
 	{
 		if (m_vFds[i].fd == client.getFD())
 		{
+			close (m_vFds[i].fd);
 			m_vFds.erase(m_vFds.begin() + i);
 			break;
 		}
@@ -61,10 +60,25 @@ void Server::ClearClient(Client &client)
 	{
 		if (m_vClients[i] == &client)
 		{
+			m_vClients[i]->cleanChannels();
+			delete m_vClients[i];
 			m_vClients.erase(m_vClients.begin() + i);
 			break;
 		}
 	}
-	CloseFds();
-	delete &client;
+}
+#include <iostream>
+
+void 	Server::deleteChannel(Channel &channel)
+{
+	for (size_t i = 0; i < m_vChannels.size(); i++) {
+		if (m_vChannels[i] == &channel)
+		{
+			std::cout << "bug : deleting " << std::endl;
+			m_vChannels[i]->m_cleanClient();
+			delete m_vChannels[i];
+			m_vChannels.erase(m_vChannels.begin() + i);
+			break;
+		}
+	}
 }
