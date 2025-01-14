@@ -6,22 +6,21 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 13:44:48 by eschussl          #+#    #+#             */
-/*   Updated: 2024/12/21 13:55:15 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/14 15:09:44 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parsing.hpp"
-#include <iostream>
-#include "serverExceptions.hpp"
+#include "utils.hpp"
 
 Parsing::Parsing(std::string line)
 {
-	size_t wordIndex = 0;
+	line = trimNewLines(line);
 	size_t i = 0;
 	while (i != line.npos)
 	{
 		std::string word = line.substr(i, line.find(' ', i) - i);
-		if (word[0] == ':')
+		if (!word.empty() && word[0] == ':')
 		{
 			word = line.substr(i + 1, line.npos - i);
 			i = line.npos;
@@ -31,7 +30,6 @@ Parsing::Parsing(std::string line)
 		else
 			i = line.npos;
 		m_arguments.push_back(word);
-		wordIndex++;
 	}
 }
 
