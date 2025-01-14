@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChanMode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 18:00:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 15:55:00 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:05:16 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ bool	ChanMode::isOP(Client * client) const { return std::find(m_vOP.begin(), m_v
 
 bool	ChanMode::isBanned(Client * client) const { return std::find(m_vBanned.begin(), m_vBanned.end(), client->getPrefix()) != m_vBanned.end(); }
 
+//std::vector<Client*>&	ChanMode::getOpClient() { return m_vOP; }
 std::vector<Client*>	ChanMode::getOpClient() const { return m_vOP; }
 
 void	ChanMode::setInviteOnly(bool value) { m_inviteOnly = value; }

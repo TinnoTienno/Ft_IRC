@@ -36,8 +36,8 @@
 # define RPL_MOTD ":%h 372 %n :%m" // message
 # define RPL_ENDOFMOTD ":%h 376 %n :%h End of /MOTD command."
 #define RPL_TOPIC "%h 332 %p %C :%t" // channel topic
-#define RPL_NOTOPIC ":%h 331 %p %C :No topic is set" // channel
-#define RPL_NAMREPLY ":%p 353 %n%s %C :%l" //symbol channel list of clients
-#define RPL_ENDOFNAMES ":%p 366 %n %C :End of /NAMES list." // nick channel
-#define RPL_CHANNELMODEIS ":%p 324 %n %C %m" // 
+#define RPL_NOTOPIC ":%h 331 %n %C :No topic is set" // channel
+#define RPL_NAMREPLY ":%h 353 %n%s %C :%l" //symbol channel list of clients
+#define RPL_ENDOFNAMES ":%h 366 %n %C :End of /NAMES list." // nick channel
+#define RPL_CHANNELMODEIS ":%h 324 %n %C %m" //
 #endif

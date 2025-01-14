@@ -6,13 +6,12 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:00:52 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/10 15:46:53 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 14:37:09 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <exception>
-#include <iostream>
 #include <stddef.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -26,11 +25,9 @@
 
 void Server::ServerInit(const std::string &port)
 {
-	if (port.find_first_not_of("0123456789") != std::string::npos)
-		throw std::invalid_argument("error: invalid argument: port: " + port);
-	this->m_port = atoi(port.c_str());
 	try
 	{
+		this->m_port = strtous(port);
 		SerSocket();
 		sendLog("Server <" + itoa(m_serverSocketFd) + "> Connected");
 		sendLog("Waiting for a connection...");

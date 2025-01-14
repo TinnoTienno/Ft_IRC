@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/13 11:51:02 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 00:13:12 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define SERVER_HPP
 
 #include <vector>
-#include <map>
 #include <sys/socket.h>
 #include <poll.h>
 #include "Client.hpp"
@@ -63,8 +62,8 @@ class Server
 		std::string							m_hostname;
 		unsigned int						m_nextChannelID;
 		std::ofstream						m_logFd;
-		std::vector<Client> 				m_vClients;
-		std::vector<Channel>				m_vChannels;
+		std::vector<Client*> 				m_vClients;
+		std::vector<Channel*>				m_vChannels;
 		
 	public :
 		Server(const std::string &name, const std::string &password);
@@ -98,8 +97,8 @@ class Server
 		Client 	*getClient(const std::string &nickname);
 		Channel *getChannel(const std::string &channelName);
 
-		Channel &createChannel(const std::string &name, Client &client);
-		Channel &createChannel(const std::string &name, Client &client, const std::string &passwd);
+		void	createChannel(const std::string &name, Client &client);
+		void	createChannel(const std::string &name, Client &client, const std::string &passwd);
 		void 	deleteChannel(Channel &channel);
 		Channel *findChannel(const std::string &channelName);
 

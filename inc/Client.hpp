@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:38:29 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/10 18:12:24 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/13 19:41:40 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,50 +21,57 @@ class Channel;
 class Client
 {
 	private :
-		int 		m_fd;
-		bool		m_authentified;
+		int 					m_fd;
+		bool					m_authentified;
 		std::string 			m_ipAdd;
 		std::string				m_hostname;
 		std::string 			m_nickname;
 		std::string 			m_username;
 		std::string 			m_realname;
 		std::string 			m_irssiPacket;
-		std::vector<Channel *> 	m_vOpChannels;
-	public : 
-		std::vector<Channel *>	m_vChannels;
-		Client();
+		std::vector<Channel*> 	m_vOpChannels;
+		std::vector<Channel*>	m_vChannels;
 
-		//getters / setters
+	public : 
+		Client();
+		~Client();
+		Client(const Client & copy);
+		Client&	operator=(const Client & rhsy);
+		void	cleanChannels();
+
+		//getters
 		std::string	getPrefix() const;
-		void setFD(const int&);
-		const int&	getFD() const;
-		void setIPadd(const std::string&);
-		void setHostname(struct sockaddr *addr, Server &server);
-		void setAuth(const bool &);
-		bool getAuth() const;
-		void setUsername(const std::string &username);
 		const std::string& getUsername() const;
-		void setNickname(const std::string &);
+		const int&	getFD() const;
+		bool getAuth() const;
 		const std::string& getNickname() const;
-		void setRealname(const std::string &);
 		const std::string& getRealname() const;
-		//packets
-		void 	addPacket(const std::string &);
 		std::string getPacket();
+		std::vector<Channel *>	getChannel() const;
+	
+	 	// setters
+		void	setFD(const int&);
+		void	setUsername(const std::string &username);
+		void	setIPadd(const std::string&);
+		void	setHostname(struct sockaddr *addr, Server &server);
+		void	setAuth(const bool &);
+		void	setNickname(const std::string &);
+		void	setRealname(const std::string &);
+		void 	addPacket(const std::string &);
+
 		//messages
-		// void 	sendMsg(const std::string &, Server &server) const;
 		void	sendQuitMsg(const std::string & msg);
 		void 	kill(Server & server, const std::string &);
 		void	connect(Server &server);
 		void	sendInviteList(Server *server);
-		//vectors
 
+		//Channels
+//		void	addChannel(Channel *channel);
 		void	addChannel(Channel &channel);
 		void	leaveChannel(Channel &channel);
 		void	addOP(Channel &channel);
 		void	leaveOP(Channel &channel);
 		size_t	getChannelsCount();
-		~Client();
 }	;
 
 #endif

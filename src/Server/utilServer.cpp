@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 16:56:14 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 18:55:48 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:05:40 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ bool Server::userErrorCode(Client &client, const Parsing &parse)
 Channel *Server::findChannel(const std::string &channelName)
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++)
-		if (strCompareNoCase(m_vChannels[i].getName(), channelName))
-			return &m_vChannels[i];
+		if (strCompareNoCase(m_vChannels[i]->getName(), channelName))
+			return m_vChannels[i];
 	return NULL;
 }
 
@@ -136,6 +136,7 @@ static std::string addVar(Server &server, Client* dest, Client *source, Channel 
 	}
 }
 
+#include <iostream>
 void Server::sendf(Client *dest, Client *source, Channel *channel, const std::string str, ...)
 {
 	va_list args;
@@ -148,9 +149,11 @@ void Server::sendf(Client *dest, Client *source, Channel *channel, const std::st
 		else
 			message += str[i];
 	}
+	std::cout << "fd dans sendf : " << dest->getFD() << std::endl;
 	this->sendLog(itoa(dest->getFD()) + " << " + message);
 	message += "\r\n";
 	va_end(args);
+	std::cout << "avant ou après la merde ??" << std::endl;
 	if (send (dest->getFD(), message.c_str(), message.size(), 0) != static_cast<ssize_t>(message.length()))
 		throw std::runtime_error("Failed to send the message: " + message);
 }

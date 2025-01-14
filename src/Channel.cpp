@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 18:42:31 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 11:05:21 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "Notice.hpp"
 #include "Quit.hpp"
 #include <stdio.h>
+#include <vector>
 
 bool Channel::parseChannelName(const std::string &channelName)
 {
@@ -52,6 +53,26 @@ Channel::Channel(Server &server, const std::string &name, const std::string &pas
 }
 
 Channel::~Channel	(void)
+{
+}
+
+Channel::Channel(const Channel & copy) : m_vClients(copy.m_vClients), m_cMode(copy.m_cMode), m_name(copy.m_name), m_serv(copy.m_serv), m_channelType(copy.m_channelType)
+{
+}
+
+Channel&	Channel::operator=(const Channel & rhs)
+{
+	if (this == &rhs)
+		return *this;
+	m_cMode = rhs.m_cMode;
+	m_name = rhs.m_name;
+	m_serv = rhs.m_serv;
+	m_channelType = rhs.m_channelType;
+	m_vClients = rhs.m_vClients;
+	return *this;
+}
+
+void	Channel::m_cleanClient()
 {
 	m_serv->sendLog("DEBUG : Channl destructor called : " + this->getName());
 	for (size_t i = 0; i < m_vClients.size(); i++)
@@ -88,10 +109,12 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 		throw serverExceptions(471);
 	this->m_serv->sendLog("Adding " + client.getNickname() + " to " + this->getName() + " channel");
 	client.addChannel(*this);
-	std::cout << client.m_vChannels[0]->getName() << std::endl;
-	if (!this->m_cMode.getOpClient().size())
-		addOP(client);
+	std::cout << client.getChannel()[0]->getName() << std::endl;
+	if (this->m_cMode.getOpClient().empty())
+		this->addOP(client);
+	std::cout << "all good" << std::endl;
 	this->m_vClients.push_back(&client);
+	std::cout << "not good" << std::endl;
 	this->sendAllJoin(client);
 	this->sendTopic(client);
 	this->sendClientslist(client);
@@ -122,7 +145,7 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 			switch (mode)
 			{
 				case ePrivMsg:
-					server->sendf(m_vClients[i], client, NULL, PRIVMSG, msg.c_str());
+					server->sendf(m_vClients[i], client, this, PRIVMSGALL, msg.c_str());
 					break;
 				case eNotice:
 					server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
@@ -212,14 +235,31 @@ std::string Channel::getSymbol()
 
 void Channel::sendAllJoin(Client &source)
 {
-	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		this->m_serv->sendf(this->m_vClients[i], &source, this, JOIN);
+	std::cout << "avant alljoin" << std::endl;
+	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
+	{
+//	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		std::cout << "source prefix : " << source.getPrefix() << std::endl;
+		std::cout << "source fd : " << source.getFD() << std::endl;
+		Client*	currentClientPtr = *it;
+		if (currentClientPtr == NULL)
+			std::cout << "WTFucking Fuck" << std::endl;
+		else
+			std::cout << "dest fd : " << currentClientPtr->getFD() << std::endl;
+		this->m_serv->sendf(*it, &source, this, JOIN);
+	}
+	std::cout << "après alljoin" << std::endl;
 }
 
 void Channel::sendPart(Client &source, const std::string &message)
 {
-	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		this->m_serv->sendf(this->m_vClients[i], &source, this, PART, message.c_str());
+	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
+		this->m_serv->sendf(*it, &source, this, PART, message.c_str());
+	{
+		
+	}
+//	for (size_t i = 0; i < this->m_vClients.size(); i++)
+//		this->m_serv->sendf(this->m_vClients[i], &source, this, PART, message.c_str());
 }
 
 void Channel::sendKick(Client &source, Client &target, const std::string &message)
