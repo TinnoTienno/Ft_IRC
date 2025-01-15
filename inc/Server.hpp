@@ -76,7 +76,7 @@ class Server
 		
 		void AcceptNewClient();
 		void ReceiveNewData(Client &client);
-		void parseCommand(const std::string buffer, Client &client);
+		void handleCommand(const std::string buffer, Client &client);
 		std::string parseBuffer(Client &client, std::string buffer);
 		
 		bool checkAuth(Client &client, const std::string&);

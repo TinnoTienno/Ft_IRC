@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 14:52:46 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 14:06:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,13 @@ void Server::ReceiveNewData(Client &client)
 			for (size_t k = 0; k < line.size(); k = j + 1)
 			{
 				j = line.find("\n", k + 1);
-				parseCommand(line.substr(k, j - k - 1), client);
+				handleCommand(line.substr(k, j - k - 1), client);
 			}
 		}
 	}
 }
 
-void Server::parseCommand(const std::string line, Client &client)
+void Server::handleCommand(const std::string line, Client &client)
 {
 	typedef void (*CommandFunction)(Server &, const Parsing &, Client &);
 	std::map<std::string, CommandFunction> commandMap;
@@ -142,47 +142,3 @@ std::string Server::parseBuffer(Client &client, std::string buffer)
 	client.addPacket(result.substr(lastN + 1));
 	return result.substr(0, lastN + 1);
 }
-/*
-void Server::parseCommand(const std::string line, Client &client)
-{
-	bool	executed = false;
-	std::string		Commands[] = {"JOIN", 
-	"NICK", 
-	"userhost", 
-	"PING", 
-	"PRIVMSG", 
-	"NOTICE", 
-	"PART", 
-	"TOPIC", 
-	"KICK", 
-	"MODE",
-	"INVITE",
-	"QUIT"};
-	void (*fCommands[])(Server &, const Parsing &, Client &) = { &Join::execute,
-		&Nick::execute,
-		&UserHost::execute,
-		&Ping::execute,
-		&PrivMsg::execute,
-		&Notice::execute,
-		&Part::execute,
-		&Topic::execute,
-		&Kick::execute,
-		&Mode::execute,
-		&Invite::execute,
-		&Quit::execute};
-	size_t size = sizeof(Commands) / sizeof(Commands[0]);
-	sendLog(itoa(client.getFD()) + " >> " + line);
-	Parsing parse(line);
-	bool commandFound = false;
-	for (size_t i = 0; i < size; i++)
-	{
-		if (parse.getCommand() == Commands[i])
-		{
-			fCommands[i](*this, parse, client);
-			executed = true;
-		}
-	}
-	if (!executed)
-		this->sendf(&client, NULL, NULL, ERR_UNKNOWNCOMMAND, parse.getCommand().c_str());
-}
-*/

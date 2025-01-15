@@ -5,9 +5,6 @@ Legende :
 
 # connect
 
-!!!! sendAllMode
-!!!! auto quit bot
-
 connect
 /connect with same nick/hostname
 
@@ -124,17 +121,12 @@ topic #chan voici le topic
 mode +t   + topic #chan voici le topic
 
 # userhost
-
-WIP
-
-# Who
-
 WIP
 
 # bot
 
-mode #chan +i  + bot #chan -> Bot must quit when he cant join channel
+/mode #chan +i  + bot #chan -> Bot must quit when he cant join channel
 
 # Other tests
 
-nc mode + Ctrl D
+/nc mode + Ctrl D

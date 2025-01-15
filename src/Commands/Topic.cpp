@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 15:32:50 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 18:32:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:47:04 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void Topic::execute(Server &server, const Parsing &parse, Client &client)
 			if (chan->getMode()->isTopicProtected() && !chan->getMode()->isOP(&client))
 				throw serverExceptions(482);
 			chan->getMode()->setTopic(parse.getArguments()[2]);
-			chan->sendAllTopic();
+			chan->sendAllMsg(&server, &client, "", eTopic);
 		}
 		else
 			chan->sendTopic(client);

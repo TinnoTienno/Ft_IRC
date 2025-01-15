@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstddef>
 #include <string>
 #include "ChanMode.hpp"
 #include "Client.hpp"
@@ -74,7 +75,7 @@ Channel&	Channel::operator=(const Channel & rhs)
 	return *this;
 }
 
-void	Channel::m_cleanClient()
+void	Channel::cleanClient()
 {
 	std::cout << "Bug cleanclient" << std::endl;
 	for (size_t i = 0; i < m_vClients.size(); i++)
@@ -152,7 +153,10 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 					server->sendf( *iter, client, this, QUITMSG, msg.c_str());
 				break;
 			case eWho:
-				server->sendf(client, *iter, NULL, RPL_WHOREPLY, this->getName().c_str(), (*iter)->getUsername().c_str(), (*iter)->getHostName().c_str(), (*iter)->getRealname().c_str());
+				if (this->getMode()->isOP(*iter))
+					server->sendf(client, *iter, NULL, RPL_WHOREPLY, this->getName().c_str(), (*iter)->getUsername().c_str(), (*iter)->getHostName().c_str(), "H@", (*iter)->getRealname().c_str());
+				else
+					server->sendf(client, *iter, NULL, RPL_WHOREPLY, this->getName().c_str(), (*iter)->getUsername().c_str(), (*iter)->getHostName().c_str(), "H", (*iter)->getRealname().c_str());
 				break;
 			case eJoin:
 				server->sendf(*iter, client, this, JOIN);
@@ -160,9 +164,12 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 			case ePart:
 				server->sendf(*iter, client, this, PART, msg.c_str());
 				break;
-//			case eKick:
-//				server->sendf(*iter, client, this, KICK, (*iter)target.getNickname().c_str(), message.c_str());
-//				break;
+			case eMode:
+				server->sendf(*iter, NULL, this, MODE, msg.c_str());
+				break;
+			case eTopic:
+				server->sendf(*iter, NULL, this, TOPIC);
+				break;
 			default:
 				;
 		}
@@ -175,17 +182,6 @@ void Channel::sendKick(Client &source, Client &target, const std::string &messag
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
 		this->m_serv->sendf(this->m_vClients[i], &source, this, KICK, target.getNickname().c_str(), message.c_str());
-}
-
-void	Channel::sendAllMode(bool status, const std::string &modeLetter)
-{
-	std::string statuschar;
-	if (status)
-		statuschar = "+";
-	else
-		statuschar = '-';
-	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + statuschar + modeLetter);
 }
 
 const std::string	Channel::getName(void) const { return this->m_name; }
@@ -254,11 +250,6 @@ void Channel::sendTopic(Client &dest)
 		this->m_serv->sendf(&dest, NULL, this, RPL_TOPIC);
 }
 
-void Channel::sendAllTopic()
-{
-	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		this->m_serv->sendf(m_vClients[i], NULL, this, TOPIC);
-}
 
 void Channel::addOP(Client &client) 
 {

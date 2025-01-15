@@ -75,7 +75,7 @@ void 	Server::deleteChannel(Channel &channel)
 		if (m_vChannels[i] == &channel)
 		{
 			std::cout << "bug : deleting " << std::endl;
-			m_vChannels[i]->m_cleanClient();
+			m_vChannels[i]->cleanClient();
 			delete m_vChannels[i];
 			m_vChannels.erase(m_vChannels.begin() + i);
 			break;

@@ -44,4 +44,6 @@ private:
 	std::string&	m_trimNewLines(std::string & str);
 };
 
+std::vector<std::string>	vsplit(const std::string & str, char delimiter);
+
 #endif
