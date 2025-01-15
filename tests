@@ -46,22 +46,25 @@ nc + authentification
 
 WIP - Modifier sendAllMode en premier
 
-nc mode
+/nc mode
 mode ""
-mode #chan ""
-mode #wrongchan ""
-mode #chan b (When user in not in #chan)
-mode noda +o
-mode #chan +o ""
-mode #chan -o ""
-mode #chan +t ""
-mode #chan +l ""
-mode #chan +k ""
-mode #chan b ""
+/mode #chan ""
+/mode #wrongchan ""
+/mode #chan
+/mode #closedchan b
+/mode #unclosedchan b
+/mode noda +o
+/mode #chan +o ""
+/mode #chan -o ""
+/mode #chan -o op
+/mode #chan +t
+/mode #chan +l ""
+/mode #chan +k ""
+/mode #chan b ""
 mode #chan +b ""
 mode #chan -b ""
-mode #chan b (OP)
-mode #chan b (Not OP)
+/mode #chan b (OP)
+/mode #chan b (Not OP)
 mode #chan +o user2
 mode #chan +o noda (Already op)
 mode #chan +o
@@ -78,7 +81,7 @@ mode #chan +o
 /nc notice
 /notice "" coucou
 /notice "" ""
-notice #chan "" (Right now is sending "" as a message, should try Dalnet before modifying)
+/notice #chan ""
 /notice #chan 
 /notice #chan coucou
 /notice noda coucou
@@ -89,7 +92,7 @@ notice #chan "" (Right now is sending "" as a message, should try Dalnet before 
 # part
 
 /nc part
-part "" (right now is sending a No such channel, should try DALNET)
+/part ""
 /part #chan
 /part #wrongchan
 /part existingchan
@@ -104,7 +107,7 @@ part "" (right now is sending a No such channel, should try DALNET)
 /nc privmsg 
 /privmsg "" coucou
 /privmsg "" ""
-privmsg #chan "" (Same as notice)
+/privmsg #chan "" (Same as notice)
 /privmsg #chan coucou
 /privmsg noda coucou
 /mode #chan +i + privmsg #chan coucou
@@ -115,10 +118,10 @@ privmsg #chan "" (Same as notice)
 /join #newchan + quit
  
 # topic Aduvilla
-topic 
-topic #chan
-topic #chan voici le topic 
-mode +t   + topic #chan voici le topic
+nc topic 
+/topic #chan
+/topic #chan voici le topic 
+/mode +t   + topic #chan voici le topic
 
 # userhost
 WIP

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Numerics.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:41:39 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/15 16:10:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 17:16:49 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define INVITE ":%P INVITE %n %C" // guest chan
 # define JOIN ":%P JOIN :%C"
 # define KICK ":%P KICK %C %m :%m" //targetnick message
-# define MODE ":%p MODE %C %m" // mode
+# define MODE ":%P MODE %C %m" // mode
 # define NICK ":%p NICK :%m" //newnick
 # define NICK2 ":%m%p NICK :%m" //newnick 
 # define NOTICE ":%P NOTICE %n :%m" // source, nickname, message

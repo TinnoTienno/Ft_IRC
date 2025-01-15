@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 16:01:35 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/15 17:19:13 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 				server->sendf(*iter, client, this, PART, msg.c_str());
 				break;
 			case eMode:
-				server->sendf(*iter, NULL, this, MODE, msg.c_str());
+				server->sendf(*iter, client, this, MODE, msg.c_str());
 				break;
 			case eTopic:
 				server->sendf(*iter, NULL, this, TOPIC);
