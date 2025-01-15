@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/15 15:45:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:21:33 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,9 @@ void Mode::execute(Server &server, const Parsing &parse, Client &client)
 		if (!chan)
 			throw serverExceptions(403);
 		if (parse.getArguments().size() == 2)
+		{
 			return server.sendf(&client, NULL, chan, RPL_CHANNELMODEIS, chan->getMode()->modeToStr().c_str());
+		}
 		if (!chan->getMode()->isOP(&client))
 			throw serverExceptions(482);
 		Mode::channelMode(server, *chan, client, parse);

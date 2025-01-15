@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 13:45:01 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:05:44 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,14 +146,17 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 					server->sendf(*iter, client, this, PRIVMSGALL, msg.c_str());
 				break;
 			case eNotice:
-				server->sendf(*iter, client, NULL, NOTICEALL, msg.c_str());
+				server->sendf(*iter, client, this, NOTICEALL, msg.c_str());
 				break;
 			case eQuit:
 				if (*iter != client)
 					server->sendf( *iter, client, this, QUITMSG, msg.c_str());
 				break;
 			case eWho:
-				server->sendf(client, *iter, NULL, RPL_WHOREPLY, this->getName().c_str(), (*iter)->getUsername().c_str(), (*iter)->getHostName().c_str(), (*iter)->getRealname().c_str());
+				if (this->getMode()->isOP(*iter))
+					server->sendf(client, *iter, NULL, RPL_WHOREPLY, this->getName().c_str(), (*iter)->getUsername().c_str(), (*iter)->getHostName().c_str(), "H@", (*iter)->getRealname().c_str());
+				else
+					server->sendf(client, *iter, NULL, RPL_WHOREPLY, this->getName().c_str(), (*iter)->getUsername().c_str(), (*iter)->getHostName().c_str(), "H", (*iter)->getRealname().c_str());
 				break;
 			case eJoin:
 				server->sendf(*iter, client, this, JOIN);

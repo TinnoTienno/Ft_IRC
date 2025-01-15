@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 18:00:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 16:27:22 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:21:28 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ void	ChanMode::sendBanList(Server &server, Channel &channel, Client &dest)
 
 std::string ChanMode::modeToStr()
 {
-	if (!(this->isInviteOnly() || this->isTopicProtected() || this->isPasswordProtected() || this->isSizeLimited()))
-		return "";
 	std::string res = "+";
 	if (this->isInviteOnly())
 		res += "i";

@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:41:39 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/15 15:44:16 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:10:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@
 # define RPL_INVITING ":%h 341 %n %N %C" // guest channel
 #define RPL_NAMREPLY ":%h 353 %n%s %C :%l" //symbol channel list of clients
 #define RPL_ENDOFNAMES ":%h 366 %n %C :End of /NAMES list." // nick channel
-# define RPL_WHOREPLY ":%h 352 %n %m %u %H %N H :%r" // m -> chanNmae else *; username hostname realname
+# define RPL_WHOREPLY ":%h 352 %n %c %u %H %h %N %f :0 %r" // m -> chanNmae else *; username hostname flags realname
 //# define RPL_WHOREPLY ":%h 352 %n %C %u %H %n :%r" // channel (if chan is target of who) username hostname realname
 # define RPL_BANLIST ":%h 367 %n %C %m" // bannedPrefix
 # define RPL_ENDOFBANLIST ":%h 368 %n %C :End of channel ban list"
