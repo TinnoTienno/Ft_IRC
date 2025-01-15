@@ -5,71 +5,127 @@ Legende :
 
 # connect
 
-/connect
-/connect with same nick/hostname
+connect
+connect with same nick/hostname
 
 #invite
-/invite noda
-/invite wronguser
+nc invite
+invite ""
+invite noda
+invite wronguser
 invite (Cancelled test)
 
 # join
-/join chan
-/join #chan
-/join #chan
-/join #chan couille
-/join #chan couille
-/join #chan couilles
-/join #chan1,#chan2
-/join #chan1,#chan2 mdp1,mdp2 + /join #chan1,#chan2 mdp1,mdp2
+nc join 
+join ""
+join chan
+join #chan
+join #chan
+join ,#chan
+join #chan mdp
+join #chan mdp
+join #chan mdps
+join #chan1,#chan2
+join #chan1,#chan2 mdp1,mdp2 + /join #chan1,#chan2 mdp1,mdp2
 
 # kick
-/kick noda
-/kick #chan
-/kick #chan wronguser
-/kick wronguser
-/kick lastuser
+nc kick
+kick ""
+kick noda
+kick #chan
+kick #chan wronguser
+kick wronguser
+kick self
 
 # mode
 (A la fin, je suis pas fou)
 
+WIP - Modifier sendAllMode en premier
+
+nc mode
+mode ""
+mode #chan ""
+mode #wrongchan ""
+mode #chan b (When user in not in #chan)
+mode noda +o
+mode #chan +o ""
+mode #chan -o ""
+mode #chan +t ""
+mode #chan +l ""
+mode #chan +k ""
+mode #chan b ""
+mode #chan +b ""
+mode #chan -b ""
+mode #chan b (OP)
+mode #chan b (Not OP)
+mode #chan +o user2
+mode #chan +o noda (Already op)
+mode #chan +o
+
 # nick
 
-/nick noda
-/nick noda
-/nick #chan
+nc nick
+nick ""
+nick noda + nick noda
+nick #chan
 
 # notice
 
-/notice #chan coucou
-/notice noda coucou
-/join #chan mdp + notice #chan coucou (Looks off : #chan Cannot send to channel || :bess-f4r3s11.clusters.42paris.fr 404 noda_ #chan :Cannot send to channel)
-/notice wrongusername coucou
+nc notice
+notice "" coucou
+notice "" ""
+notice #chan ""
+notice #chan coucou
+notice noda coucou
+join #chan mdp + notice #chan coucou (Looks off : #chan Cannot send to channel || :bess-f4r3s11.clusters.42paris.fr 404 noda_ #chan :Cannot send to channel)
+notice wrongusername coucou
 
 # part
 
-/part #chan
-/part #wrongchan
-/part existingchan
-/part noda
-/part
+nc part
+part ""
+part #chan
+part #wrongchan
+part existingchan
+part noda
 
 # ping
-(J'ai pas trouve de test)
+nc ping
+ping ""
 
 # privmsg
 
-/privmsg #chan coucou
-/privmsg noda coucou
-/join #chan mdp + privmsg #chan coucou
-/privmsg wrongusername coucou
+nc privmsg 
+privmsg "" coucou
+privmsg "" ""
+privmsg #chan ""
+privmsg #chan coucou
+privmsg noda coucou
+mode #chan +i + privmsg #chan coucou
+privmsg wrongusername coucou
 
 # quit
-/quit
-/join #newchan + quit
+quit
+join #newchan + quit
  
-#topic
-/topic 
-/topic #chan
-/topic #chan voici le topic 
-/mode +t   + topic #chan voici le topic
+# topic
+topic 
+topic #chan
+topic #chan voici le topic 
+mode +t   + topic #chan voici le topic
+
+# userhost
+
+WIP
+
+# Who
+
+WIP
+
+# bot
+
+mode #chan +i  + bot #chan -> Bot must quit when he cant join channel
+
+# Other tests
+
+nc mode + Ctrl D
