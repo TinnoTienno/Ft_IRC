@@ -6,12 +6,22 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:41:39 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 18:36:26 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:20:41 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NUMERICS_HPP
 # define NUMERICS_HPP
+
+/*	SENDF FORMAT :
+	%h -> SERVER HOSTNAME
+	%p -> destination Client prefix
+	%n -> destination Client nickname
+	%P -> source Client prefix
+	%N -> source Client nickname
+	%C -> Channel name
+	%T -> Channel topic
+*/
 
 // AUTHENTIFICATION
 
@@ -45,17 +55,19 @@
 # define RPL_MYINFO ":%h 004 %n :%h 1.2.3 itkol"
 # define RPL_ISUPPORT ":%h 005 %n :CHANMODES=i, t, k, o, l : are supported by this server"
 # define RPL_LUSERCLIENT ":%h 251 %n :There are %u users on 1 server" // getUserNumber
-// # define RPL_LUSEROP ":%h 252 %n :0 :IRC Operators online"
 # define RPL_LUSEROP ":%h 252 %n :Operators are disabled on this server"
 # define RPL_LUSERCHANNELS ":%h 254 %n :%m :channels formed" // getChannelNumber
 #define RPL_CHANNELMODEIS ":%h 324 %n %C %m" //channelmods
 #define RPL_NOTOPIC ":%h 331 %n %C :No topic is set" // channel
 #define RPL_TOPIC ":%h 332 %p %C :%T" // channel topic
+# define RPL_ENDOFWHO ":%h 315 %n %m :End of WHO list" // mask
 # define RPL_INVITELIST ":%h 336 %n %C"
 # define RPL_ENDOFINVITELIST ":%h 337 %n :End of /INVITE list"
 # define RPL_INVITING ":%h 341 %n %N %C" // guest channel
 #define RPL_NAMREPLY ":%h 353 %n%s %C :%l" //symbol channel list of clients
 #define RPL_ENDOFNAMES ":%h 366 %n %C :End of /NAMES list." // nick channel
+# define RPL_WHOREPLY ":%h 352 %n %m %u %H %N H :%r" // m -> chanNmae else *; username hostname realname
+//# define RPL_WHOREPLY ":%h 352 %n %C %u %H %n :%r" // channel (if chan is target of who) username hostname realname
 # define RPL_BANLIST ":%h 367 %n %C %m" // bannedPrefix
 # define RPL_ENDOFBANLIST ":%h 368 %n %C :End of channel ban list"
 # define RPL_MOTD ":%h 372 %n :%m" // message

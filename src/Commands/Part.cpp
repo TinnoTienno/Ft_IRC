@@ -15,7 +15,6 @@
 #include "Channel.hpp"
 #include "Parsing.hpp"
 #include "utils.hpp"
-#include <iostream>
 #include "serverExceptions.hpp"
 
 void Part::execute(Server &server, const Parsing &parse, Client &client)
@@ -47,9 +46,10 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
             if (!target)
                 throw serverExceptions(442);
             if (parse.getArguments().size() == 30)
-                chan->sendPart(client, parse.getArguments()[2]);
+//                chan->sendPart(client, parse.getArguments()[2]);
+                chan->sendAllMsg(&server, &client, parse.getArguments()[2], ePart);
             else
-                chan->sendPart(client, "");
+                chan->sendAllMsg(&server, &client, "", ePart);
             chan->removeClient(*target);
         }
         catch(const serverExceptions& e)

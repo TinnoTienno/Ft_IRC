@@ -1,9 +1,5 @@
 		TODO
-WHO		Aduvilla
-sendAll Aduvilla
-tests Eschussl
-Invite list Aduvilla (Partie Mode ?)
-sendError
+tests 
 visuel
 	
 		DONE
@@ -16,4 +12,10 @@ kick
 invite
 join
 mode
+sendAll Aduvilla
+priv en double
+WHO		Aduvilla
+erreur si avec irssi -> join #ici -> part -> quit -> leaks
+Invite list Aduvlla (Partie Mode ?)
+
 Logo Eschussl

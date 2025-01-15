@@ -83,6 +83,8 @@ void	Channel::m_cleanClient()
 		m_cMode.getOpClient()[i]->leaveOP(*this);
 }
 
+bool	Channel::isEmpty() const { return m_vClients.empty(); }
+
 bool	Channel::isJoinable(Client &client)
 {
 	if (this->m_cMode.isBanned(&client))
@@ -112,7 +114,7 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 	if (this->m_cMode.getOpClient().empty())
 		this->addOP(client);
 	this->m_vClients.push_back(&client);
-	this->sendAllJoin(client);
+	this->sendAllMsg(this->getServ(), &client, "", eJoin);
 	this->sendTopic(client);
 	this->sendClientslist(client);
 }
@@ -132,28 +134,87 @@ void	Channel::removeClient(const Client & client)
 	}
 }
 
+/*
 void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
 	{
-		if (m_vClients[i] != client)
+		switch (mode)
 		{
-			switch (mode)
-			{
-				case ePrivMsg:
-					server->sendf(m_vClients[i], client, this, PRIVMSGALL, msg.c_str());
-					break;
-				case eNotice:
-					server->sendf(m_vClients[i], client, this, NOTICEALL, msg.c_str());
-					break;
-				case eQuit:
+			case ePrivMsg:
+				server->sendf(m_vClients[i], client, this, PRIVMSGALL, msg.c_str());
+				break;
+			case eNotice:
+				server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
+				break;
+			case eQuit:
+				if (m_vClients[i] != client)
 					server->sendf( m_vClients[i], client, this, QUITMSG, msg.c_str());
-					break;
-				default:
-	  				;
-			}
+				break;
+			case eWho:
+				server->sendf(client, m_vClients[i], NULL, RPL_WHOREPLY, m_vClients[i]->getUsername().c_str(), m_vClients[i]->getHostName().c_str(), m_vClients[i]->getRealname().c_str());
+			default:
+				;
 		}
 	}
+	if (mode == eWho)
+		server->sendf(client, NULL, NULL, RPL_ENDOFWHO, msg.c_str());
+}
+
+void Channel::sendAllJoin(Client &source)
+{
+	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
+		this->m_serv->sendf(*it, &source, this, JOIN);
+}
+
+void Channel::sendPart(Client &source, const std::string &message)
+{
+	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
+		this->m_serv->sendf(*it, &source, this, PART, message.c_str());
+}
+*/
+
+void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
+{
+	for (std::vector<Client *>::iterator iter = this->m_vClients.begin(); iter != this->m_vClients.end(); ++iter)
+	{
+		switch (mode)
+		{
+			case ePrivMsg:
+				if (*iter != client || client->isNetCat())
+					server->sendf(*iter, client, this, PRIVMSGALL, msg.c_str());
+				break;
+			case eNotice:
+				server->sendf(*iter, client, NULL, NOTICEALL, msg.c_str());
+				break;
+			case eQuit:
+				if (*iter != client)
+					server->sendf( *iter, client, this, QUITMSG, msg.c_str());
+				break;
+			case eWho:
+				server->sendf(client, *iter, NULL, RPL_WHOREPLY, this->getName().c_str(), (*iter)->getUsername().c_str(), (*iter)->getHostName().c_str(), (*iter)->getRealname().c_str());
+				break;
+			case eJoin:
+				server->sendf(*iter, client, this, JOIN);
+				break;
+			case ePart:
+				server->sendf(*iter, client, this, PART, msg.c_str());
+				break;
+//			case eKick:
+//				server->sendf(*iter, client, this, KICK, (*iter)target.getNickname().c_str(), message.c_str());
+//				break;
+			default:
+				;
+		}
+	}
+	if (mode == eWho)
+		server->sendf(client, NULL, NULL, RPL_ENDOFWHO, msg.c_str());
+}
+
+void Channel::sendKick(Client &source, Client &target, const std::string &message)
+{
+	for (size_t i = 0; i < this->m_vClients.size(); i++)
+		this->m_serv->sendf(this->m_vClients[i], &source, this, KICK, target.getNickname().c_str(), message.c_str());
 }
 
 void	Channel::sendAllMode(bool status, const std::string &modeLetter)
@@ -165,12 +226,6 @@ void	Channel::sendAllMode(bool status, const std::string &modeLetter)
 		statuschar = '-';
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
 		this->m_serv->sendf(this->m_vClients[i], NULL, this, MODE + statuschar + modeLetter);
-}
-
-void	Channel::sendAllQuit(Client &client, const std::string &message)
-{
-	for (std::vector<Client *>::iterator iter = this->m_vClients.begin(); iter != this->m_vClients.end(); iter++)
-		this->m_serv->sendf(*iter, &client, this, QUITMSG, message.c_str());
 }
 
 const std::string	Channel::getName(void) const { return this->m_name; }
@@ -226,23 +281,6 @@ std::string Channel::getSymbol()
 	}
 }
 
-void Channel::sendAllJoin(Client &source)
-{
-	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
-		this->m_serv->sendf(*it, &source, this, JOIN);
-}
-
-void Channel::sendPart(Client &source, const std::string &message)
-{
-	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
-		this->m_serv->sendf(*it, &source, this, PART, message.c_str());
-}
-
-void Channel::sendKick(Client &source, Client &target, const std::string &message)
-{
-	for (size_t i = 0; i < this->m_vClients.size(); i++)
-		this->m_serv->sendf(this->m_vClients[i], &source, this, KICK, target.getNickname().c_str(),message.c_str());
-}
 
 Server *Channel::getServ() { return m_serv; }
 

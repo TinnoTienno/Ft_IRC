@@ -49,6 +49,7 @@ void Kick::execute(Server &server, const Parsing &parse, Client &client)
 				else
 					chan->sendKick(*op, *target, KICK_DEFAULT_MESSAGE);
 				chan->removeClient(*target);
+				server.checkEmptyChan();
 			}
 		}
 		catch(const serverExceptions& e)

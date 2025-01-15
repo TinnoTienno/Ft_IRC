@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:26:49 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 12:07:36 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 19:39:57 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ class Server
 
 		void	createChannel(const std::string &name, Client &client);
 		void	createChannel(const std::string &name, Client &client, const std::string &passwd);
+		void	checkEmptyChan();
 		void 	deleteChannel(Channel &channel);
 		Channel *findChannel(const std::string &channelName);
 

@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Quit.hpp                                           :+:      :+:    :+:   */
+/*   Who.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/24 14:54:11 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 15:53:19 by aduvilla         ###   ########.fr       */
+/*   Created: 2025/01/14 15:52:02 by aduvilla          #+#    #+#             */
+/*   Updated: 2025/01/14 16:12:45 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef QUIT_HPP
-# define QUIT_HPP
+#ifndef WHO_HPP
+# define WHO_HPP
 
 class Server;
 class Client;
 class Parsing;
 
-class Quit
+class Who
 {
 	public :
 		static void execute(Server &server, const Parsing &parse, Client &client);

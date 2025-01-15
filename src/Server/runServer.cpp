@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Parsing.hpp"
 #include "Server.hpp"
 #include <fcntl.h>
 #include <arpa/inet.h>
@@ -28,9 +29,11 @@
 #include "Mode.hpp"
 #include "Invite.hpp"
 #include "Quit.hpp"
+#include "Who.hpp"
 #include "serverExceptions.hpp"
 #include "utils.hpp"
 #include "Numerics.hpp"
+#include <map>
 
 void Server::AcceptNewClient()
 {
@@ -91,6 +94,58 @@ void Server::ReceiveNewData(Client &client)
 
 void Server::parseCommand(const std::string line, Client &client)
 {
+	typedef void (*CommandFunction)(Server &, const Parsing &, Client &);
+	std::map<std::string, CommandFunction> commandMap;
+
+	commandMap["JOIN"] = &Join::execute;
+	commandMap["NICK"] = &Nick::execute;
+	commandMap["userhost"] = &UserHost::execute;
+	commandMap["PING"] = &Ping::execute;
+	commandMap["PRIVMSG"] = &PrivMsg::execute;
+	commandMap["NOTICE"] = &Notice::execute;
+	commandMap["PART"] = &Part::execute;
+	commandMap["TOPIC"] = &Topic::execute;
+	commandMap["KICK"] = &Kick::execute;
+	commandMap["MODE"] = &Mode::execute;
+	commandMap["INVITE"] = &Invite::execute;
+	commandMap["QUIT"] = &Quit::execute;
+	commandMap["WHO"] = &Who::execute;
+	sendLog(itoa(client.getFD()) + " >> " + line);
+	Parsing parse(line);
+	std::map<std::string, CommandFunction>::iterator it = commandMap.find(parse.getCommand());
+	if (it != commandMap.end())
+		it->second(*this, parse, client);
+	else
+		this->sendf(&client, NULL, NULL, ERR_UNKNOWNCOMMAND, parse.getCommand().c_str());
+}
+
+std::string Server::parseBuffer(Client &client, std::string buffer)
+{
+	if (buffer.find("\n") == buffer.npos)
+	{
+		client.addPacket(buffer);
+		return "";
+	}
+	size_t	pos = 0;
+	while ((pos = buffer.find('\n', pos)) != std::string::npos)
+	{
+		if (pos == 0 || buffer[pos - 1] != '\r')
+		{
+			client.setNetCat(true);
+			buffer.insert(pos, 1, '\r');
+			pos++;
+		}
+		pos++;
+	}
+	std::string result = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
+	size_t	lastN = result.rfind('\n');
+	client.addPacket(result.substr(lastN + 1));
+	return result.substr(0, lastN + 1);
+}
+/*
+void Server::parseCommand(const std::string line, Client &client)
+{
+	bool	executed = false;
 	std::string		Commands[] = {"JOIN", 
 	"NICK", 
 	"userhost", 
@@ -124,33 +179,10 @@ void Server::parseCommand(const std::string line, Client &client)
 		if (parse.getCommand() == Commands[i])
 		{
 			fCommands[i](*this, parse, client);
-			commandFound = true;
+			executed = true;
 		}
 	}
-	if (!commandFound)
+	if (!executed)
 		this->sendf(&client, NULL, NULL, ERR_UNKNOWNCOMMAND, parse.getCommand().c_str());
 }
-
-std::string Server::parseBuffer(Client &client, std::string buffer)
-{
-	if (buffer.find("\n") == buffer.npos)
-	{
-		client.addPacket(buffer);
-		return "";
-	}
-	size_t	pos = 0;
-	while ((pos = buffer.find('\n', pos)) != std::string::npos)
-	{
-		if (pos == 0 || buffer[pos - 1] != '\r')
-		{
-			buffer.insert(pos, 1, '\r');
-			pos++;
-		}
-		pos++;
-	}
-	std::string result = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
-	size_t	lastN = result.rfind('\n');
-	client.addPacket(result.substr(lastN + 1));
-	return result.substr(0, lastN + 1);
-}
-
+*/

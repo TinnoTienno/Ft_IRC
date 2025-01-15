@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:43:19 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 14:36:25 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:03:09 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,10 @@ bool strCompareNoCase(const std::string &string1, const std::string &string2)
 	return true;
 }
 
-
+std::string	trimNewLines(const std::string & str)
+{
+	std::string	result = str;
+	while (!str.empty() && (str[str.size() - 1] == '\r' || str[str.size() - 1] == '\n'))
+		result.erase(str.size() - 1, 1);
+	return result;
+}
