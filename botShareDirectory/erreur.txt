@@ -1,8 +1,0 @@
-erreur avec /part dans irssi :
-!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
-16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
-16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
-16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
-16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
-16:12 -!- Irssi: (default) critical nicklist_set_host: assertion 'host != NULL' failed
-16:12 -!- #ici No topic is set

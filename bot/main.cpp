@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 10:39:46 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/09 12:19:23 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/16 00:46:18 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int ac, char **av)
 		return 1;
 	}
 	std::string adress(av[1]);
-	if (adress == "localhost")
+	if (!adress.empty() && adress == "localhost")
 		adress = "127.0.0.1";
 	Bot	bot(adress, av[2], av[3], std::atoi(av[4]));
 	try

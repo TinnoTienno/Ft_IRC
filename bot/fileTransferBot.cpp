@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 17:38:15 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 22:02:49 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/16 00:04:49 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,25 +118,24 @@ void	Bot::m_handleSendFile(std::vector<std::string> & tokens)
 	int		serverSock = -1;
 	int		clientSock = -1;
 	std::ifstream	file;
-	std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
+	std::string user = tokens[0].substr(0, tokens[0].find("!"));
 	try
 	{
 		if (tokens.size() < 5)
 			throw std::runtime_error("Usage: PRIVMSG " + m_name + " !send [filename]");
-		std::string filename = m_trimNewLines(tokens[4]);
 		u_int32_t localIp = m_getLocalIpInt();
 		struct sockaddr_in	serverAddr = {};
 		m_createSocket(serverAddr, serverSock);
 		int	port = ntohs(serverAddr.sin_port);
-		if (!isInList(filename))
-			throw std::runtime_error(filename + ": is not in shared dirextory");
-		std::string fullPath = this->m_fileDir + "/" + filename;
+		if (!isInList(tokens[4]))
+			throw std::runtime_error(tokens[4] + ": is not in shared dirextory");
+		std::string fullPath = static_cast<std::string>(FILEDIR) + "/" + tokens[4];
 		file.open(fullPath.c_str(), std::ios::binary | std::ios::ate); // binary -> binary mode ; ate -> cursor is placed at the end
 		if (!file.is_open())
-			throw std::runtime_error("Error: Cannot open file " + filename);
+			throw std::runtime_error("Error: Cannot open file " + tokens[4]);
 		size_t	fileSize = getFileSize(file);
 		std::ostringstream DccMessage;
-		DccMessage << "PRIVMSG " << user << " :\001DCC SEND " << filename << " " << localIp << " " << port << " " << fileSize << "\001\r\n";
+		DccMessage << "PRIVMSG " << user << " :\001DCC SEND " << tokens[4] << " " << localIp << " " << port << " " << fileSize << "\001\r\n";
 		speak(DccMessage.str());
 		speak("PRIVMSG " + user + " :File Sent: It will be available for 1 minute\r\n");
 		speak("PRIVMSG " + user + " :Type /dcc get -n [newFileName] -d [pathToCopyDir] FileHandlerBot [filename]\r\n");

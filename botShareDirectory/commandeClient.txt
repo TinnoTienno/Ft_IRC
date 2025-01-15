@@ -1,12 +1,20 @@
-/dcc send Noda /mnt/nfs/homes/aduvilla/Code/Ft_IRC/todo
-# envoie à noda le fichier todo
+# CONNECT
+irssi -c [adresseip] -p [port] -w [password] -n [nick]
 
-/dcc get <user> <file>
-/dcc get -n <nouveau_nom_de_fichier> -d <chemin/vers/le/repertoire> <user> <file>
-# recois le file de user
+nc -N [host] [port]
+PASS [password]
+NICK [nick]
+USER [user] 0 * :[realName]
 
-nc -l 12345 < test.txt
-# envoie le fichier test avec netcat (on doit se trouver dans le dossier dans lequel est test.txt)
+# DCC IRSSI SEND FILE
+/dcc send [user] [complete/path/file]
 
-nc <server_ip> 12345 > test.txt
-# recois le fichier avec server_ip étant l'adresse IP de l'envoyeur
+# DCC IRSSI GET FILE
+/dcc get [user] [file]
+/dcc get -n [newFileName] -d [path/to/paste/dir] [user] [file]
+
+# NETCAT SEND FILE
+nc [Ipaddress] [port] < [complete/path/file]
+
+# NETCAT GET FILE
+nc -l [port] > [new/path/and/filename]

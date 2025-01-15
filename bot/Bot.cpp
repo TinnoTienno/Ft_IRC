@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 18:27:07 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/16 00:26:36 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <arpa/inet.h>
 #include <cerrno>
 #include <exception>
+#include <fstream>
 #include <iostream>
 #include <netinet/in.h>
 #include <sstream>
@@ -35,7 +36,6 @@ Bot::Bot(std::string serAdd, std::string channel, std::string password, int port
 {
 	this->m_channel = "#" + channel;
 	this->m_name = "FileHandlerBot";
-	this->m_fileDir = "botShareDirectory";
 	this->m_serSocket = -1;
 }
 
@@ -69,8 +69,8 @@ void	Bot::m_createList()
 {
 	DIR* directory;
 	struct dirent* ent;
-	if ((directory = opendir(this->m_fileDir.c_str())) == NULL)
-		throw std::runtime_error("Error: Cannot open directory : " + this->m_fileDir);
+	if ((directory = opendir(FILEDIR)) == NULL)
+		throw std::runtime_error("Error: Cannot open directory : " + static_cast<std::string>(FILEDIR));
 	if (!this->m_vlist.empty())
 		this->m_vlist.clear();
 	while ((ent = readdir(directory)) != NULL)
@@ -154,7 +154,7 @@ void	Bot::m_handleRefresh(std::vector<std::string> & tokens)
 
 void	Bot::m_handleList(std::vector<std::string> & tokens)
 {
-	std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
+	std::string user = tokens[0].substr(0, tokens[0].find("!"));
 	if (this->m_vlist.empty())
 		speak("PRIVMSG " + user + " Bot's shareDirextory is empty\r\n");
 	std::ostringstream messageStream;
@@ -167,19 +167,41 @@ void	Bot::m_handleList(std::vector<std::string> & tokens)
 	speak("PRIVMSG " + user + " :End of shared files list\r\n");
 }
 
+void	Bot::m_handleKick(std::vector<std::string> & tokens)
+{
+	std::string user = tokens[0].substr(0, tokens[0].find("!"));
+	std::vector<std::string>	bannedWords;
+	std::ifstream				file(BANDIC);
+	if (!file)
+		return ;
+	std::string	word;
+	while (std::getline(file, word))
+//	while (file >> word) // read word by word cut with tab space \n ...
+		bannedWords.push_back(word);
+	file.close();
+	for (std::vector<std::string>::iterator ittok = tokens.begin(); ittok != tokens.end(); ++ittok)
+		for (std::vector<std::string>::iterator itb = bannedWords.begin(); itb != bannedWords.end(); ++itb)
+			if (toLowerStr(*ittok) == *itb)
+			{
+				speak("KICK " + m_channel + " " + user + " :Shocking!\r\n");
+				return ;
+			}
+}
+
 void	Bot::m_handlePrivMsg(std::string & message)
 {
 	std::vector<std::string> tokens = vsplit(message, ' ');
 	typedef void (Bot::*CommandFuncion)(std::vector<std::string> &);
 	std::map<std::string, CommandFuncion> commandMap;
 
-	commandMap[":!send"] = &Bot::m_handleSendFile;
-	commandMap[":!list"] = &Bot::m_handleList;
-	commandMap[":!refresh"] = &Bot::m_handleRefresh;
+	commandMap["!send"] = &Bot::m_handleSendFile;
+	commandMap["!list"] = &Bot::m_handleList;
+	commandMap["!refresh"] = &Bot::m_handleRefresh;
 
 	if (tokens.size() < 4)
 		return ;
-	std::map<std::string, CommandFuncion>::iterator it = commandMap.find(m_trimNewLines(tokens[3]));
+	std::map<std::string, CommandFuncion>::iterator it = commandMap.find(tokens[3]);
 	if (it != commandMap.end())
 		(this->*(it->second))(tokens);
+	m_handleKick(tokens);
 }
