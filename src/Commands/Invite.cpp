@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Invite.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 13:05:36 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 16:51:54 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:59:15 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 	{
 		Client	*guest;
 		if (parse.getArguments().size() == 1)
-			client.sendInviteList(&server);
+			return client.sendInviteList(&server);
 		else if (parse.getArguments().size() < 3)
 				throw serverExceptions(461);
 		guest = server.getClient(parse.getArguments()[1]);

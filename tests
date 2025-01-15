@@ -9,38 +9,42 @@ Legende :
 !!!! auto quit bot
 
 connect
-connect with same nick/hostname
+/connect with same nick/hostname
+
+# authentification
+nc + authentification
 
 #invite
-nc invite
-invite ""
-invite noda
-invite wronguser
-invite (Cancelled test)
+/nc invite
+/invite ""
+/invite noda #cha
+/invite wronguser #cha
+/invite noda #wrongchan
+/invite noda
 
 # join
-nc join 
-join ""
-join chan
-join #chan
-join #chan
-join ,#chan
-join #chan mdp
-join #chan mdp
-join #chan mdps
-join #chan1,#chan2
-join #chan1,#chan2 mdp1,mdp2 + /join #chan1,#chan2 mdp1,mdp2
+/nc join 
+/join ""
+/join chan
+/join #chan
+/join #chan
+/join ,#chan
+/join #chan mdp + join #chan mdp
+/join #chan mdp + join #chan mdps
+/join #chan1,#chan2
+/join #chan1,#chan2 mdp1,mdp2 + /join #chan1,#chan2 mdp1,mdp2
+/join #cha + /join #Cha
 
 # kick
-nc kick
-kick ""
-kick noda
-kick #chan
-kick #chan wronguser
-kick wronguser
-kick self
+/nc kick
+/kick ""
+/kick noda
+/kick #chan
+/kick #chan wronguser
+/kick wronguser
+/kick #cha self
 
-# mode
+# mode Arthur
 (A la fin, je suis pas fou)
 
 WIP - Modifier sendAllMode en premier
@@ -66,52 +70,54 @@ mode #chan +o noda (Already op)
 mode #chan +o
 
 # nick
-
-nc nick
-nick ""
-nick noda + nick noda
-nick #chan
+/nc nick
+/nick ""
+/nick noda + nick noda
+/nick #chan
+/Tested at connection too
 
 # notice
 
-nc notice
-notice "" coucou
-notice "" ""
-notice #chan ""
-notice #chan coucou
-notice noda coucou
-join #chan mdp + notice #chan coucou (Looks off : #chan Cannot send to channel || :bess-f4r3s11.clusters.42paris.fr 404 noda_ #chan :Cannot send to channel)
-notice wrongusername coucou
+/nc notice
+/notice "" coucou
+/notice "" ""
+notice #chan "" (Right now is sending "" as a message, should try Dalnet before modifying)
+/notice #chan 
+/notice #chan coucou
+/notice noda coucou
+/join #chan mdp + notice #chan coucou (Looks off : #chan Cannot send to channel || :bess-f4r3s11.clusters.42paris.fr 404 noda_ #chan :Cannot send to channel)
+/notice wrongusername coucou
+/notice #wrongchannel coucou
 
 # part
 
-nc part
-part ""
-part #chan
-part #wrongchan
-part existingchan
-part noda
+/nc part
+part "" (right now is sending a No such channel, should try DALNET)
+/part #chan
+/part #wrongchan
+/part existingchan
+/part noda
 
 # ping
-nc ping
-ping ""
+/nc ping
+/ping ""
 
 # privmsg
 
-nc privmsg 
-privmsg "" coucou
-privmsg "" ""
-privmsg #chan ""
-privmsg #chan coucou
-privmsg noda coucou
-mode #chan +i + privmsg #chan coucou
-privmsg wrongusername coucou
+/nc privmsg 
+/privmsg "" coucou
+/privmsg "" ""
+privmsg #chan "" (Same as notice)
+/privmsg #chan coucou
+/privmsg noda coucou
+/mode #chan +i + privmsg #chan coucou
+/privmsg wrongusername coucou
 
 # quit
-quit
-join #newchan + quit
+/quit
+/join #newchan + quit
  
-# topic
+# topic Aduvilla
 topic 
 topic #chan
 topic #chan voici le topic 

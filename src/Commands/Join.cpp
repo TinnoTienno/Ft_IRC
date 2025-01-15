@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 17:19:53 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 15:44:03 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:26:48 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 		try
 		{
 			channel = server.findChannel(*iterChannels);
+			if (channel && channel->getClient(&client))
+				return ;
 			if (iterPasswords != passwords.end() && channel)
 				channel->addClient(client, *iterPasswords);
 			else if (iterPasswords != passwords.end())
