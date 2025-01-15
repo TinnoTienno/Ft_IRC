@@ -6,7 +6,7 @@
 #    By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/15 14:34:58 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/15 16:28:37 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ SRCS		=	main.cpp\
 				serverExceptions.cpp\
 				ChanMode.cpp\
 				$(addprefix $(SERVER_PATH), Server.cpp initServer.cpp getServer.cpp signalServer.cpp authentificationServer.cpp runServer.cpp utilServer.cpp exitServer.cpp)\
-				$(addprefix $(COMMAND_PATH), Nick.cpp Kick.cpp Join.cpp UserHost.cpp Ping.cpp PrivMsg.cpp Notice.cpp Part.cpp Topic.cpp Mode.cpp Quit.cpp Invite.cpp Who.cpp)
+				$(addprefix $(COMMAND_PATH), Nick.cpp Kick.cpp Join.cpp Ping.cpp PrivMsg.cpp Notice.cpp Part.cpp Topic.cpp Mode.cpp Quit.cpp Invite.cpp Who.cpp)
 				
 OBJS		=	$(addprefix .obj/,$(SRCS:.cpp=.o))
 

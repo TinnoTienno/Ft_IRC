@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:09:09 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 14:06:17 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:29:18 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <string>
 #include <unistd.h>
 #include <string.h>
-#include "UserHost.hpp"
 #include "Ping.hpp"
 #include "Topic.hpp"
 #include "PrivMsg.hpp"
@@ -99,7 +98,6 @@ void Server::handleCommand(const std::string line, Client &client)
 
 	commandMap["JOIN"] = &Join::execute;
 	commandMap["NICK"] = &Nick::execute;
-	commandMap["userhost"] = &UserHost::execute;
 	commandMap["PING"] = &Ping::execute;
 	commandMap["PRIVMSG"] = &PrivMsg::execute;
 	commandMap["NOTICE"] = &Notice::execute;
