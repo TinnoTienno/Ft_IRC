@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 15:36:59 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 18:27:07 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include <vector>
 #include <fcntl.h>
 #include <poll.h>
+#include <map>
 
 bool Bot::m_signal = false;
 
@@ -94,9 +95,7 @@ int	Bot::init()
 	}
 	catch (const std::exception & e)
 	{
-		std::cout << "avant what" << std::endl;
 		std::cerr << e.what() << std::endl;
-		std::cout << "apres what" << std::endl;
 		return quit();
 	}
 }
@@ -147,8 +146,15 @@ int	Bot::m_run()
 	return quit();
 }
 
-void	Bot::m_handleList(const std::string & user)
+void	Bot::m_handleRefresh(std::vector<std::string> & tokens)
 {
+	(void)tokens;
+	m_createList();
+}
+
+void	Bot::m_handleList(std::vector<std::string> & tokens)
+{
+	std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
 	if (this->m_vlist.empty())
 		speak("PRIVMSG " + user + " Bot's shareDirextory is empty\r\n");
 	std::ostringstream messageStream;
@@ -161,29 +167,19 @@ void	Bot::m_handleList(const std::string & user)
 	speak("PRIVMSG " + user + " :End of shared files list\r\n");
 }
 
-void	Bot::m_handlePrivMsg(const std::string & message)
+void	Bot::m_handlePrivMsg(std::string & message)
 {
 	std::vector<std::string> tokens = vsplit(message, ' ');
+	typedef void (Bot::*CommandFuncion)(std::vector<std::string> &);
+	std::map<std::string, CommandFuncion> commandMap;
 
-	if (tokens.size() > 3 && tokens[3] == ":!send")
-	{
-		std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
-		if (tokens.size() > 4)
-		{
-			std::string filename = m_trimNewLines(tokens[4]);
-			m_handleSendFile(user, filename);
-		}
-		else
-			speak("PRIVMSG " + user + " :Usage: !send [filename]\r\n");
-	}
-	else if (tokens.size() > 3 && m_trimNewLines(tokens[3]) == ":!list")
-	{
-		std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
-		m_handleList(user);
-	}
-	else if (tokens.size() > 3 && m_trimNewLines(tokens[3]) == ":!refresh")
-	{
-		std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
-		m_createList();
-	}
+	commandMap[":!send"] = &Bot::m_handleSendFile;
+	commandMap[":!list"] = &Bot::m_handleList;
+	commandMap[":!refresh"] = &Bot::m_handleRefresh;
+
+	if (tokens.size() < 4)
+		return ;
+	std::map<std::string, CommandFuncion>::iterator it = commandMap.find(m_trimNewLines(tokens[3]));
+	if (it != commandMap.end())
+		(this->*(it->second))(tokens);
 }

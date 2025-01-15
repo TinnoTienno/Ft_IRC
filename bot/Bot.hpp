@@ -1,10 +1,12 @@
 #ifndef BOT_HPP
-#define BOT_HPP
+# define BOT_HPP
 
-#include <string>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <vector>
+#include <fstream>
+# include <string>
+# include <arpa/inet.h>
+# include <netinet/in.h>
+# include <vector>
+# define DCCTIMEOUT 60
 
 class Bot {
 public:
@@ -31,19 +33,26 @@ private:
     int 						m_serSocket;
 	void		m_authenticate();
 	void		m_connectToServer();
-	void		m_createList();
 	void		m_helloWorld();
+	void		m_createList();
     int			m_run();
-	void		m_handlePrivMsg(const std::string & message);
 	uint32_t	m_getLocalIpInt() const;
 	void		m_createSocket(struct sockaddr_in & serverAddr, int & serverSock);
-	void		m_acceptAndSend(int serverSock, std::ifstream & file);
-	void		m_handleList(const std::string & user);
-	bool		isInList(const std::string & user, const std::string & filename);
-    int			m_handleSendFile(const std::string& user, const std::string& filename);
-	std::string&	m_trimNewLines(std::string & str);
+	void		m_acceptAndSend(int & serverSock, int & clientSock, std::ifstream & file);
+	bool		isInList(const std::string & filename);
+
+	// HANDLE CMD
+	void		m_sendFileData(int & clientSock, std::ifstream & file);
+	void		m_handlePrivMsg(std::string & message);
+	void		m_handleList(std::vector<std::string> & tokens);
+    void		m_handleSendFile(std::vector<std::string> & tokens);
+	void		m_handleRefresh(std::vector<std::string> & tokens);
+
+	// UTILS
+	std::string	m_trimNewLines(const std::string & str);
 };
 
 std::vector<std::string>	vsplit(const std::string & str, char delimiter);
+size_t	getFileSize(std::ifstream & file);
 
 #endif

@@ -6,22 +6,26 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 14:11:32 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 14:45:32 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 21:24:20 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
+#include <cstddef>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include <ios>
 
-std::string	&Bot::m_trimNewLines(std::string & str)
+std::string	Bot::m_trimNewLines(const std::string & str)
 {
-	while (!str.empty() && (str[str.size() - 1] == '\r' || str[str.size() - 1] == '\n'))
-		str.erase(str.size() - 1, 1);
-	return str;
+	std::string result = str;
+	while (!result.empty() && (result[result.size() - 1] == '\r' || result[result.size() - 1] == '\n'))
+		result.erase(result.size() - 1, 1);
+	return result;
 }
 
 void	Bot::speak(const std::string & msg)
@@ -48,5 +52,13 @@ std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 	std::istringstream	inputStream(str);
 	while (std::getline(inputStream, token, delimiter))
 		result.push_back(token);	
+	return result;
+}
+
+size_t	getFileSize(std::ifstream & file)
+{
+	size_t	result;
+	result = file.tellg(); // get the file size in bytes with the current cursor position
+	file.seekg(0, std::ios::beg); // move the cursor back to the begining
 	return result;
 }
