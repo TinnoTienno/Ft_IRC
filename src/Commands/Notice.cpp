@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 13:47:58 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 17:49:04 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,62 @@
 
 void	Notice::execute(Server &server, const Parsing &parse, Client &client)
 {
-	if (parse.getArguments().size() < 3)
-		return ;
-	std::vector<std::string>	targets = vsplit(parse.getArguments()[1], ',');
-	for (size_t i = 0; i < targets.size(); i++)
+	try
 	{
-		if (targets[i].find('#') == 0)
+		if (parse.getArguments().size() < 3)
 		{
-			Channel *chan = server.getChannel(targets[i]);
-			if (chan)
-				chan->sendAllMsg(&server, &client, parse.getArguments()[2], eNotice); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+			if (parse.getArguments().size() < 2 || parse.getArguments()[1].find(":", 0) == 0)
+				throw serverExceptions(411);
+			else
+				throw serverExceptions(412);
 		}
-		else
-	  	{
-			Client *user = server.getClient( targets[i]);
-			if (user)
-				server.sendf(user, &client, NULL, NOTICE, parse.getArguments()[2].c_str());
+		std::vector<std::string>	targets = vsplit(parse.getArguments()[1], ',');
+		for (size_t i = 0; i < targets.size(); i++)
+		{
+			Channel	*chan = NULL;
+			try
+			{
+				if (targets[i].find('#') == 0)
+				{
+					chan = server.getChannel(targets[i]);
+					if (!chan)
+						throw serverExceptions(401);
+					else if (!chan->isJoinable(client))
+						throw serverExceptions(404);
+					else
+						chan->sendAllMsg(&server, &client, parse.getArguments()[2], eNotice); // !!!! il faut aussi envoyer le client actuel pour la source du msg
+				}
+				else
+				{
+					Client *user = server.getClient( targets[i]);
+					if (!user)
+						throw serverExceptions(401);
+					else
+						server.sendf(user, &client, NULL, NOTICE, parse.getArguments()[2].c_str());
+				}
+			}
+	   		catch (const serverExceptions & e)
+			{
+				switch (e.getErrorCode())
+				{
+					case 401 :
+						e.sendError(server, &client, NULL, targets[i].c_str());
+					case 404 :
+						e.sendError(server, &client, chan);
+				}
+			}
+		}
+	}
+	catch (const serverExceptions & e)
+	{
+		switch (e.getErrorCode())
+		{
+			case 411 :
+	   			e.sendError(server, &client, NULL, parse.getCommand().c_str());
+				break;
+			case 412 :
+	   			e.sendError(server, &client, NULL);
 		}
 	}
 }
+

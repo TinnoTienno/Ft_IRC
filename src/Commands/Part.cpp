@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:19:25 by noda              #+#    #+#             */
-/*   Updated: 2025/01/13 17:07:35 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:08:30 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,24 +43,24 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
             chan = server.getChannel(*iter);
             if (!chan)
                 throw serverExceptions(403);
-            Client *cli = chan->getClient(&client);
-            if (!cli)
+            Client *target = chan->getClient(&client);
+            if (!target)
                 throw serverExceptions(442);
             if (parse.getArguments().size() == 30)
                 chan->sendPart(client, parse.getArguments()[2]);
             else
                 chan->sendPart(client, "");
-            chan->removeClient(*cli);
+            chan->removeClient(*target);
         }
         catch(const serverExceptions& e)
         {
             switch (e.getErrorCode())
             {
                 case 403 :
-			    	e.sendError(server, &client, NULL, *iter->c_str());
+			    	e.sendError(server, &client, NULL, (*iter).c_str());
 			    	break;
                 case 442 :
-                    e.sendError(server, &client, NULL, chan->getName().c_str());
+                    e.sendError(server, &client, chan);
                     break;
             }
 			

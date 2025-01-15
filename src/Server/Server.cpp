@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:33:51 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 12:22:05 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 17:08:30 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,14 @@ void	Server::createChannel(const std::string &name, Client &client)
 
 void	Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
 {
-	Channel*	newChannel = new Channel(*this, name);
+	Channel*	newChannel = new Channel(*this, name, passwd);
 	newChannel->addClient(client, passwd);
 	newChannel->addOP(client);
 	m_vChannels.push_back(newChannel);
 }
 
 
-void 	Server::deleteChannel(Channel &channel)
-{
-	for (size_t i = 0; i < m_vChannels.size(); i++) {
-		if (m_vChannels[i] == &channel)
-		{
-			m_vChannels.erase(m_vChannels.begin() + i);
-			delete &channel;
-		}
-	}
-}
+
 
 Client *Server::getClient(const std::string &nickname)
 {

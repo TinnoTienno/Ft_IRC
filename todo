@@ -1,10 +1,10 @@
 		TODO
 WHO		Aduvilla
 sendAll Aduvilla
-tests 
-Invite list Aduvlla (Partie Mode ?)
+tests Eschussl
+Invite list Aduvilla (Partie Mode ?)
+sendError
 visuel
-	Logo Eschussl
 	
 		DONE
 privmsg
@@ -16,3 +16,4 @@ kick
 invite
 join
 mode
+Logo Eschussl

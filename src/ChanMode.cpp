@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 18:00:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 13:45:06 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:27:22 by eschussl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <vector>
 #include "Server.hpp"
 #include "Numerics.hpp"
+#include "utils.hpp"
 
 ChanMode::ChanMode() : m_inviteOnly(false), m_topicProtected(false), m_passwordProtected(false), m_sizeLimited(false), m_clientMax(DEFAULTSIZELIMIT) {}
 
@@ -35,7 +36,7 @@ const std::string&	ChanMode::getTopic() const { return m_topic; }
 
 bool	ChanMode::isPasswordProtected() const { return m_passwordProtected; }
 
-bool	ChanMode::isPasswordValid(const std::string & pass) const { return pass == m_password; }
+bool	ChanMode::isPasswordValid(const std::string & pass) const {	return pass == m_password; }
 
 bool	ChanMode::isSizeLimited() const { return m_sizeLimited; }
 
@@ -105,3 +106,19 @@ void	ChanMode::sendBanList(Server &server, Channel &channel, Client &dest)
 		server.sendf(&dest, NULL, &channel, RPL_BANLIST, (*iter).c_str());
 	server.sendf(&dest, NULL, &channel, RPL_ENDOFBANLIST);
 }
+
+std::string ChanMode::modeToStr()
+{
+	if (!(this->isInviteOnly() || this->isTopicProtected() || this->isPasswordProtected() || this->isSizeLimited()))
+		return "";
+	std::string res = "+";
+	if (this->isInviteOnly())
+		res += "i";
+	if (this->isTopicProtected())
+		res += "t";
+	if (this->isPasswordProtected())
+		res += "k";
+	if (this->isSizeLimited())
+		res += "l" + itoa(this->getLimitSize());
+	return res;
+}	
