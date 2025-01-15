@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 19:39:53 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 16:32:03 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 11:45:49 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 				{
 					case 401 :
 						e.sendError(server, &client, NULL, targets[i].c_str());
+						break;
 					case 404 :
 						e.sendError(server, &client, chan);
 				}

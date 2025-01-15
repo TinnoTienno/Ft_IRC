@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 18:36:21 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 11:40:19 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,46 +133,6 @@ void	Channel::removeClient(const Client & client)
 		}
 	}
 }
-
-/*
-void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
-{
-	for (size_t i = 0; i < m_vClients.size(); i++)
-	{
-		switch (mode)
-		{
-			case ePrivMsg:
-				server->sendf(m_vClients[i], client, this, PRIVMSGALL, msg.c_str());
-				break;
-			case eNotice:
-				server->sendf(m_vClients[i], client, NULL, NOTICE, msg.c_str());
-				break;
-			case eQuit:
-				if (m_vClients[i] != client)
-					server->sendf( m_vClients[i], client, this, QUITMSG, msg.c_str());
-				break;
-			case eWho:
-				server->sendf(client, m_vClients[i], NULL, RPL_WHOREPLY, m_vClients[i]->getUsername().c_str(), m_vClients[i]->getHostName().c_str(), m_vClients[i]->getRealname().c_str());
-			default:
-				;
-		}
-	}
-	if (mode == eWho)
-		server->sendf(client, NULL, NULL, RPL_ENDOFWHO, msg.c_str());
-}
-
-void Channel::sendAllJoin(Client &source)
-{
-	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
-		this->m_serv->sendf(*it, &source, this, JOIN);
-}
-
-void Channel::sendPart(Client &source, const std::string &message)
-{
-	for (std::vector<Client*>::iterator it = this->m_vClients.begin(); it != this->m_vClients.end(); ++it)
-		this->m_serv->sendf(*it, &source, this, PART, message.c_str());
-}
-*/
 
 void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
 {

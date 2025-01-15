@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 23:58:31 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 17:49:04 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 11:46:38 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	Notice::execute(Server &server, const Parsing &parse, Client &client)
 				{
 					case 401 :
 						e.sendError(server, &client, NULL, targets[i].c_str());
+						break;
 					case 404 :
 						e.sendError(server, &client, chan);
 				}
