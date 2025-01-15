@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 14:19:25 by noda              #+#    #+#             */
-/*   Updated: 2025/01/14 18:08:30 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:12:02 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Part::execute(Server &server, const Parsing &parse, Client &client)
         {
             case 461 :
 				e.sendError(server, &client, NULL, parse.getCommand().c_str());
-				break;
+				return;
         }
     }
 	std::vector<std::string> channelnames = vsplit(parse.getArguments()[1], ',');
