@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:23:07 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 19:45:29 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:42:13 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ typedef enum messageMode
 	eWho,
 	eJoin,
 	ePart,
-	eKick
+	eKick,
+	eMode
 }	messageMode;
 
 typedef enum channelType
