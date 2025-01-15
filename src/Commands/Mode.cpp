@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 19:15:16 by noda              #+#    #+#             */
-/*   Updated: 2025/01/15 11:09:16 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/15 15:45:17 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,21 @@
 #include <vector>
 #include "Numerics.hpp"
 
-void Mode::modeI(Channel &channel, bool status)
+void Mode::modeI(Server &server,Channel &channel, Client &source, bool status)
 {
+	std::string strStat = status ? "+i" : "-i";
 	channel.getMode()->setInviteOnly(status);
-	channel.sendAllMode(status, "i");
+	channel.sendAllMsg(&server, &source, strStat, eMode);
 }
 
-void Mode::modeT(Channel & channel, bool status)
+void Mode::modeT(Server & server,Channel & channel, Client &source, bool status)
 {
+	std::string strStat = status ? "+t" : "-t";
 	channel.getMode()->setTopicProtected(status);
-	channel.sendAllMode(status, "t");
+	channel.sendAllMsg(&server, &source, strStat, eMode);
 }
 	
-void	Mode::modeL(Channel & channel, bool status, const std::string &modeArg)
+void	Mode::modeL(Server & server, Channel & channel, Client & source, bool status, const std::string &modeArg)
 {
 	if (status)
 	{
@@ -47,13 +49,12 @@ void	Mode::modeL(Channel & channel, bool status, const std::string &modeArg)
 		{
 			(void) e;
 		}
-		
-		channel.sendAllMode(status, "l " + modeArg);
+		channel.sendAllMsg(&server, &source, "+l " + modeArg, eMode);
 	}
 	else
 	{
 		channel.getMode()->setSizeLimited(status);
-		channel.sendAllMode(status, "l");
+		channel.sendAllMsg(&server, &source, "-l ", eMode);
 	}
 }
 
@@ -70,12 +71,12 @@ void	Mode::modeO(Server &server, Channel & channel, Client &source, bool status,
 			if (client && status && !channel.getMode()->isOP(client))
 			{
 				channel.getMode()->addOP(client);
-				channel.sendAllMode(status, "o " + modeArg); // a voir si c'est bien ?
+				channel.sendAllMsg(&server, &source, "+o " + modeArg, eMode);
 			}
 			if (client && !status && channel.getMode()->isOP(client))
 			{
 				channel.getMode()->removeOP(client);
-				channel.sendAllMode(status, "o " + modeArg);
+				channel.sendAllMsg(&server, &source, "-o " + modeArg, eMode);
 			}
 		}
 		catch(const serverExceptions& e)
@@ -86,92 +87,84 @@ void	Mode::modeO(Server &server, Channel & channel, Client &source, bool status,
 				e.sendError(server, &source, NULL, tokens[i].c_str());
 			}
 		}
-		
-		
 	}
 }
 	
-void	Mode::modeK(Channel & channel, bool status, const std::string &modeArg)
+void	Mode::modeK(Server & server, Channel & channel, Client & source, bool status, const std::string &modeArg)
 {
 	if (status)
 	{
 		channel.getMode()->setPasswordProtected(status);
 		channel.getMode()->setPassword(modeArg);
-		channel.sendAllMode(status, "k");
+		channel.sendAllMsg(&server, &source, "+k ", eMode);
 	}
 	else
 	{
 		channel.getMode()->setPasswordProtected(status);
-		channel.sendAllMode(status, "k");
+		channel.sendAllMsg(&server, &source, "-k ", eMode);
 	}
 }
 
-void	Mode::modeB(Channel &channel, Client &source)
+void	Mode::modeB(Server & server, Channel &channel, Client &source)
 {
-	channel.getMode()->sendBanList(*channel.getServ(), channel, source);
+	channel.getMode()->sendBanList(server, channel, source);
 }
 
-void	Mode::modeB(Channel &channel, bool status, const std::string bannedPrefix)
+void	Mode::modeB(Server & server, Channel &channel, Client & source, bool status, const std::string bannedPrefix)
 {
+	std::string strStat = status ? "+b" : "-b";
 	if (status)
 		channel.getMode()->setBanned(bannedPrefix);
 	else
 		channel.getMode()->unsetBanned(bannedPrefix);
-	channel.sendAllMode(true, "b " + bannedPrefix);
+	channel.sendAllMsg(&server, &source, strStat + bannedPrefix, eMode);
 }
-#include <iostream>
+
 void Mode::channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse)
 {
-	bool status = 0;
+	bool status = true;
 	(void) server;
 	std::string arg = parse.getArguments()[2];
-	bool statusUpdated = 0;
 	size_t argIndex = 3;
 	for (size_t i = 0; i < arg.size(); i++)
 	{
 		switch (arg[i])
 		{
 			case '+' :
-				statusUpdated = true;
 				status = true;
 				break;
 			case '-' :
-				statusUpdated = true;
 				status = false;
 				break;
 			case 'i' :
-				if (statusUpdated)
-					Mode::modeI(channel, status);
+					Mode::modeI(server,channel, source, status);
 				break;
 			case 't' :
-				if (statusUpdated)
-					Mode::modeT(channel, status);
+					Mode::modeT(server, channel, source, status);
 				break;
 			 case 'k' :
-				if (statusUpdated && parse.getArguments().size() > argIndex)
-					Mode::modeK(channel, status, parse.getArguments()[argIndex++]);
+				if (parse.getArguments().size() > argIndex)
+					Mode::modeK(server, channel,  source, status, parse.getArguments()[argIndex++]);
 				else
 					throw serverExceptions(461);
 				break;
 			 case 'o' :
-				if (statusUpdated && parse.getArguments().size() > argIndex)
+				if (parse.getArguments().size() > argIndex)
 					Mode::modeO(server, channel, source, status, parse.getArguments()[argIndex++]);
 				else
 					throw serverExceptions(461);
 				break;
 			case 'l' :
-				if (statusUpdated && parse.getArguments().size() > argIndex)
-					Mode::modeL(channel, status, parse.getArguments()[argIndex++]);
+				if (parse.getArguments().size() > argIndex)
+					Mode::modeL(server, channel, source, status, parse.getArguments()[argIndex++]);
 				else
 					throw serverExceptions(461);
 				break;
 			case 'b' :
-				if (!statusUpdated)
-					Mode::modeB(channel, source);
-				else if (parse.getArguments().size() > argIndex)
-					Mode::modeB(channel, status, parse.getArguments()[argIndex++]);
+				if (parse.getArguments().size() > argIndex)
+					Mode::modeB(server, channel, source, status, parse.getArguments()[argIndex++]);
 				else
-					throw serverExceptions(461);
+					Mode::modeB(server, channel, source);
 				break;
 			default :
 					throw serverExceptions(525);

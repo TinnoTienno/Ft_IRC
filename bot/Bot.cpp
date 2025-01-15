@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/13 20:15:20 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:36:59 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ Bot::Bot(std::string serAdd, std::string channel, std::string password, int port
 	this->m_channel = "#" + channel;
 	this->m_name = "FileHandlerBot";
 	this->m_fileDir = "botShareDirectory";
-	this->m_serSocket = -1;
 	this->m_serSocket = -1;
 }
 
@@ -95,7 +94,9 @@ int	Bot::init()
 	}
 	catch (const std::exception & e)
 	{
+		std::cout << "avant what" << std::endl;
 		std::cerr << e.what() << std::endl;
+		std::cout << "apres what" << std::endl;
 		return quit();
 	}
 }
@@ -137,28 +138,24 @@ int	Bot::m_run()
 			m_helloWorld();
 		if (message.find("PRIVMSG") != std::string::npos)
 			m_handlePrivMsg(message);
+		if (message.find("473") != std::string::npos)
+		{
+			std::cerr << "Error: FileHandlerBot cannot join channel " + m_channel << std::endl;
+			return quit();
+		}
 	}
 	return quit();
-}
-
-std::string	&Bot::m_trimNewLines(std::string & str)
-{
-	while (!str.empty() && (str[str.size() - 1] == '\r' || str[str.size() - 1] == '\n'))
-		str.erase(str.size() - 1, 1);
-	return str;
 }
 
 void	Bot::m_handleList(const std::string & user)
 {
 	if (this->m_vlist.empty())
-	{
 		speak("PRIVMSG " + user + " Bot's shareDirextory is empty\r\n");
-	}
 	std::ostringstream messageStream;
 	messageStream << "PRIVMSG " << user << " :FileHandlerBot is handling " << this->m_vlist.size() << " files:\r\n"; 
 	speak(messageStream.str());
-	speak("PRIVMSG " + user + " \r\n");
 	speak("PRIVMSG " + user + " :Type '!send [filename]' to start transfering file\r\n");
+	speak("PRIVMSG " + user + " \r\n");
 	for (size_t i = 0; i < this->m_vlist.size(); i++)
 		speak("PRIVMSG " + user + " :" + this->m_vlist[i] + "\r\n");
 	speak("PRIVMSG " + user + " :End of shared files list\r\n");
@@ -166,12 +163,7 @@ void	Bot::m_handleList(const std::string & user)
 
 void	Bot::m_handlePrivMsg(const std::string & message)
 {
-	std::istringstream inputStream(message);
-	std::string token;
-	std::vector<std::string> tokens;
-
-	while (std::getline(inputStream, token, ' '))
-		tokens.push_back(token);
+	std::vector<std::string> tokens = vsplit(message, ' ');
 
 	if (tokens.size() > 3 && tokens[3] == ":!send")
 	{
@@ -194,21 +186,4 @@ void	Bot::m_handlePrivMsg(const std::string & message)
 		std::string user = tokens[0].substr(1, tokens[0].find("!") - 1);
 		m_createList();
 	}
-	//	else if (tokens.size() > 4 && m_trimNewLines(tokens[2]) == "JOIN" && m_trimNewLines(tokens[3].substr(1, tokens[3].npos) == this->m_channel)
-}
-
-void	Bot::speak(const std::string & msg)
-{
-	std::cout << "<< " << msg << std::endl;
-	if (send(this->m_serSocket, msg.c_str(), msg.size(), 0) != static_cast<ssize_t>(msg.length()))
-		throw std::runtime_error("Error: Message not sent");
-}
-
-int	Bot::quit()
-{
-	speak("QUIT :Leaving\r\n");
-	if (this->m_serSocket != -1)
-		close(this->m_serSocket);
-	std::cout << "ircbot Disconnected" << std::endl;
-	return 1;
 }

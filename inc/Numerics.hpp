@@ -6,7 +6,7 @@
 /*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 13:41:39 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/14 18:20:41 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/15 15:44:16 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 # define INVITE ":%P INVITE %n %C" // guest chan
 # define JOIN ":%P JOIN :%C"
 # define KICK ":%P KICK %C %m :%m" //targetnick message
-# define MODE ":%p MODE %C "
+# define MODE ":%p MODE %C %m" // mode
 # define NICK ":%p NICK :%m" //newnick
 # define NICK2 ":%m%p NICK :%m" //newnick 
 # define NOTICE ":%P NOTICE %n :%m" // source, nickname, message

@@ -6,7 +6,7 @@
 #    By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/14 16:39:23 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/15 14:34:58 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ BOT_NAME	= 	ircbot
 
 BOT_PATH	=	bot/
 
-BOT_SRCS	=	$(addprefix $(BOT_PATH),Bot.cpp fileTransferBot.cpp main.cpp)
+BOT_SRCS	=	$(addprefix $(BOT_PATH),Bot.cpp fileTransferBot.cpp main.cpp utils.cpp)
 
 BOT_OBJS	=	$(addprefix .botObj/,$(BOT_SRCS:.cpp=.o))
 
