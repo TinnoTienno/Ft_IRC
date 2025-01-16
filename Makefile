@@ -6,7 +6,7 @@
 #    By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/15 16:28:37 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/16 01:37:53 by aduvilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,11 +55,11 @@ $(NAME):	$(OBJS)
 bot			:	$(BOT_NAME)
 
 $(BOT_NAME)	:	$(BOT_OBJS)
-	$(CXX) $(CXXFLAGS) $^ -o $@  -Ibot
+	$(CXX) $(CXXFLAGS) $^ -o $@  -Ibot/inc
 
 .botObj/%.o: %.cpp
 	@mkdir -p .botObj/$(BOT_PATH)
-	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@ -Ibot
+	$(CXX) -MMD $(CXXFLAGS) -c $< -o $@ -Ibot/inc
 
 clean :
 	@rm -rf .obj
