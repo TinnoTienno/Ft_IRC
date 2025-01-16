@@ -30,12 +30,14 @@ private:
 	std::string					m_channel;
     std::string 				m_password;
 	std::vector<std::string>	m_vlist;
+	std::vector<std::string>	m_vbanDic;
     int 						m_port;
     int 						m_serSocket;
 	void						m_authenticate();
 	void						m_connectToServer();
 	void						m_helloWorld();
 	void						m_createList();
+	void						m_createDictionary();
     int							m_run();
 	uint32_t					m_getLocalIpInt() const;
 	void						m_createSocket(struct sockaddr_in & serverAddr, int & serverSock);

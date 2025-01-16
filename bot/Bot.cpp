@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/16 00:26:36 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/16 09:34:31 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ bool Bot::m_signal = false;
 
 Bot::Bot(std::string serAdd, std::string channel, std::string password, int port) : m_serAddress(serAdd), m_password(password), m_port(port)
 {
-	this->m_channel = "#" + channel;
+	this->m_channel = channel[0] == '#' ? channel : "#" + channel;
+//	this->m_channel = "#" + channel;
 	this->m_name = "FileHandlerBot";
 	this->m_serSocket = -1;
 }
@@ -82,11 +83,32 @@ void	Bot::m_createList()
 	closedir(directory);
 }
 
+void	Bot::m_createDictionary()
+{
+	try
+	{
+		std::ifstream				file(BANDIC);
+		if (!file)
+			throw std::runtime_error("Cannot find banDic.txt: No ban words");
+		if (!this->m_vbanDic.empty())
+			this->m_vbanDic.clear();
+		std::string	word;
+		while (std::getline(file, word)) //	while (file >> word) // read word by word cut with tab space \n ...
+			this->m_vbanDic.push_back(word);
+		file.close();
+	}
+	catch (const std::exception & e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+}
+
 int	Bot::init()
 {
 	try
 	{
 		m_createList();
+		m_createDictionary();
 		m_connectToServer();
 		speak("PASS " + this->m_password + "\r\n");
 		speak("NICK " + this->m_name + "\r\n");
@@ -162,6 +184,8 @@ void	Bot::m_handleList(std::vector<std::string> & tokens)
 	speak(messageStream.str());
 	speak("PRIVMSG " + user + " :Type '!send [filename]' to start transfering file\r\n");
 	speak("PRIVMSG " + user + " \r\n");
+	for (std::vector<std::string>::iterator it = m_vlist.begin(); it != m_vlist.end(); ++it)
+		speak("PRIVMSG " + user + " :" + *it + "\r\n");
 	for (size_t i = 0; i < this->m_vlist.size(); i++)
 		speak("PRIVMSG " + user + " :" + this->m_vlist[i] + "\r\n");
 	speak("PRIVMSG " + user + " :End of shared files list\r\n");
@@ -170,17 +194,8 @@ void	Bot::m_handleList(std::vector<std::string> & tokens)
 void	Bot::m_handleKick(std::vector<std::string> & tokens)
 {
 	std::string user = tokens[0].substr(0, tokens[0].find("!"));
-	std::vector<std::string>	bannedWords;
-	std::ifstream				file(BANDIC);
-	if (!file)
-		return ;
-	std::string	word;
-	while (std::getline(file, word))
-//	while (file >> word) // read word by word cut with tab space \n ...
-		bannedWords.push_back(word);
-	file.close();
-	for (std::vector<std::string>::iterator ittok = tokens.begin(); ittok != tokens.end(); ++ittok)
-		for (std::vector<std::string>::iterator itb = bannedWords.begin(); itb != bannedWords.end(); ++itb)
+	for (std::vector<std::string>::iterator ittok = tokens.begin() + 3; ittok != tokens.end(); ++ittok)
+		for (std::vector<std::string>::iterator itb = m_vbanDic.begin(); itb != m_vbanDic.end(); ++itb)
 			if (toLowerStr(*ittok) == *itb)
 			{
 				speak("KICK " + m_channel + " " + user + " :Shocking!\r\n");
