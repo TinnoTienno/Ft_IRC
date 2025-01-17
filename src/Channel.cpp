@@ -32,6 +32,13 @@
 #include <stdio.h>
 #include <vector>
 
+/**
+ * @brief Parses the channel name to check if it is valid.
+ * 
+ * @param channelName The channel name to parse.
+ * @return true If the channel name is valid.
+ * @return false If the channel name is not valid.
+ */
 bool Channel::parseChannelName(const std::string &channelName)
 {
 	if (charIsNot(channelName[0], "&#+!")|| channelName.size() >= CHANNEL_NAME_MAX_LENGTH || channelName.size() <= CHANNEL_NAME_MIN_LENGTH)
@@ -41,12 +48,25 @@ bool Channel::parseChannelName(const std::string &channelName)
 	return true;
 }
 
+/**
+ * @brief Constructor for the Channel class.
+ * 
+ * @param server The server instance.
+ * @param name The name of the channel.
+ */
 Channel::Channel(Server &server, const std::string &name) : m_cMode(), m_name(name), m_serv(&server), m_channelType(Public)
 {
 	if (!parseChannelName(name))
 		throw serverExceptions(476);
 }
 
+/**
+ * @brief Constructor for the Channel class with a password.
+ * 
+ * @param server The server instance.
+ * @param name The name of the channel.
+ * @param passwd The password for the channel.
+ */
 Channel::Channel(Server &server, const std::string &name, const std::string &passwd) : m_name(name), m_serv(&server), m_channelType(Public)
 {
 	if (!parseChannelName(name))
@@ -55,14 +75,28 @@ Channel::Channel(Server &server, const std::string &name, const std::string &pas
 	this->getMode()->setPassword(passwd);
 }
 
+/**
+ * @brief Destructor for the Channel class.
+ */
 Channel::~Channel	(void)
 {
 }
 
+/**
+ * @brief Copy constructor for the Channel class.
+ * 
+ * @param copy The Channel object to copy.
+ */
 Channel::Channel(const Channel & copy) : m_vClients(copy.m_vClients), m_cMode(copy.m_cMode), m_name(copy.m_name), m_serv(copy.m_serv), m_channelType(copy.m_channelType)
 {
 }
 
+/**
+ * @brief Assignment operator for the Channel class.
+ * 
+ * @param rhs The Channel object to assign from.
+ * @return Channel& The assigned Channel object.
+ */
 Channel&	Channel::operator=(const Channel & rhs)
 {
 	if (this == &rhs)
@@ -75,6 +109,9 @@ Channel&	Channel::operator=(const Channel & rhs)
 	return *this;
 }
 
+/**
+ * @brief Cleans up the clients in the channel.
+ */
 void	Channel::cleanClient()
 {
 	std::cout << "Bug cleanclient" << std::endl;
@@ -84,8 +121,21 @@ void	Channel::cleanClient()
 		m_cMode.getOpClient()[i]->leaveOP(*this);
 }
 
+/**
+ * @brief Checks if the channel is empty.
+ * 
+ * @return true If the channel is empty.
+ * @return false If the channel is not empty.
+ */
 bool	Channel::isEmpty() const { return m_vClients.empty(); }
 
+/**
+ * @brief Checks if a client can join the channel.
+ * 
+ * @param client The client to check.
+ * @return true If the client can join the channel.
+ * @return false If the client cannot join the channel.
+ */
 bool	Channel::isJoinable(Client &client)
 {
 	if (this->m_cMode.isBanned(&client))
@@ -97,6 +147,13 @@ bool	Channel::isJoinable(Client &client)
 	return false;
 }
 
+/**
+ * @brief Adds a client to the channel.
+ * 
+ * @param client The client to add.
+ * @param passwd The password for the channel.
+ * @throws serverExceptions If the client cannot join the channel.
+ */
 void	Channel::addClient(Client &client, const std::string &passwd)
 {
 	if (this->getClient(&client)) // client already in channel
@@ -120,6 +177,11 @@ void	Channel::addClient(Client &client, const std::string &passwd)
 	this->sendClientslist(client);
 }
 
+/**
+ * @brief Removes a client from the channel.
+ * 
+ * @param client The client to remove.
+ */
 void	Channel::removeClient(const Client & client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
@@ -135,6 +197,14 @@ void	Channel::removeClient(const Client & client)
 	}
 }
 
+/**
+ * @brief Sends a message to all clients in the channel.
+ * 
+ * @param server The server instance.
+ * @param client The client sending the message.
+ * @param msg The message to send.
+ * @param mode The message mode.
+ */
 void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg, messageMode mode)
 {
 	for (std::vector<Client *>::iterator iter = this->m_vClients.begin(); iter != this->m_vClients.end(); ++iter)
@@ -178,14 +248,32 @@ void	Channel::sendAllMsg(Server *server, Client *client, const std::string & msg
 		server->sendf(client, NULL, NULL, RPL_ENDOFWHO, msg.c_str());
 }
 
+/**
+ * @brief Sends a kick message to all clients in the channel.
+ * 
+ * @param source The client issuing the kick.
+ * @param target The client being kicked.
+ * @param message The kick message.
+ */
 void Channel::sendKick(Client &source, Client &target, const std::string &message)
 {
 	for (size_t i = 0; i < this->m_vClients.size(); i++)
 		this->m_serv->sendf(this->m_vClients[i], &source, this, KICK, target.getNickname().c_str(), message.c_str());
 }
 
+/**
+ * @brief Gets the name of the channel.
+ * 
+ * @return const std::string The name of the channel.
+ */
 const std::string	Channel::getName(void) const { return this->m_name; }
 		
+/**
+ * @brief Gets a client in the channel by pointer.
+ * 
+ * @param client The client pointer to search for.
+ * @return Client* The client if found, otherwise NULL.
+ */
 Client *Channel::getClient(Client *client)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
@@ -194,6 +282,12 @@ Client *Channel::getClient(Client *client)
 	return NULL;
 }
 
+/**
+ * @brief Gets a client in the channel by nickname.
+ * 
+ * @param nickname The nickname to search for.
+ * @return Client* The client if found, otherwise NULL.
+ */
 Client *Channel::getClient(const std::string &nickname)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)
@@ -202,6 +296,11 @@ Client *Channel::getClient(const std::string &nickname)
 	return NULL;
 }
 
+/**
+ * @brief Sends the client list to a client.
+ * 
+ * @param dest The client to send the list to.
+ */
 void Channel::sendClientslist(Client &dest)
 {
 	std::string list = this->clientsList();
@@ -209,6 +308,11 @@ void Channel::sendClientslist(Client &dest)
 	m_serv->sendf(&dest, NULL, this, RPL_ENDOFNAMES, list.c_str());
 }
 
+/**
+ * @brief Gets the list of clients in the channel as a string.
+ * 
+ * @return std::string The list of clients.
+ */
 std::string Channel::clientsList()
 {
 	std::string res = "";
@@ -222,6 +326,11 @@ std::string Channel::clientsList()
 	return res;
 }
 
+/**
+ * @brief Gets the symbol for the channel type.
+ * 
+ * @return std::string The symbol for the channel type.
+ */
 std::string Channel::getSymbol()
 {
 	switch (m_channelType)
@@ -237,20 +346,38 @@ std::string Channel::getSymbol()
 	}
 }
 
-
+/**
+ * @brief Gets the server instance.
+ * 
+ * @return Server* The server instance.
+ */
 Server *Channel::getServ() { return m_serv; }
 
 //MODES
 
+/**
+ * @brief Gets the channel mode.
+ * 
+ * @return ChanMode* The channel mode.
+ */
 ChanMode*	Channel::getMode() { return &m_cMode; }
 
+/**
+ * @brief Sends the topic to a client.
+ * 
+ * @param dest The client to send the topic to.
+ */
 void Channel::sendTopic(Client &dest)
 {
 	if (this->m_cMode.getTopic() != "")
 		this->m_serv->sendf(&dest, NULL, this, RPL_TOPIC);
 }
 
-
+/**
+ * @brief Adds a client as an operator in the channel.
+ * 
+ * @param client The client to add as an operator.
+ */
 void Channel::addOP(Client &client) 
 {
 	if (!m_cMode.isOP(&client))

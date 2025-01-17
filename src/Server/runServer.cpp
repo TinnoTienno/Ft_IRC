@@ -34,6 +34,12 @@
 #include "Numerics.hpp"
 #include <map>
 
+/**
+ * @brief  Accepts a new client connection and sets up the necessary structures.
+ *
+ * This function creates a new client, accepts the incoming connection, and
+ * configures the necessary socket and poll structures to handle the client.
+ */
 void Server::AcceptNewClient()
 {
 	Client *client = new Client();
@@ -55,7 +61,7 @@ void Server::AcceptNewClient()
 	newPoll.fd = incoFd;
 	newPoll.events = POLLIN;
 	newPoll.revents = 0;
-	
+
 	client->setFD(incoFd);
 	client->setIPadd(inet_ntoa((clientAdd.sin_addr)));
 	client->setHostname(reinterpret_cast<struct sockaddr*>(&clientAdd), *this);
@@ -65,6 +71,16 @@ void Server::AcceptNewClient()
 	sendLog("Client <" + itoa(incoFd) + "> Connected");
 }
 
+
+/**
+ * @brief  Receives and processes new data from a connected client.
+ *
+ * This function reads data sent by the client, checks for disconnection,
+ * parses the buffer for commands, and processes those commands if the client
+ * is authenticated.
+ *
+ * @param  client : Reference to the client sending data.
+ */
 void Server::ReceiveNewData(Client &client)
 {
 	char buff[513]; //-> buffer for the received data
@@ -91,6 +107,15 @@ void Server::ReceiveNewData(Client &client)
 	}
 }
 
+/**
+ * @brief  Handles a command sent by a client.
+ *
+ * This function maps incoming command strings to their corresponding
+ * command-handling functions and executes the appropriate action.
+ *
+ * @param  line   : The command string received from the client.
+ * @param  client : Reference to the client sending the command.
+ */
 void Server::handleCommand(const std::string line, Client &client)
 {
 	typedef void (*CommandFunction)(Server &, const Parsing &, Client &);
@@ -117,25 +142,37 @@ void Server::handleCommand(const std::string line, Client &client)
 		this->sendf(&client, NULL, NULL, ERR_UNKNOWNCOMMAND, parse.getCommand().c_str());
 }
 
-std::string Server::parseBuffer(Client &client, std::string buffer)
+/**
+ * @brief  Parses the incoming message buffer and handles newline characters.
+ *
+ * This function processes the message buffer by adding necessary carriage
+ * returns before newline characters and stores the complete message in
+ * the client's packet for further processing.
+ *
+ * @param  client  : Reference to the client whose data is being parsed.
+ * @param  message : The raw message string received from the client.
+ *
+ * @return A parsed string containing the message data without the newline.
+ */
+std::string Server::parseBuffer(Client &client, std::string message)
 {
-	if (buffer.find("\n") == buffer.npos)
+	if (message.find("\n") == message.npos)
 	{
-		client.addPacket(buffer);
+		client.addPacket(message);
 		return "";
 	}
 	size_t	pos = 0;
-	while ((pos = buffer.find('\n', pos)) != std::string::npos)
+	while ((pos = message.find('\n', pos)) != std::string::npos)
 	{
-		if (pos == 0 || buffer[pos - 1] != '\r')
+		if (pos == 0 || message[pos - 1] != '\r')
 		{
 			client.setNetCat(true);
-			buffer.insert(pos, 1, '\r');
+			message.insert(pos, 1, '\r');
 			pos++;
 		}
 		pos++;
 	}
-	std::string result = client.getPacket() + buffer; //careful this one might bring bugs if /r/n is not the end of the string
+	std::string result = client.getPacket() + message; //careful this one might bring bugs if /r/n is not the end of the string
 	size_t	lastN = result.rfind('\n');
 	client.addPacket(result.substr(lastN + 1));
 	return result.substr(0, lastN + 1);

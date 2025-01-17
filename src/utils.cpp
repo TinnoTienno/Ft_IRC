@@ -23,6 +23,12 @@
 #include <stdio.h>
 #include <limits.h>
 
+/**
+ * @brief Converts an integer to a string.
+ * 
+ * @param nb The integer to convert.
+ * @return std::string The resulting string.
+ */
 std::string itoa(int nb)
 {
 	std::ostringstream oss;
@@ -30,6 +36,11 @@ std::string itoa(int nb)
 	return (std::string) oss.str();
 }
 
+/**
+ * @brief Gets the current time as a formatted string.
+ * 
+ * @return const std::string The formatted time string.
+ */
 const std::string	getTime()
 {
 	char				buffer[100];	
@@ -39,6 +50,13 @@ const std::string	getTime()
 	return std::string(buffer);
 }
 
+/**
+ * @brief Splits a string into a vector of substrings based on a delimiter.
+ * 
+ * @param str The string to split.
+ * @param delimiter The character to use as the delimiter.
+ * @return std::vector<std::string> The resulting vector of substrings.
+ */
 std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 {
 	std::vector<std::string>	result;
@@ -52,6 +70,13 @@ std::vector<std::string>	vsplit(const std::string & str, char delimiter)
 	return result;
 }
 
+/**
+ * @brief Converts a string to an unsigned short.
+ * 
+ * @param str The string to convert.
+ * @return unsigned short The resulting unsigned short.
+ * @throws std::invalid_argument if the string is empty or contains non-digit characters.
+ */
 unsigned short	strtous(const std::string & str)
 {
 	unsigned short	result = 0;
@@ -68,37 +93,14 @@ unsigned short	strtous(const std::string & str)
 	return result;
 }
 
-/*
-void	sendMessage(const int fd, Server &server, const std::string & command, const std::string msg)
-{
-	std::string message = ":" + server.getHostname() + " " + command + " :" + msg;
-	server.sendLog(itoa(fd) + " << " + message);
-	message += "\r\n";
-	if (send(fd, message.c_str(), message.size(), 0) != (ssize_t)message.length())
-		throw std::runtime_error("Failed to send the message: " + msg);
-}
-
-std::vector<std::string>	vsplit(const std::string & str, char delimiter)
-{
-	std::vector<std::string>	result;
-	std::string					token;
-
-	for (size_t i = 0; i < str.size(); i++)
-	{
-		if (str[i] == delimiter && !token.empty())
-		{
-			result.push_back(token);
-			token.clear();
-		}
-		else if (str[i] != delimiter)
-			token += str[i];  
-	}
-	if (!token.empty())
-		result.push_back(token);
-	return result;
-}
-*/
-
+/**
+ * @brief Checks if a character is not in a given string.
+ * 
+ * @param c The character to check.
+ * @param plage The string to check against.
+ * @return true If the character is not in the string.
+ * @return false If the character is in the string.
+ */
 bool charIsNot(char c, const std::string &plage)
 {
 	for (std::string::const_iterator iter = plage.begin(); iter != plage.end(); iter++)
@@ -107,6 +109,14 @@ bool charIsNot(char c, const std::string &plage)
 	return true;
 }
 
+/**
+ * @brief Compares two strings case-insensitively.
+ * 
+ * @param string1 The first string.
+ * @param string2 The second string.
+ * @return true If the strings are equal (case-insensitive).
+ * @return false If the strings are not equal.
+ */
 bool strCompareNoCase(const std::string &string1, const std::string &string2)
 {
 	if (string1.size() != string2.size())
@@ -117,6 +127,12 @@ bool strCompareNoCase(const std::string &string1, const std::string &string2)
 	return true;
 }
 
+/**
+ * @brief Trims newline characters from the end of a string.
+ * 
+ * @param str The string to trim.
+ * @return std::string The resulting string.
+ */
 std::string	trimNewLines(const std::string & str)
 {
 	std::string	result = str;

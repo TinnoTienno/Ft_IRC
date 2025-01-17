@@ -19,6 +19,15 @@
 #include "serverExceptions.hpp"
 #include "Numerics.hpp"
 
+/**
+ * @brief  Executes the PRIVMSG command.
+ *
+ * This function handles the PRIVMSG command, which sends a private message to a user or channel.
+ *
+ * @param  server : Reference to the server object.
+ * @param  parse : Reference to the parsing object containing command arguments.
+ * @param  client : Reference to the client object issuing the command.
+ */
 void	PrivMsg::execute(Server &server, const Parsing &parse, Client &client)
 {
 	try

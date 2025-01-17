@@ -17,6 +17,15 @@
 #include "utils.hpp"
 #include "serverExceptions.hpp"
 
+/**
+ * @brief  Executes the PART command.
+ *
+ * This function handles the PART command, which removes a client from a channel.
+ *
+ * @param  server : Reference to the server object.
+ * @param  parse : Reference to the parsing object containing command arguments.
+ * @param  client : Reference to the client object issuing the command.
+ */
 void Part::execute(Server &server, const Parsing &parse, Client &client)
 {
     try 

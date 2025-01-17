@@ -20,6 +20,13 @@
 #include "utils.hpp"
 #include <string>
 
+/**
+ * @brief Executes the KICK command.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ */
 void Kick::execute(Server &server, const Parsing &parse, Client &client)
 {
 	Channel *chan;

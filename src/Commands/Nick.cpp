@@ -19,6 +19,13 @@
 #include "Numerics.hpp"
 #include <iostream>
 
+/**
+ * @brief Executes the NICK command.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ */
 void Nick::execute(Server &server, const Parsing &parse, Client &client)
 {
 	std::string nickTmp = client.getNickname();
@@ -26,6 +33,14 @@ void Nick::execute(Server &server, const Parsing &parse, Client &client)
 	Nick::parseError(server, parse, client);
 }
 
+/**
+ * @brief Parses and handles errors for the NICK command.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ * @return int 0 if successful, 1 if an error occurred.
+ */
 int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 {
 	try
@@ -64,6 +79,13 @@ int Nick::parseError(Server &server, const Parsing &parse, Client &client)
 	return 0;
 }
 
+/**
+ * @brief Checks if a nickname is formatted correctly.
+ * 
+ * @param nickname The nickname to check.
+ * @return true If the nickname is formatted correctly.
+ * @return false If the nickname is not formatted correctly.
+ */
 bool Nick::isNickFormatted(const std::string &nickname)
 {
 	if (nickname.find_first_of("&@.:!\"") != nickname.npos || !nickname.find("#") || isdigit(nickname[0]))

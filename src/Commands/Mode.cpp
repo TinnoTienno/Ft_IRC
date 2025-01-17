@@ -22,6 +22,14 @@
 #include <vector>
 #include "Numerics.hpp"
 
+/**
+ * @brief Sets the invite-only mode for a channel.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to modify.
+ * @param source The client issuing the command.
+ * @param status The new status of the invite-only mode.
+ */
 void Mode::modeI(Server &server,Channel &channel, Client &source, bool status)
 {
 	std::string strStat = status ? "+i" : "-i";
@@ -29,6 +37,14 @@ void Mode::modeI(Server &server,Channel &channel, Client &source, bool status)
 	channel.sendAllMsg(&server, &source, strStat, eMode);
 }
 
+/**
+ * @brief Sets the topic-protected mode for a channel.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to modify.
+ * @param source The client issuing the command.
+ * @param status The new status of the topic-protected mode.
+ */
 void Mode::modeT(Server & server,Channel & channel, Client &source, bool status)
 {
 	std::string strStat = status ? "+t" : "-t";
@@ -36,6 +52,15 @@ void Mode::modeT(Server & server,Channel & channel, Client &source, bool status)
 	channel.sendAllMsg(&server, &source, strStat, eMode);
 }
 	
+/**
+ * @brief Sets the size limit for a channel.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to modify.
+ * @param source The client issuing the command.
+ * @param status The new status of the size limit mode.
+ * @param modeArg The size limit value.
+ */
 void	Mode::modeL(Server & server, Channel & channel, Client & source, bool status, const std::string &modeArg)
 {
 	if (status)
@@ -58,6 +83,15 @@ void	Mode::modeL(Server & server, Channel & channel, Client & source, bool statu
 	}
 }
 
+/**
+ * @brief Sets the operator status for clients in a channel.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to modify.
+ * @param source The client issuing the command.
+ * @param status The new status of the operator mode.
+ * @param modeArg The list of clients to modify.
+ */
 void	Mode::modeO(Server &server, Channel & channel, Client &source, bool status, const std::string &modeArg)
 {
 	std::vector<std::string>	tokens = vsplit(modeArg, ',');
@@ -90,6 +124,15 @@ void	Mode::modeO(Server &server, Channel & channel, Client &source, bool status,
 	}
 }
 	
+/**
+ * @brief Sets the password protection for a channel.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to modify.
+ * @param source The client issuing the command.
+ * @param status The new status of the password protection mode.
+ * @param modeArg The password value.
+ */
 void	Mode::modeK(Server & server, Channel & channel, Client & source, bool status, const std::string &modeArg)
 {
 	if (status)
@@ -105,11 +148,27 @@ void	Mode::modeK(Server & server, Channel & channel, Client & source, bool statu
 	}
 }
 
+/**
+ * @brief Sends the ban list for a channel.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to query.
+ * @param source The client issuing the command.
+ */
 void	Mode::modeB(Server & server, Channel &channel, Client &source)
 {
 	channel.getMode()->sendBanList(server, channel, source);
 }
 
+/**
+ * @brief Sets the ban status for a client in a channel.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to modify.
+ * @param source The client issuing the command.
+ * @param status The new status of the ban mode.
+ * @param bannedPrefix The prefix of the client to ban/unban.
+ */
 void	Mode::modeB(Server & server, Channel &channel, Client & source, bool status, const std::string bannedPrefix)
 {
 	std::string strStat = status ? "+b" : "-b";
@@ -120,6 +179,14 @@ void	Mode::modeB(Server & server, Channel &channel, Client & source, bool status
 	channel.sendAllMsg(&server, &source, strStat + bannedPrefix, eMode);
 }
 
+/**
+ * @brief Handles channel mode changes.
+ * 
+ * @param server The server instance.
+ * @param channel The channel to modify.
+ * @param source The client issuing the command.
+ * @param parse The parsed command.
+ */
 void Mode::channelMode(Server &server, Channel &channel, Client &source, const Parsing &parse)
 {
 	bool status = true;
@@ -173,6 +240,13 @@ void Mode::channelMode(Server &server, Channel &channel, Client &source, const P
 	}
 }
 
+/**
+ * @brief Executes the MODE command.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ */
 void Mode::execute(Server &server, const Parsing &parse, Client &client)
 {
 	Channel *chan = NULL;

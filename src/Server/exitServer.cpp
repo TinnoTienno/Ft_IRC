@@ -16,6 +16,9 @@
 #include "Channel.hpp"
 #include "utils.hpp"
 
+/**
+ * @brief Destructor for the Server class.
+ */
 Server::~Server()
 {
 	CloseFds();
@@ -33,6 +36,9 @@ Server::~Server()
 	m_logFd.close();
 }
 
+/**
+ * @brief Closes all file descriptors.
+ */
 void	Server::CloseFds()
 {
 	for(size_t i = 0; i < m_vClients.size(); i++){ //-> close all the clients
@@ -45,6 +51,11 @@ void	Server::CloseFds()
 	}
 }
 
+/**
+ * @brief Clears a client from the server.
+ * 
+ * @param client The client to clear.
+ */
 void Server::ClearClient(Client &client)
 {
 	for (size_t i = 0; i < m_vFds.size(); i++)
@@ -69,6 +80,12 @@ void Server::ClearClient(Client &client)
 }
 
 #include <iostream>
+
+/**
+ * @brief Deletes a channel from the server.
+ * 
+ * @param channel The channel to delete.
+ */
 void 	Server::deleteChannel(Channel &channel)
 {
 	for (size_t i = 0; i < m_vChannels.size(); i++) {

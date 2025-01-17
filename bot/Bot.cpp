@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/16 09:34:31 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:53:55 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@
 
 bool Bot::m_signal = false;
 
+/**
+ * @brief  Constructor for the Bot class.
+ *
+ * Initializes the bot with the server address, channel, password, and port.
+ *
+ * @param  serAdd    : Server address
+ * @param  channel   : Channel to join
+ * @param  password  : Password for the server
+ * @param  port      : Port number
+ */
 Bot::Bot(std::string serAdd, std::string channel, std::string password, int port) : m_serAddress(serAdd), m_password(password), m_port(port)
 {
 	this->m_channel = channel[0] == '#' ? channel : "#" + channel;
@@ -40,14 +50,40 @@ Bot::Bot(std::string serAdd, std::string channel, std::string password, int port
 	this->m_serSocket = -1;
 }
 
+
+/**
+ * @brief  Destructor for the Bot class.
+ */
 Bot::~Bot() {}
 
+/**
+ * @brief  Gets the bot's nickname.
+ *
+ * @return Bot's nickname as a string.
+ */
 std::string	Bot::getNick() const { return this->m_name; }
 
+/**
+ * @brief  Gets the bot's username.
+ *
+ * @return Bot's username as a string.
+ */
 std::string	Bot::getUsername() const { return "U-" + this->m_name; }
 
+/**
+ * @brief  Gets the bot's real name.
+ *
+ * @return Bot's real name as a string.
+ */
 std::string	Bot::getRealname() const { return "R-" + this->m_name; }
 
+/**
+ * @brief  Connects the bot to the server.
+ *
+ * Establishes a TCP connection to the server and sets the socket to non-blocking mode.
+ *
+ * @throw  std::runtime_error If connection or socket configuration fails.
+ */
 void	Bot::m_connectToServer()
 {
 	struct sockaddr_in	socketAdd = {};
@@ -66,6 +102,14 @@ void	Bot::m_connectToServer()
 
 }
 
+
+/**
+ * @brief  Creates a list of files in the shared directory.
+ *
+ * Populates the vector with the names of regular files in the directory.
+ *
+ * @throw  std::runtime_error If the directory cannot be opened.
+ */
 void	Bot::m_createList()
 {
 	DIR* directory;
@@ -83,6 +127,11 @@ void	Bot::m_createList()
 	closedir(directory);
 }
 
+/**
+ * @brief  Creates a dictionary of banned words.
+ *
+ * Reads words from a file and stores them in the banned words vector.
+ */
 void	Bot::m_createDictionary()
 {
 	try
@@ -103,6 +152,13 @@ void	Bot::m_createDictionary()
 	}
 }
 
+/**
+ * @brief  Initializes the bot and starts its main loop.
+ *
+ * Sets up necessary resources and connects to the server.
+ *
+ * @return Status code of the bot execution.
+ */
 int	Bot::init()
 {
 	try
@@ -122,6 +178,11 @@ int	Bot::init()
 	}
 }
 
+/**
+ * @brief  Sends an introductory message to the channel.
+ *
+ * Explains the bot's functionality and available commands.
+ */
 void	Bot::m_helloWorld()
 {
 	speak("PRIVMSG " + this->m_channel + " :Hi everyone i'm an IRC File Transfer Bot\r\n");
@@ -129,18 +190,19 @@ void	Bot::m_helloWorld()
 	speak("PRIVMSG " + this->m_channel + " :I can transfer you the file you want with the command 'PRIVMSG FileHandlerBot !send [filename]'\r\n");
 }
 
+/**
+ * @brief  Main loop for the bot's execution.
+ *
+ * Processes messages received from the server and handles commands.
+ *
+ * @return Status code of the bot execution.
+ */
 int	Bot::m_run()
 {
 	char	buffer[513];
-//	struct	pollfd pfd;
-//	pfd.fd = this->m_serSocket;
-//	pfd.events = POLLIN;
 
 	while(this->m_signal == false)
 	{
-//		if ((poll(&pfd, 1, -1) == -1) || this->m_signal == true)
-//			return quit();
-//		else if (pfd.revents & POLLIN)
 		memset(buffer, 0, sizeof(buffer));
 		int	bytes = recv(this->m_serSocket, buffer, sizeof(buffer) - 1, 0);
 		if (bytes == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
@@ -168,12 +230,28 @@ int	Bot::m_run()
 	return quit();
 }
 
+
+/**
+ * @brief  Handles the refresh command.
+ *
+ * Rebuilds the list of files in the shared directory.
+ *
+ * @param  tokens : Parsed command tokens.
+ */
 void	Bot::m_handleRefresh(std::vector<std::string> & tokens)
 {
 	(void)tokens;
 	m_createList();
 }
 
+/**
+ * @brief  Handles the list command.
+ *
+ * Sends the list of shared files to the requesting user and explains
+ * how to transfer a file.
+ *
+ * @param  tokens : Parsed command tokens
+ */
 void	Bot::m_handleList(std::vector<std::string> & tokens)
 {
 	std::string user = tokens[0].substr(0, tokens[0].find("!"));
@@ -191,6 +269,14 @@ void	Bot::m_handleList(std::vector<std::string> & tokens)
 	speak("PRIVMSG " + user + " :End of shared files list\r\n");
 }
 
+/**
+ * @brief  Handles the kick command.
+ *
+ * Checks for banned words in the user's message and kicks them from the channel
+ * if a match is found.
+ *
+ * @param  tokens : Parsed command tokens
+ */
 void	Bot::m_handleKick(std::vector<std::string> & tokens)
 {
 	std::string user = tokens[0].substr(0, tokens[0].find("!"));
@@ -203,6 +289,14 @@ void	Bot::m_handleKick(std::vector<std::string> & tokens)
 			}
 }
 
+/**
+ * @brief  Handles private messages sent to the bot.
+ *
+ * Parses the message, identifies commands, and delegates handling
+ * to the appropriate function.
+ *
+ * @param  message : Message received from the user
+ */
 void	Bot::m_handlePrivMsg(std::string & message)
 {
 	std::vector<std::string> tokens = vsplit(message, ' ');

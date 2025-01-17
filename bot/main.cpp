@@ -20,6 +20,13 @@
 # define BOT_USAGE "Usage: ./bot [server adress] [Channel] [password] [port]"
 #endif
 
+/**
+ * @brief  Signal handler for the Bot class
+ *
+ * Handles system signals received by the application and sets the signal flag to true.
+ *
+ * @param  signum : Signal number received
+ */
 void	Bot::signalHandler(int signum)
 {
 	std::cout << std::endl << "signal Received: " << signum << std::endl;

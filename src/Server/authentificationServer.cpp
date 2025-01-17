@@ -17,6 +17,15 @@
 #include "Numerics.hpp"
 #include "serverExceptions.hpp"
 
+/**
+ * @brief Checks the authentication of a client.
+ * 
+ * This function processes the authentication commands (NICK, PASS, USER) sent by the client.
+ * 
+ * @param client The client object.
+ * @param buffer The buffer containing the client's input.
+ * @return true if the client is authenticated, false otherwise.
+ */
 bool Server::checkAuth(Client &client, const std::string &buffer)
 {
 	size_t j = 0;

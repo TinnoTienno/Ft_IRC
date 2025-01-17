@@ -22,6 +22,16 @@
 #include <sstream>
 #include <vector>
 
+/**
+ * @brief  Retrieves the local IP address as an integer.
+ *
+ * Uses a loopback connection to determine the local IP address
+ * of the machine.
+ *
+ * @return The local IP address in network byte order as a 32-bit integer.
+ *
+ * @throw std::runtime_error if the socket operation fails.
+ */
 uint32_t	Bot::m_getLocalIpInt() const
 {
 	int	sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -49,6 +59,17 @@ uint32_t	Bot::m_getLocalIpInt() const
 	return ntohl(LocalAddr.sin_addr.s_addr);
 }
 
+/**
+ * @brief  Creates a server socket and binds it to a local address.
+ *
+ * Initializes and configures a socket for listening, binding it
+ * to an automatically assigned port and setting it to non-blocking mode.
+ *
+ * @param  serverAddr : Reference to the sockaddr_in structure to be initialized.
+ * @param  serverSock : Reference to the socket descriptor to be created.
+ *
+ * @throw std::runtime_error if any socket operation fails.
+ */
 void	Bot::m_createSocket(struct sockaddr_in & serverAddr, int & serverSock)
 {
 	serverSock = socket(AF_INET, SOCK_STREAM, 0);
@@ -68,6 +89,13 @@ void	Bot::m_createSocket(struct sockaddr_in & serverAddr, int & serverSock)
 		throw std::runtime_error("Error: Listening on socket failed");
 }
 
+/**
+ * @brief  Checks if a file is in the shared list.
+ *
+ * @param  filename : The name of the file to check.
+ *
+ * @return true if the file is found, false otherwise.
+ */
 bool	Bot::isInList(const std::string & filename)
 {
 	for (size_t i = 0; i < this->m_vlist.size(); i++)
@@ -76,6 +104,18 @@ bool	Bot::isInList(const std::string & filename)
 	return false;
 }
 
+/**
+ * @brief  Accepts a client connection and sends a file.
+ *
+ * Waits for a client to connect within a specified timeout period.
+ * Once connected, sends the contents of the file to the client.
+ *
+ * @param  serverSock : The server socket descriptor.
+ * @param  clientSock : The client socket descriptor to be initialized.
+ * @param  file : The file to be sent.
+ *
+ * @throw std::runtime_error if the connection times out or other errors occur.
+ */
 void	Bot::m_acceptAndSend(int & serverSock, int & clientSock, std::ifstream & file)
 {
 	int			elapsedTime = 0;
@@ -103,6 +143,18 @@ void	Bot::m_acceptAndSend(int & serverSock, int & clientSock, std::ifstream & fi
 	file.close();
 }
 
+
+/**
+ * @brief  Sends file data to a connected client.
+ *
+ * Reads data from the file in chunks and sends it to the client
+ * over the provided socket.
+ *
+ * @param  clientSock : The socket descriptor for the connected client.
+ * @param  file : The file to be sent.
+ *
+ * @throw std::runtime_error if sending data fails.
+ */
 void	Bot::m_sendFileData(int & clientSock, std::ifstream & file)
 {
 	char	buffer[4096];
@@ -113,6 +165,14 @@ void	Bot::m_sendFileData(int & clientSock, std::ifstream & file)
 	}
 }
 
+/**
+ * @brief  Handles the file sending process for the bot.
+ *
+ * Parses the command tokens, retrieves the file, and sends it to
+ * the specified user via DCC. Handles errors and ensures proper cleanup.
+ *
+ * @param  tokens : Command tokens containing user and file information.
+ */
 void	Bot::m_handleSendFile(std::vector<std::string> & tokens)
 {
 	int		serverSock = -1;
