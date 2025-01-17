@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   authentificationServer.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:13:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 13:45:55 by eschussl         ###   ########.fr       */
+/*   Updated: 2025/01/17 13:53:06 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ bool Server::checkAuth(Client &client, const std::string &buffer)
 		}
 		else if (parse.getCommand() == "PASS")
 		{
+			if (parse.getArguments().size() == 1)
+				return this->sendf(&client, NULL, NULL,  ERR_NONICKNAMEGIVEN), false;
 			if (parse.getArguments()[1] == m_pass)
 				client.setAuth(true);
 			else
