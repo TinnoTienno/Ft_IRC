@@ -18,6 +18,15 @@
 #include "Parsing.hpp"
 #include "serverExceptions.hpp"
 
+/**
+ * @brief  Executes the QUIT command.
+ *
+ * This function handles the QUIT command, which disconnects a client from the server.
+ *
+ * @param  server : Reference to the server object.
+ * @param  parse : Reference to the parsing object containing command arguments.
+ * @param  client : Reference to the client object issuing the command.
+ */
 void Quit::execute(Server &server, const Parsing &parse, Client &client)
 {
 	std::string	message;

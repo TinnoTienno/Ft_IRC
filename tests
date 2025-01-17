@@ -3,13 +3,14 @@ Legende :
  / = test valide
  () = commentaires
 
+ !!! PRIVMSG vide dans bot
 # connect
 
 connect
 /connect with same nick/hostname
 
 # authentification
-nc + authentification
+/nc + authentification
 
 #invite
 /nc invite
@@ -44,7 +45,7 @@ nc + authentification
 # mode Arthur
 (A la fin, je suis pas fou)
 
-WIP - Modifier sendAllMode en premier
+/Modifier sendAllMode en premier
 
 /nc mode
 mode ""

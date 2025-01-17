@@ -17,10 +17,28 @@
 #include <stdarg.h>
 #include "Server.hpp"
 
+/**
+ * @brief Get the error code.
+ * 
+ * @return int The error code.
+ */
 int serverExceptions::getErrorCode() const { return m_errorCode; }
 
+/**
+ * @brief Construct a new serverExceptions object.
+ * 
+ * @param errorCode The error code.
+ */
 serverExceptions::serverExceptions(const int errorCode) : m_errorCode(errorCode) { }
 
+/**
+ * @brief Send an error message to the client.
+ * 
+ * @param server The server object.
+ * @param dest The destination client.
+ * @param channel The channel (optional).
+ * @param ... Additional arguments depending on the error code.
+ */
 void serverExceptions::sendError(Server &server, Client *dest, Channel *channel,...) const
 {
 	va_list args;

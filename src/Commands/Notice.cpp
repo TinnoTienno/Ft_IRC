@@ -19,6 +19,13 @@
 #include "serverExceptions.hpp"
 #include "Numerics.hpp"
 
+/**
+ * @brief Executes the NOTICE command.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ */
 void	Notice::execute(Server &server, const Parsing &parse, Client &client)
 {
 	try

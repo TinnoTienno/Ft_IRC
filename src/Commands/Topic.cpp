@@ -17,6 +17,15 @@
 #include "Client.hpp"
 #include "Parsing.hpp"
 
+/**
+ * @brief  Executes the TOPIC command.
+ *
+ * This function handles the TOPIC command, which sets or retrieves the topic of a channel.
+ *
+ * @param  server : Reference to the server object.
+ * @param  parse : Reference to the parsing object containing command arguments.
+ * @param  client : Reference to the client object issuing the command.
+ */
 void Topic::execute(Server &server, const Parsing &parse, Client &client)
 {
 	Channel *chan;

@@ -23,6 +23,15 @@
 #include "serverExceptions.hpp"
 #include "utils.hpp"
 
+/**
+ * @brief  Initializes the server with the specified port.
+ *
+ * This function sets up the server by converting the port string to an integer,
+ * creating and binding a socket, and starting to listen for incoming connections.
+ * It also manages incoming connections and data using the poll mechanism.
+ *
+ * @param  port : Port number as a string to initialize the server.
+ */
 void Server::ServerInit(const std::string &port)
 {
 	try
@@ -53,6 +62,15 @@ void Server::ServerInit(const std::string &port)
 	}
 }
 
+/**
+ * @brief  Configures the server socket and prepares it for connections.
+ *
+ * This function creates a socket, sets it to non-blocking mode,
+ * binds it to the specified port, and starts listening for connections.
+ * It also initializes the poll structure for the socket.
+ *
+ * @throws std::runtime_error if socket creation, configuration, binding, or listening fails.
+ */
 void Server::SerSocket()
 {
 	struct sockaddr_in socketAdd = {};

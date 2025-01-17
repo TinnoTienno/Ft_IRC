@@ -19,6 +19,13 @@
 #include "Server.hpp"
 #include "serverExceptions.hpp"
 
+/**
+ * @brief Executes the INVITE command.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ */
 void	Invite::execute(Server &server, const Parsing &parse, Client &client)
 {
 	Channel	*chan = NULL;

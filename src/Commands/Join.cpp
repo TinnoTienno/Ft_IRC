@@ -19,6 +19,13 @@
 #include "utils.hpp"
 #include "serverExceptions.hpp"
 
+/**
+ * @brief Executes the JOIN command.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ */
 void Join::execute(Server &server, const Parsing &parse, Client &client)
 {
 	try
@@ -34,6 +41,13 @@ void Join::execute(Server &server, const Parsing &parse, Client &client)
 	}
 }
 
+/**
+ * @brief Executes the JOIN command for multiple channels.
+ * 
+ * @param server The server instance.
+ * @param parse The parsed command.
+ * @param client The client issuing the command.
+ */
 void Join::execChannels(Server &server, const Parsing &parse, Client &client)
 {
 	std::vector<std::string> channels = vsplit(parse.getArguments()[1], ',');

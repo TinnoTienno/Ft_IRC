@@ -14,6 +14,11 @@
 #include <iostream>
 #include "serverExceptions.hpp"
 
+/**
+ * @brief Signal handler for the server.
+ * 
+ * @param signum The signal number.
+ */
 void Server::SignalHandler(int signum)
 {
 	(void)signum;

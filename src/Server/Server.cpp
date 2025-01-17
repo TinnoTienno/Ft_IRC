@@ -21,6 +21,12 @@
 
 bool Server::m_signal = false;
 
+/**
+ * @brief Constructs a new Server object.
+ * 
+ * @param name The hostname of the server.
+ * @param pass The password for the server.
+ */
 Server::Server(const std::string &name, const std::string &pass) : m_pass(pass), m_hostname(name)
 { 
 	m_serverSocketFd = -1;
@@ -31,6 +37,12 @@ Server::Server(const std::string &name, const std::string &pass) : m_pass(pass),
 		std::cerr << "Error : Couldn't open log file" << std::endl;
 }
 
+/**
+ * @brief Creates a new channel without a password.
+ * 
+ * @param name The name of the channel.
+ * @param client The client creating the channel.
+ */
 void	Server::createChannel(const std::string &name, Client &client)
 {
 	Channel* newChannel = new Channel(*this, name);
@@ -39,6 +51,13 @@ void	Server::createChannel(const std::string &name, Client &client)
 	m_vChannels.push_back(newChannel);
 }
 
+/**
+ * @brief Creates a new channel with a password.
+ * 
+ * @param name The name of the channel.
+ * @param client The client creating the channel.
+ * @param passwd The password for the channel.
+ */
 void	Server::createChannel(const std::string &name, Client &client, const std::string &passwd)
 {
 	Channel*	newChannel = new Channel(*this, name, passwd);
@@ -47,9 +66,12 @@ void	Server::createChannel(const std::string &name, Client &client, const std::s
 	m_vChannels.push_back(newChannel);
 }
 
-
-
-
+/**
+ * @brief Gets a client by their nickname.
+ * 
+ * @param nickname The nickname of the client.
+ * @return A pointer to the Client if found, otherwise NULL.
+ */
 Client *Server::getClient(const std::string &nickname)
 {
 	for (size_t i = 0; i < m_vClients.size(); i++)

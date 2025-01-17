@@ -18,6 +18,15 @@
 #include "Server.hpp"
 #include <vector>
 
+/**
+ * @brief  Executes the WHO command.
+ *
+ * This function handles the WHO command, which lists information about users or channels.
+ *
+ * @param  server : Reference to the server object.
+ * @param  parse : Reference to the parsing object containing command arguments.
+ * @param  client : Reference to the client object issuing the command.
+ */
 void	Who::execute(Server &server, const Parsing &parse, Client &client)
 {
 	if (parse.getArguments().size() < 2)
