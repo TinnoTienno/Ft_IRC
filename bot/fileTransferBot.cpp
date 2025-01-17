@@ -140,6 +140,7 @@ void	Bot::m_acceptAndSend(int & serverSock, int & clientSock, std::ifstream & fi
 		throw std::runtime_error("Error: accepting connection time out");
 	m_sendFileData(clientSock, file);
 	close(clientSock);
+	close(serverSock);
 	file.close();
 }
 
@@ -200,7 +201,6 @@ void	Bot::m_handleSendFile(std::vector<std::string> & tokens)
 		speak("PRIVMSG " + user + " :File Sent: It will be available for 1 minute\r\n");
 		speak("PRIVMSG " + user + " :Type /dcc get -n [newFileName] -d [pathToCopyDir] FileHandlerBot [filename]\r\n");
 		m_acceptAndSend(serverSock, clientSock, file);
-		close(serverSock);
 		speak("PRIVMSG " + user + " :Send complete\r\n");
 	}
 	catch (const std::exception & e)

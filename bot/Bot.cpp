@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/17 14:53:55 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/17 17:24:35 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,8 +186,10 @@ int	Bot::init()
 void	Bot::m_helloWorld()
 {
 	speak("PRIVMSG " + this->m_channel + " :Hi everyone i'm an IRC File Transfer Bot\r\n");
-	speak("PRIVMSG " + this->m_channel + " :You can ask me the list of transferable files with the command 'PRIVMSG FileHandlerBot !list'\r\n");
-	speak("PRIVMSG " + this->m_channel + " :I can transfer you the file you want with the command 'PRIVMSG FileHandlerBot !send [filename]'\r\n");
+	speak("PRIVMSG " + this->m_channel + " :You can ask me 'PRIVMSG FileHandlerBot ![cmd]' to :\r\n");
+	speak("PRIVMSG " + this->m_channel + " :- Display the list of transferable files with the command 'PRIVMSG FileHandlerBot !list'\r\n");
+	speak("PRIVMSG " + this->m_channel + " :- Transfer you the file you want with the command 'PRIVMSG FileHandlerBot !send [filename]'\r\n");
+	speak("PRIVMSG " + this->m_channel + " :- Refresh the list of handled files with the command 'PRIVMSG FileHandlerBot !refresh'\r\n");
 }
 
 /**
@@ -255,18 +257,15 @@ void	Bot::m_handleRefresh(std::vector<std::string> & tokens)
 void	Bot::m_handleList(std::vector<std::string> & tokens)
 {
 	std::string user = tokens[0].substr(0, tokens[0].find("!"));
-	if (this->m_vlist.empty())
-		speak("PRIVMSG " + user + " Bot's shareDirextory is empty\r\n");
 	std::ostringstream messageStream;
 	messageStream << "PRIVMSG " << user << " :FileHandlerBot is handling " << this->m_vlist.size() << " files:\r\n"; 
 	speak(messageStream.str());
-	speak("PRIVMSG " + user + " :Type '!send [filename]' to start transfering file\r\n");
-	speak("PRIVMSG " + user + " \r\n");
 	for (std::vector<std::string>::iterator it = m_vlist.begin(); it != m_vlist.end(); ++it)
 		speak("PRIVMSG " + user + " :" + *it + "\r\n");
 	for (size_t i = 0; i < this->m_vlist.size(); i++)
 		speak("PRIVMSG " + user + " :" + this->m_vlist[i] + "\r\n");
 	speak("PRIVMSG " + user + " :End of shared files list\r\n");
+	speak("PRIVMSG " + user + " :Type '!send [filename]' to start transfering file\r\n");
 }
 
 /**
