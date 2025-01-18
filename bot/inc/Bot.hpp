@@ -7,8 +7,10 @@
 # include <netinet/in.h>
 # include <vector>
 # define DCCTIMEOUT 60
+# define CONNECTIMEOUT 5
 # define BANDIC "botShareDirectory/banDic.txt"
 # define FILEDIR "botShareDirectory"
+
 
 class Bot {
 public:
@@ -33,6 +35,7 @@ private:
 	std::vector<std::string>	m_vbanDic;
     int 						m_port;
     int 						m_serSocket;
+	
 	void						m_authenticate();
 	void						m_connectToServer();
 	void						m_helloWorld();
@@ -51,10 +54,8 @@ private:
     void						m_handleSendFile(std::vector<std::string> & tokens);
 	void						m_handleRefresh(std::vector<std::string> & tokens);
 	void						m_handleKick(std::vector<std::string> & tokens);
-
-	// 				UTILS
 };
-
+	// 				UTILS
 std	::string					trimNewLines(const std::string & str);
 std::vector<std::string>		vsplit(const std::string & str, char delimiter);
 size_t							getFileSize	(std::ifstream & file);

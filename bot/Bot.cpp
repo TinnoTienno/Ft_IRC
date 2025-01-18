@@ -108,7 +108,7 @@ void	Bot::m_connectToServer()
 			break;
 		else if (errno != EINPROGRESS && errno != EALREADY)
 			throw std::runtime_error("Error: Cannot connect to server");
-		if (elapsedTime >= 5)
+		if (elapsedTime >= CONNECTIMEOUT)
 			throw std::runtime_error("Error: Connection timed out");
 		usleep(1000000);
 		elapsedTime++;
