@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/17 17:24:35 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/18 15:08:03 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,26 @@ void	Bot::m_connectToServer()
 	this->m_serSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if(this->m_serSocket == -1)
 		throw std::runtime_error("Error: Socket failed");
-	if(connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd))) != 0)
-		throw std::runtime_error("Error: Cannot connect to server");
 	if (fcntl(this->m_serSocket, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error("Error: Failed to set non-blocking mode");
-
+	int result = connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd)));
+	if (result == -1 && errno != EINPROGRESS)
+		throw std::runtime_error("Error: Cannot connect to server");
+	int elapsedTime = 0;
+	while (m_signal == false)
+	{
+		result = connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd)));
+		if (result == 0 || errno == EISCONN)
+			break;
+		else if (errno != EINPROGRESS && errno != EALREADY)
+			throw std::runtime_error("Error: Cannot connect to server");
+		if (elapsedTime >= 5)
+			throw std::runtime_error("Error: Connection timed out");
+		usleep(1000000);
+		elapsedTime++;
+	}
+	if (m_signal == true)
+		throw std::runtime_error(" :Signal received: Connection interrupted");
 }
 
 
