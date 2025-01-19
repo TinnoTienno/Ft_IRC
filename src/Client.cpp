@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:55:26 by eschussl          #+#    #+#             */
-/*   Updated: 2025/01/15 13:10:24 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/19 17:43:55 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,6 @@ void Client::leaveChannel(Channel &channel)
 	for (size_t i = 0; i < m_vChannels.size(); i++)
 		if (&channel == m_vChannels[i])
 			m_vChannels.erase(m_vChannels.begin() + i);
-	std::cout << "bug : leave channel " << this->getChannelsCount() << std::endl;
 }
 
 void Client::addOP(Channel &channel) { this->m_vOpChannels.push_back(&channel); }

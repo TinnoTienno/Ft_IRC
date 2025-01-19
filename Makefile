@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+         #
+#    By: noda <noda@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/23 17:05:09 by eschussl          #+#    #+#              #
-#    Updated: 2025/01/15 16:28:37 by aduvilla         ###   ########.fr        #
+#    Updated: 2025/01/19 17:16:25 by noda             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,7 @@ $(NAME):	$(OBJS)
 bot			:	$(BOT_NAME)
 
 $(BOT_NAME)	:	$(BOT_OBJS)
-	$(CXX) $(CXXFLAGS) $^ -o $@  -Ibot
+	$(CXX) $(CXXFLAGS) $^ -o $@ -Ibot
 
 .botObj/%.o: %.cpp
 	@mkdir -p .botObj/$(BOT_PATH)

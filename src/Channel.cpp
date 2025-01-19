@@ -6,7 +6,7 @@
 /*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 16:23:54 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/15 17:19:13 by noda             ###   ########.fr       */
+/*   Updated: 2025/01/19 17:43:52 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ Channel&	Channel::operator=(const Channel & rhs)
 
 void	Channel::cleanClient()
 {
-	std::cout << "Bug cleanclient" << std::endl;
 	for (size_t i = 0; i < m_vClients.size(); i++)
 		m_vClients[i]->leaveChannel(*this);
 	for (size_t i = 0; i < m_cMode.getOpClient().size(); i++)
