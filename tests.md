@@ -62,13 +62,13 @@ mode ""
 /mode #chan +l ""
 /mode #chan +k ""
 /mode #chan b ""
-mode #chan +b ""
-mode #chan -b ""
+/mode #chan +b ""
+/mode #chan -b ""
 /mode #chan b (OP)
 /mode #chan b (Not OP)
-mode #chan +o user2
-mode #chan +o noda (Already op)
-mode #chan +o
+/mode #chan +o user2
+/mode #chan +o noda (Already op)
+/mode #chan +o
 
 # nick
 /nc nick
@@ -124,12 +124,10 @@ nc topic
 /topic #chan voici le topic 
 /mode +t   + topic #chan voici le topic
 
-# userhost
-WIP
-
 # bot
 
 /mode #chan +i  + bot #chan -> Bot must quit when he cant join channel
+Proteger quand le nickname est deja pris ? Ca va pas poser de probleme ca 
 
 # Other tests
 

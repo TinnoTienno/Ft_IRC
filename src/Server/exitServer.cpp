@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exitServer.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eschussl <eschussl@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noda <noda@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 14:01:56 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/14 19:38:32 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/19 17:43:57 by noda             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ void 	Server::deleteChannel(Channel &channel)
 	for (size_t i = 0; i < m_vChannels.size(); i++) {
 		if (m_vChannels[i] == &channel)
 		{
-			std::cout << "bug : deleting " << std::endl;
 			m_vChannels[i]->cleanClient();
 			delete m_vChannels[i];
 			m_vChannels.erase(m_vChannels.begin() + i);
