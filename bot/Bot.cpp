@@ -6,7 +6,7 @@
 /*   By: aduvilla <aduvilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 09:05:12 by aduvilla          #+#    #+#             */
-/*   Updated: 2025/01/18 15:08:03 by aduvilla         ###   ########.fr       */
+/*   Updated: 2025/01/20 10:53:30 by aduvilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,13 @@ void	Bot::m_connectToServer()
 		throw std::runtime_error("Error: Socket failed");
 	if (fcntl(this->m_serSocket, F_SETFL, O_NONBLOCK) == -1)
 		throw std::runtime_error("Error: Failed to set non-blocking mode");
-	int result = connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd)));
-	if (result == -1 && errno != EINPROGRESS)
-		throw std::runtime_error("Error: Cannot connect to server");
+//	int result = connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd)));
+//	if (result == -1 && errno != EINPROGRESS)
+//		throw std::runtime_error("Error: Cannot connect to server");
 	int elapsedTime = 0;
 	while (m_signal == false)
 	{
-		result = connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd)));
+		int result = connect(this->m_serSocket, (struct sockaddr*)&socketAdd, (socklen_t)(sizeof(socketAdd)));
 		if (result == 0 || errno == EISCONN)
 			break;
 		else if (errno != EINPROGRESS && errno != EALREADY)
