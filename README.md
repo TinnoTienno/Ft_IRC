@@ -9,6 +9,7 @@
 - Private messaging
 - Basic IRC commands (JOIN, PART, PRIVMSG, etc.)
 - Multi-client support
+- **Bot**: A file transfer bot that can list and send files, refresh the file list, and kick users for banned words.
 
 ## Installation
 To install and run `ft_irc`, follow these steps:
@@ -26,8 +27,9 @@ To install and run `ft_irc`, follow these steps:
     make
     ```
 
-
 ## Usage
+
+### Running the Server
 
 1. Start the server:
     ```sh
@@ -39,7 +41,49 @@ To install and run `ft_irc`, follow these steps:
 2. Connect to the server using an IRC client:
     - Use Irssi IRC client to connect to the server using the specified port and password.
 
+### Running the Bot
 
+1. Start the bot:
+    ```sh
+    ./bot <server_address> <channel> <password> <port>
+    ```
+    - `<server_address>`: The address of the IRC server.
+    - `<channel>`: The channel to join.
+    - `<password>`: The password for the server.
+    - `<port>`: The port number of the server.
+
+2. The bot supports the following commands:
+    - `!list`: Display the list of transferable files.
+    - `!send <filename>`: Transfer the specified file.
+    - `!refresh`: Refresh the list of handled files.
+
+### File Transfers with `nc` and `irssi`
+
+#### Using `irssi` for File Transfers
+
+- **Send a file**:
+    ```sh
+    /dcc send [user] [complete/path/file]
+    ```
+
+- **Receive a file**:
+    ```sh
+    /dcc get [user] [file]
+    /dcc get -n [newFileName] -d [path/to/paste/dir] [user] [file]
+    ```
+
+#### Using `nc` (Netcat) for File Transfers
+
+- **Send a file**:
+    ```sh
+    nc [Ipaddress] [port] < [complete/path/file]
+    ```
+
+- **Receive a file**:
+    ```sh
+    nc -l [port] > [new/path/and/filename]
+    ```
+    
 ## Commands
 
 ### JOIN
